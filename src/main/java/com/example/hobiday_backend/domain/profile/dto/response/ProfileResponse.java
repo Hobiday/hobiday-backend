@@ -13,4 +13,7 @@ public class ProfileResponse {
     private String profileName;
     private String profileEmail;
     private String profileGenre;
+    private Boolean profileActiveFlag;
+    private String profileIntroduction;
+    private String profilePhoto;
 }

@@ -61,4 +61,35 @@ public class ProfileService {
                 .profileGenre(profile.getProfileGenre())
                 .build();
     }
+
+    public ProfileResponse updateProfile(Long userId, AddProfileRequest updateProfileRequest) {
+        Profile profile = profileRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));
+
+        // 사용자 일치 여부 확인
+        if(!profile.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("프로필 수정 권한이 없습니다.");
+        }
+
+       profile = profileRepository.save(Profile.builder()
+                .userId(profile.getUserId())
+                .profileEmail(profile.getProfileEmail())
+                .profileName(profile.getProfileName())
+                .profileGenre(updateProfileRequest.getProfileGenre() != null ? updateProfileRequest.getProfileGenre() : profile.getProfileGenre())
+                .profileIntroduction(updateProfileRequest.getProfileIntroduction() != null ? updateProfileRequest.getProfileIntroduction() : profile.getProfileIntroduction())
+                .profilePhoto(updateProfileRequest.getProfilePhoto() != null ? updateProfileRequest.getProfilePhoto() : profile.getProfilePhoto())
+                .build());
+
+        profileRepository.save(profile);
+
+        return ProfileResponse.builder()
+                .id(profile.getId())
+                .userId(profile.getUserId())
+                .profileName(profile.getProfileName())
+                .profileEmail(profile.getProfileEmail())
+                .profileGenre(profile.getProfileGenre())
+                .profileIntroduction(profile.getProfileIntroduction())
+                .profilePhoto(profile.getProfilePhoto())
+                .build();
+    }
 }

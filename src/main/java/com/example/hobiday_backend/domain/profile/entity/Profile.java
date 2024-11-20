@@ -20,13 +20,17 @@ public class Profile {
     private String profileEmail;
     private String profileGenre;
     private Boolean profileActiveFlag;
+    private String profileIntroduction;
+    private String profilePhoto;
 
     @Builder
-    public Profile(Long userId, String profileName, String profileGenre, String profileEmail, Boolean profileActiveFlag) {
+    public Profile(Long userId, String profileName, String profileGenre, String profileEmail, Boolean profileActiveFlag, String profileIntroduction, String profilePhoto) {
         this.userId = userId;
         this.profileName = profileName;
         this.profileEmail = profileEmail;
         this.profileGenre = profileGenre;
         this.profileActiveFlag = profileActiveFlag;
+        this.profileIntroduction = profileIntroduction;
+        this.profilePhoto = profilePhoto;
     }
 }
