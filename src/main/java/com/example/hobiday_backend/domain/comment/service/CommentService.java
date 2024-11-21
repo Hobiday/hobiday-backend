@@ -3,62 +3,77 @@ package com.example.hobiday_backend.domain.comment.service;
 import com.example.hobiday_backend.domain.comment.dto.CommentReq;
 import com.example.hobiday_backend.domain.comment.dto.CommentRes;
 import com.example.hobiday_backend.domain.comment.entity.Comment;
-import com.example.hobiday_backend.domain.comment.exception.CommentErrorCode;
-import com.example.hobiday_backend.domain.comment.exception.CommentException;
-import com.example.hobiday_backend.domain.comment.repository.CommentRepository;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
-import com.example.hobiday_backend.domain.feed.exception.FeedErrorCode;
-import com.example.hobiday_backend.domain.feed.exception.FeedException;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
+import com.example.hobiday_backend.domain.profile.entity.Profile;
+import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
+import com.example.hobiday_backend.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
     private final FeedRepository feedRepository;
+    private final ProfileRepository profileRepository;
 
-    // 댓글 작성
-    @Transactional
-    public CommentRes getComments(Long id, CommentReq commentReq) {
-        // 댓글 등록
-        Feed targetFeed = feedRepository.findById(id)
-                .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
-        Long parentCommentId = commentReq.getParentCommentId();
-        // comment entity 생성
-        Comment targetComment = Comment.builder()
-                .feed(targetFeed)
-                .contents(commentReq.getContents())
-                .parentCommentId(commentReq.getParentCommentId())
-                .build();
-      /*  //피드에 댓글 추가// 이건 피드 서비스에서 처리하기
-        targetComment.getFeed().getCommentList().add(targetComment);*/
+    public CommentRes createComment(Long feedId, CommentReq commentReq, User user, Long parentCommentId) {
+        Feed feed = feedRepository.findById(feedId)
+                .orElseThrow(() -> new RuntimeException("피드를 찾을 수 없습니다"));
 
-        if (targetComment.getParentCommentId() == null) {
-            commentRepository.save(targetComment);
+        Profile profile = profileRepository.findByUsername(user.getUsername())
+                .orElseThrow(() -> new RuntimeException("프로필을 찾을 수 없습니다"));
+
+        Comment parentComment = null;
+        if (parentCommentId != null) {
+            parentComment = commentRepository.findById(parentCommentId)
+                    .orElseThrow(() -> new RuntimeException("부모 댓글이 존재하지 않아 대댓글을 작성할 수 없습니다"));
         }
-        // parentComment 가 있다면 parent comment 에 childComment 를 추가
-        Comment parentComment = commentRepository.findById(parentCommentId)
-                .orElseThrow(() -> new CommentException(CommentErrorCode.PARENT_COMMENT_NOT_FOUND));
-        parentComment.addChildComment(targetComment);
-        commentRepository.save(targetComment);
 
-        log.info(targetComment.toString());
-        // dto로 반환 빌더 추가로 만들어주기
-        return null; // 일단은 null
+        Comment comment = new Comment(commentReq, feed, profile, parentComment);
+        Comment savedComment = commentRepository.save(comment);
+
+        return CommentRes.from(savedComment, false, true);
     }
 
+    public List<CommentRes> getCommentsByFeedId(Long feedId, User user) {
+        List<Comment> comments = commentRepository.findAllByFeedIdAndParentCommentIsNull(feedId);
 
-    // 댓글 수정
+        return comments.stream()
+                .map(comment -> {
+                    boolean isLiked = comment.getLikeList().stream()
+                            .anyMatch(like -> like.getUser().getUsername().equals(user.getUsername()));
+                    boolean isAuthor = comment.getProfile().getUsername().equals(user.getUsername());
+                    return CommentRes.from(comment, isLiked, isAuthor);
+                })
+                .collect(Collectors.toList());
+    }
 
+    public CommentRes updateComment(Long commentId, CommentReq commentReq, User user) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
 
-    // 댓글 삭제
+        if (!comment.getProfile().getUsername().equals(user.getUsername())) {
+            throw new RuntimeException("Unauthorized");
+        }
 
-    // 댓글 조회
+        comment.updateContents(commentReq.getContents());
+        return CommentRes.from(commentRepository.save(comment), false, true);
+    }
 
+    public void deleteComment(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
 
+        if (!comment.getProfile().getUsername().equals(user.getUsername())) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        commentRepository.deleteById(commentId);
+    }
 }
