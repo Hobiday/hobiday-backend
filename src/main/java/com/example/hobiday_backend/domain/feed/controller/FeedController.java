@@ -18,14 +18,14 @@ import java.util.List;
 public class FeedController {
     private final FeedService feedService;
 
-    // 게시글 전체 목록 조회
+    // 피드 전체 목록 조회
     @GetMapping("/api/feeds")
     public ResponseEntity<SuccessRes<List<FeedRes>>> getFeeds(@RequestBody FeedReq feedReq) {
         List<FeedRes> feeds = feedService.getAllFeeds(feedReq);
         return ResponseEntity.ok(SuccessRes.success(feeds));
     }
 
-    // 특정 게시물 조회
+    // 피드 게시물 조회
     @GetMapping("/api/feeds/{id}")
     public ResponseEntity<SuccessRes<FeedRes>> getPost(@PathVariable Long id) {
         FeedRes targetFeed = feedService.getFeed(id);

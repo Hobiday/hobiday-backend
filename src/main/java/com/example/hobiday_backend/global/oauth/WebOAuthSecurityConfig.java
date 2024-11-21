@@ -32,7 +32,7 @@ public class WebOAuthSecurityConfig {
     @Bean
     public WebSecurityCustomizer configure(){ // 스프링 시큐리티 기능 비활성화
         return (web) -> web.ignoring()
-                .requestMatchers(toH2Console())
+                //.requestMatchers(toH2Console())
                 .requestMatchers(
                         new AntPathRequestMatcher("/img/**"),
                         new AntPathRequestMatcher("/css/**"),
@@ -58,6 +58,7 @@ public class WebOAuthSecurityConfig {
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/token")).permitAll() // 토큰 재발급 URL은 인증 없이 접근 가능하도록 설정.
+                        .requestMatchers(new AntPathRequestMatcher("/api/test/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated() // 나머지 API URL은 인증 필요
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
