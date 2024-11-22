@@ -17,27 +17,17 @@ public class CommentRes {
     private String profileImageUrl;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
-    private Integer likeCount;
-    private boolean isLiked;
     private boolean isAuthor;
-    private Long parentCommentId;
-    private List<CommentRes> childCommentList;
 
-    public static CommentRes from(Comment comment, boolean isLiked, boolean isAuthor) {
+    public static CommentRes from(Comment comment) {
         return CommentRes.builder()
                 .id(comment.getId())
                 .contents(comment.getContents())
-                .profileName(comment.getProfile().getName())
+                .profileName(comment.getProfile().getProfileName())
                 .profileImageUrl(comment.getProfile().getProfileImageUrl())
                 .createdTime(comment.getCreatedTime())
                 .modifiedTime(comment.getModifiedTime())
-                .likeCount(comment.getLikeList().size())
-                .isLiked(isLiked)
-                .isAuthor(isAuthor)
-                .parentCommentId(comment.getParentComment() != null ? comment.getParentComment().getId() : null)
-                .childCommentList(comment.getChildCommentList().stream()
-                        .map(child -> CommentRes.from(child, false, false))
-                        .collect(Collectors.toList()))
                 .build();
     }
 }
+
