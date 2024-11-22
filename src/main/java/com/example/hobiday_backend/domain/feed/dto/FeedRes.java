@@ -18,5 +18,6 @@ public class FeedRes {
     private List<Like> likeList;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
-
+    private int likeCount;
+    private boolean isLiked;
 }

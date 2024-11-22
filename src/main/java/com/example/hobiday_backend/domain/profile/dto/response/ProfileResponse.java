@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class ProfileResponse {
-    private Long id;
+    private Long profileId;
     private Long userId;
     private String profileName;
     private String profileEmail;

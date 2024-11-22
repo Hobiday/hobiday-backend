@@ -3,6 +3,7 @@ package com.example.hobiday_backend.domain.like.entity;
 import com.example.hobiday_backend.domain.comment.entity.Comment;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.like.dto.LikeReq;
+import com.example.hobiday_backend.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,16 +18,12 @@ public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-  /*  @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;*/
-
-    @ManyToOne
-    @JoinColumn(name = "feed_id")
+    // 피드를 통해 피드의 유저 접근 가능
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_id", nullable = false)
     private Feed feed;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
@@ -34,10 +31,9 @@ public class Like {
     private int likeCount;
 
     @Builder
-    public Like (LikeReq likeReq,Feed feed/*,User user*/,Comment comment) {
+    public Like (Feed feed, User user) {
         this.feed = feed;
         this.comment = comment;
-        this.likeCount = likeReq.getLikeCount();
     }
 
 }
