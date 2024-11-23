@@ -25,6 +25,7 @@ public class Profile {
 
     @Column(length=20)
     private String profileName;
+
     private String profileEmail;
 
     @Column(length=20)

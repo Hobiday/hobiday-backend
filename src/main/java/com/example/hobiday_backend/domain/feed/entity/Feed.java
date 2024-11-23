@@ -54,7 +54,7 @@ public class Feed extends TImeStamped {
         this.picture = feedReq.getPicture();
         this.hashTags = feedReq.getHashTags();
         this.commentList = feedReq.getCommentList();
-        this.profileName = feedReq.getProfile().getProfileName();
+        this.profile = feedReq.getProfile();
     }
 
     public void incrementLikeCount() {
