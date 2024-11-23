@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,14 +87,14 @@ public class ProfileService {
         Long userId = userService.getUserIdByToken(token);
         Profile profile = profileRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));
-
+        User user = userRepository.findById(userId).get();
         // 사용자 일치 여부 확인
         if(!profile.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException("프로필 수정 권한이 없습니다.");
         }
         profile = profileRepository.save(Profile.builder()
-//                .user(profile.getUserId()) // 프로필의 User 필드는 처음 프로필 등록때 저장 받고 변경 불가능한 고유값이라 수정X
-//                .profileEmail(profile.getProfileEmail()) // 이메일도 고유값이므로 수정X
+                .user(user)
+                .profileEmail(profile.getProfileEmail())
                 .profileName(profile.getProfileName())
                 .profileGenre(!getGenreToString(updateProfileRequest.getProfileGenre()).isEmpty() ? getGenreToString(updateProfileRequest.getProfileGenre()) : profile.getProfileGenre())
                 .profileIntroduction(updateProfileRequest.getProfileIntroduction() != null ? updateProfileRequest.getProfileIntroduction() : profile.getProfileIntroduction())
@@ -105,10 +104,10 @@ public class ProfileService {
         profileRepository.save(profile);
 
         return ProfileResponse.builder()
-//                .id(profile.getId()) // 프로필ID와 회원ID는 고유값이므로 수정X
-//                .userId(profile.getUserId())
+                .profileId(profile.getId())
+                .userId(user.getId())
                 .profileName(profile.getProfileName())
-//                .profileEmail(profile.getProfileEmail())  // 이메일도 고유값이므로 수정X
+                .profileEmail(profile.getProfileEmail())
                 .profileGenre(getGenreToList(profile.getProfileGenre()))
                 .profileIntroduction(profile.getProfileIntroduction())
                 .profileImageUrl(profile.getProfileImageUrl())

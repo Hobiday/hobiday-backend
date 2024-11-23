@@ -49,7 +49,7 @@ public class Profile {
     private List<Follow> followings = new ArrayList<>();
 
 
-    @Builder
+    @Builder(toBuilder = true)
     public Profile(//Long userId, //방법1
                    User user, // 방법2
                    String profileName, String profileGenre, String profileEmail,
