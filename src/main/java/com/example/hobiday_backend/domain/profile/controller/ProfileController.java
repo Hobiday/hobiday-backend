@@ -1,6 +1,7 @@
 package com.example.hobiday_backend.domain.profile.controller;
 
 import com.example.hobiday_backend.domain.profile.dto.request.AddProfileRequest;
+import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrationResponse;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
@@ -43,4 +44,35 @@ public class ProfileController {
     }
 
     // 프로필 조회 필요함
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<ProfileResponse> getProfile(@PathVariable Long userId) {
+        try {
+            ProfileResponse profileResponse = profileService.getProfile(userId);
+
+            // 프로필이 없으면 404 반환
+            if(profileResponse == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(profileResponse);
+        } catch (Exception e) {
+            // 예외 발생시 500 서버 에러 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // 프로필 수정
+    @PostMapping("/updateProfile")
+    public ResponseEntity<ProfileResponse> updateProfile(@PathVariable Long userId,
+                                                         @RequestBody UpdateProfileRequest updateProfileRequest) {
+        try {
+            ProfileResponse updateProfile = profileService.updateProfile(userId, updateProfileRequest);
+
+            if (updateProfile == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(updateProfile);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).build();
+        }
+    }
 }
