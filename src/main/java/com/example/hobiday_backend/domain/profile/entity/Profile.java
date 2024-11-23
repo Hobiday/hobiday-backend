@@ -1,5 +1,6 @@
 package com.example.hobiday_backend.domain.profile.entity;
 
+import com.example.hobiday_backend.domain.follow.entity.Follow;
 import com.example.hobiday_backend.domain.users.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -7,12 +8,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
+
+@Table(name = "profile")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Table(name = "profile")
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +28,6 @@ public class Profile {
 
     @Column(length=20)
     private String profileName;
-
     private String profileEmail;
 
     @Column(length=20)
@@ -40,10 +42,18 @@ public class Profile {
     @Column(nullable = true)
     private String profileImageUrl;
 
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followings = new ArrayList<>();
+
+
     @Builder
     public Profile(//Long userId, //방법1
                    User user, // 방법2
-                   String profileName, String profileGenre, String profileEmail, Boolean profileActiveFlag, String profileIntroduction) {
+                   String profileName, String profileGenre, String profileEmail,
+                   Boolean profileActiveFlag, String profileIntroduction, String profileImageUrl) {
         // String profilePhoto
 //        this.userId = userId; //방법1
         this.user = user;
@@ -52,6 +62,6 @@ public class Profile {
         this.profileGenre = profileGenre;
         this.profileActiveFlag = profileActiveFlag;
         this.profileIntroduction = profileIntroduction;
-//        this.profilePhoto = profilePhoto;
+        this.profileImageUrl = profileImageUrl;
     }
 }

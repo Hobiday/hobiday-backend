@@ -1,12 +1,14 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/culture?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+#    url: jdbc:mysql://db-hobiday.c1248mguandn.ap-northeast-2.rds.amazonaws.com:3306/hobiday?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/hobiday?serverTimezone=UTC
+#    username: admin
     username: root
-    password: rkwhr123
+    password: 95206326
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
@@ -24,13 +26,14 @@ spring:
             user-name-attribute: id
         registration:
           kakao:
-            client-id: f50d9911e72a37532cae75cba2277099
-            client-secret: FxIHbsanlyYyDot1yzsoaMS1y0T7fFgi
+            client-id: f50d9911e72a37532cae75cba2277099 # 외부로 빼야함
+            client-secret: FxIHbsanlyYyDot1yzsoaMS1y0T7fFgi # 외부로 빼야함
             client-authentication-method: client_secret_post
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: http://ec2-3-37-184-82.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/kakao
+#            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             client-name: kakao
-            scope:
+            scope: # 외부로 빼야함
               - profile_nickname
               - account_email
 #              - profile_image
@@ -38,3 +41,4 @@ spring:
 jwt:
   issuer: chyun5197@gmail.com
   secret_key: team8-project
+

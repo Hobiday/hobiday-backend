@@ -1,6 +1,7 @@
 package com.example.hobiday_backend.domain.profile.controller;
 
 import com.example.hobiday_backend.domain.profile.dto.request.AddProfileRequest;
+import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrationResponse;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
@@ -20,6 +21,7 @@ import java.security.Principal;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Profiles", description = "프로필 API")
 public class ProfileController {
     private final ProfileService profileService;
     private final UserService userService;
@@ -27,8 +29,8 @@ public class ProfileController {
 
     // 프로필 등록(처음)하는 api
     @Tag(name="프로필 등록(온보딩 작성) API", description = "온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다" +
-            "\n!닉네임 중복은 아직 안만들었음" +
-            "\n!장르는 100000000 처럼 9개 장르코드 순서대로 선택/미선택 문자열")
+            "\n!닉네임 중복은 아직 안만들었음"+
+            "\n{\"연극\", \"무용\", \"대중무용\", \"서양음악\", \"한국음악\", \"대중음악\", \"복합\", \"서커스\", \"뮤지컬\"}")
     @PostMapping("/api/profiles/registration")
     public ResponseEntity<ProfileResponse> join(@RequestBody AddProfileRequest addProfileRequest,
                                                 @RequestAttribute(value = "userId") Long userId) {
@@ -68,17 +70,39 @@ public class ProfileController {
         return ResponseEntity.status(HttpStatus.OK).body(profileResponse);
     }
 
-    // ============================= 백엔드 테스트용: 로그인->프로필 등록 =============================
+
+    // 프로필 수정
+    @PostMapping("/updateProfile")
+    public ResponseEntity<ProfileResponse> updateProfile(@RequestHeader("Authorization") String token,
+                                                         @RequestBody UpdateProfileRequest updateProfileRequest) {
+
+        try {
+            ProfileResponse updateProfile = profileService.updateProfile(token, updateProfileRequest);
+
+            if (updateProfile == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(updateProfile);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).build();
+        }
+    }
+
+    //     ============================= 백엔드 테스트용: 1.토큰으로 유저 확인 2.로그인->프로필 등록 =============================
 //    @PostMapping("/api/profile")
 //    public ResponseEntity<?> addProfile(@RequestBody AddProfileRequest addProfileRequest,
-//                                        Principal principal) {
-//        log.info("현재 로그인한 사용자명(principal): " + principal.getName()); // 둘 중 하나 선택
+//                                        Principal principal, @RequestHeader("Authorization") String token) {
+//        log.info("/api/profile 토큰:" + token);
+//        Long userId = userService.getUserIdByToken(token);
+//        String name = userRepository.findById(userId).get().getEmail();
+//        log.info("현재 로그인한 사용자명(액세스토큰): " + name);
+//        log.info("현재 로그인한 사용자명(principal): " + principal.getName());
 //
-//        addProfileRequest.profileName = userRepository.findByEmail(principal.getName()).get().getNickname();
-//        User user = userRepository.findByEmail(principal.getName()).get();
-////        Profile profile = profileService.saveProfile(addProfileRequest, user);
-//        Profile profile = profileService.saveFirst(user, addProfileRequest);
+////        addProfileRequest.profileName = userRepository.findByEmail(principal.getName()).get().getNickname();
+////        User user = userRepository.findByEmail(principal.getName()).get();
+//////        Profile profile = profileService.saveProfile(addProfileRequest, user);
+////        Profile profile = profileService.saveFirst(user, addProfileRequest);
 //        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(profile.getProfileName());
+//                .body(null);
 //    }
 }

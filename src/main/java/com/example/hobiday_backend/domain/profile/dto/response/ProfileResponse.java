@@ -2,6 +2,8 @@ package com.example.hobiday_backend.domain.profile.dto.response;
 
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -12,5 +14,7 @@ public class ProfileResponse {
     private Long userId;
     private String profileName;
     private String profileEmail;
-    private String profileGenre;
+    private List<String> profileGenre;
+    private String profileIntroduction;
+    private String profileImageUrl;
 }

@@ -1,6 +1,6 @@
 package com.example.hobiday_backend.domain.users.service;
 
-import com.example.hobiday_backend.domain.users.entity.PrincipalDetails;
+import com.example.hobiday_backend.domain.users.dto.PrincipalDetails;
 import com.example.hobiday_backend.domain.users.entity.User;
 import com.example.hobiday_backend.domain.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
