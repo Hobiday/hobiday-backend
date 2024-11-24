@@ -30,13 +30,14 @@ public class UserController {
                 .body(new LogoutMessageResponse("logout success"));
     }
 
-    // 사용자(카카오) 정보 반환
+    // 회원(카카오) 정보 반환
     @Operation(summary="회원(카카오) 정보 반환 API", description = "헤더 액세스 토큰으로 요청 받아 회원(카카오) 정보를 반환합니다.")
     @GetMapping("/api/users")
     public ResponseEntity<UserResponse> findId(@RequestHeader("Authorization") String token){
         Long userId = userService.getUserIdByToken(token);
         User user = userService.findById(userId);
-        return ResponseEntity.ok(UserResponse.builder()
+        return ResponseEntity.ok()
+                .body(UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
