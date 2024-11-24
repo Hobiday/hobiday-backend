@@ -6,7 +6,6 @@ import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrati
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
-import com.example.hobiday_backend.domain.users.dto.UserResponse;
 import com.example.hobiday_backend.domain.users.repository.UserRepository;
 import com.example.hobiday_backend.domain.users.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 
 @Slf4j
 @RestController
@@ -90,20 +88,20 @@ public class ProfileController {
     }
 
 //         ============================= 백엔드 테스트용: 1.토큰으로 유저 확인 2.로그인->프로필 등록 =============================
-    @PostMapping("/api/profile")
-    public ResponseEntity<?> addProfile(@RequestBody AddProfileRequest addProfileRequest,
-                                        Principal principal, @RequestHeader("Authorization") String token) {
-        log.info("/api/profile 토큰:" + token);
-        Long userId = userService.getUserIdByToken(token);
-        String name = userRepository.findById(userId).get().getEmail();
-        log.info("현재 로그인한 사용자명(액세스토큰): " + name);
-        log.info("현재 로그인한 사용자명(principal): " + principal.getName());
-
-//        addProfileRequest.profileName = userRepository.findByEmail(principal.getName()).get().getNickname();
-//        User user = userRepository.findByEmail(principal.getName()).get();
-////        Profile profile = profileService.saveProfile(addProfileRequest, user);
-//        Profile profile = profileService.saveFirst(user, addProfileRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(null);
-    }
+//    @PostMapping("/api/profile")
+//    public ResponseEntity<?> addProfile(@RequestBody AddProfileRequest addProfileRequest,
+//                                        Principal principal, @RequestHeader("Authorization") String token) {
+//        log.info("/api/profile 토큰:" + token);
+//        Long userId = userService.getUserIdByToken(token);
+//        String name = userRepository.findById(userId).get().getEmail();
+//        log.info("현재 로그인한 사용자명(액세스토큰): " + name);
+//        log.info("현재 로그인한 사용자명(principal): " + principal.getName());
+//
+////        addProfileRequest.profileName = userRepository.findByEmail(principal.getName()).get().getNickname();
+////        User user = userRepository.findByEmail(principal.getName()).get();
+//////        Profile profile = profileService.saveProfile(addProfileRequest, user);
+////        Profile profile = profileService.saveFirst(user, addProfileRequest);
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                .body(null);
+//    }
 }
