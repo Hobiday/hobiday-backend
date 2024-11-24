@@ -89,21 +89,21 @@ public class ProfileController {
         }
     }
 
-    //     ============================= 백엔드 테스트용: 1.토큰으로 유저 확인 2.로그인->프로필 등록 =============================
-//    @PostMapping("/api/profile")
-//    public ResponseEntity<?> addProfile(@RequestBody AddProfileRequest addProfileRequest,
-//                                        Principal principal, @RequestHeader("Authorization") String token) {
-//        log.info("/api/profile 토큰:" + token);
-//        Long userId = userService.getUserIdByToken(token);
-//        String name = userRepository.findById(userId).get().getEmail();
-//        log.info("현재 로그인한 사용자명(액세스토큰): " + name);
-//        log.info("현재 로그인한 사용자명(principal): " + principal.getName());
-//
-////        addProfileRequest.profileName = userRepository.findByEmail(principal.getName()).get().getNickname();
-////        User user = userRepository.findByEmail(principal.getName()).get();
-//////        Profile profile = profileService.saveProfile(addProfileRequest, user);
-////        Profile profile = profileService.saveFirst(user, addProfileRequest);
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(null);
-//    }
+//         ============================= 백엔드 테스트용: 1.토큰으로 유저 확인 2.로그인->프로필 등록 =============================
+    @PostMapping("/api/profile")
+    public ResponseEntity<?> addProfile(@RequestBody AddProfileRequest addProfileRequest,
+                                        Principal principal, @RequestHeader("Authorization") String token) {
+        log.info("/api/profile 토큰:" + token);
+        Long userId = userService.getUserIdByToken(token);
+        String name = userRepository.findById(userId).get().getEmail();
+        log.info("현재 로그인한 사용자명(액세스토큰): " + name);
+        log.info("현재 로그인한 사용자명(principal): " + principal.getName());
+
+//        addProfileRequest.profileName = userRepository.findByEmail(principal.getName()).get().getNickname();
+//        User user = userRepository.findByEmail(principal.getName()).get();
+////        Profile profile = profileService.saveProfile(addProfileRequest, user);
+//        Profile profile = profileService.saveFirst(user, addProfileRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(null);
+    }
 }
