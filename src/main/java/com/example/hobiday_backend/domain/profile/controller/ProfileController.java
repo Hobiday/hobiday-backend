@@ -5,6 +5,8 @@ import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrati
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/profiles")
+@Tag(name = "Profile", description = "프로필 API")
 public class ProfileController {
     private final ProfileService profileService;
 
@@ -59,6 +62,7 @@ public class ProfileController {
         }
     }
 
+    @Operation(summary = "프로필 수정", description = "프로필을 수정합니다.")
     @PostMapping("/updateProfile/{id}")
     public ResponseEntity<ProfileResponse> updateProfile(@PathVariable Long userId,
                                                          @RequestBody AddProfileRequest updateProfileRequest) {
