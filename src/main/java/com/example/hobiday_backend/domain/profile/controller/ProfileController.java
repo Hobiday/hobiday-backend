@@ -9,6 +9,7 @@ import com.example.hobiday_backend.domain.profile.service.ProfileService;
 import com.example.hobiday_backend.domain.users.dto.UserResponse;
 import com.example.hobiday_backend.domain.users.repository.UserRepository;
 import com.example.hobiday_backend.domain.users.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class ProfileController {
     private final UserRepository userRepository;
 
     // 프로필 등록(처음)하는 api
-    @Tag(name="프로필 등록(온보딩 작성) API", description = "온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다" +
+    @Operation(summary="프로필 등록(온보딩 작성) API", description = "온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다" +
             "\n!닉네임 중복은 아직 안만들었음"+
             "\n{\"연극\", \"무용\", \"대중무용\", \"서양음악\", \"한국음악\", \"대중음악\", \"복합\", \"서커스\", \"뮤지컬\"}")
     @PostMapping("/api/profiles/registration")
@@ -43,7 +44,7 @@ public class ProfileController {
     }
 
     // 프로필등록 여부(O,X) api
-    @Tag(name="프로필 등록(온보딩 작성) 여부 체크 API", description = "회원ID를 전달 받아 온보딩 작성한 회원이면 true, 아니면 false 리턴합니다.")
+    @Operation(summary="프로필 등록(온보딩 작성) 여부 체크 API", description = "회원ID를 전달 받아 온보딩 작성한 회원이면 true, 아니면 false 리턴합니다.")
     @GetMapping("/api/profiles/registration/check")
     public ResponseEntity<ProfileRegistrationResponse> checkProfileRegistration(@RequestAttribute(value = "userId") Long userId) {
         ProfileRegistrationResponse profileRegistrationResponse = profileService.checkProfile(userId);
@@ -57,7 +58,7 @@ public class ProfileController {
     }
 
     // 프로필 정보 반환
-    @Tag(name="프로필 조회(by토큰) API", description = "액세스 토큰으로 요청 받아 프로필 정보를 반환합니다.")
+    @Operation(summary="프로필 조회(by토큰) API", description = "액세스 토큰으로 요청 받아 프로필 정보를 반환합니다.")
     @GetMapping("/api/profiles/myprofile")
     public ResponseEntity<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token){
         Long userId = userService.getUserIdByToken(token);
