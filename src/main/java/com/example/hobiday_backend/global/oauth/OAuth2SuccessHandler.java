@@ -28,8 +28,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(5); // 리프레시 토큰 기간 설정 5일
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2); // 액세스 토큰 기간 설정 2일
-//    public static final String REDIRECT_PATH = "http://localhost:3000/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
-    public static final String REDIRECT_PATH = "/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
+    public static final String REDIRECT_PATH = "http://localhost:3000/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
+//    public static final String REDIRECT_PATH = "/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -52,7 +52,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 액세스 토큰 생성 -> 패스에 엑세스 토큰 추가
         String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-        String targetUrl = getTargetUrl(accessToken/*, refreshToken*/);
+        String targetUrl = getTargetUrl(accessToken, refreshToken);
 
 //        String targetUrl = getTargetUrl(accessToken);
 
@@ -81,10 +81,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // 액세스 토큰을 패스에 추가
     // 쿠키에서 리다이렉트 경로가 담긴 값을 가져와 쿼리 파라미터에 액세스 토큰을 추가한다
     // 액세스 토큰을 클라이언트에게 전달
-    private String getTargetUrl(String access/*, String refresh*/) {
+    private String getTargetUrl(String access, String refresh) {
         return UriComponentsBuilder.fromUriString(REDIRECT_PATH)
                 .queryParam("access", access)
-//                .queryParam("refresh", refresh)
+                .queryParam("refresh", refresh)
                 .build()
                 .toUriString();
     }

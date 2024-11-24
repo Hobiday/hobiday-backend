@@ -25,6 +25,7 @@ public class OAuth2AuthorizationRequestBasedOnCookieRepository
     @Override
     public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
+        assert cookie != null;
         return CookieUtil.deserialize(cookie, OAuth2AuthorizationRequest.class);
     }
 
