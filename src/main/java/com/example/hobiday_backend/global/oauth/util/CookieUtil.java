@@ -12,7 +12,8 @@ public class CookieUtil {
     // 요청값(이름, 값, 만료기간)을 바탕으로 HTTP 응답에 쿠키 추가
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge){
         Cookie cookie = new Cookie(name, value);
-        cookie.setPath("/");
+        cookie.setPath("http://localhost:3000/");
+//        cookie.setPath("/");
         cookie.setMaxAge(maxAge);
         response.addCookie(cookie);
     }

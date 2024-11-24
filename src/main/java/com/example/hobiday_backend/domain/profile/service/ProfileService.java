@@ -14,8 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+
+import static com.example.hobiday_backend.domain.performance.util.GenreCasting.getGenreToList;
+import static com.example.hobiday_backend.domain.performance.util.GenreCasting.getGenreToString;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +27,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
     private final UserService userService;
-    private final static String[] GENRES = {"연극", "무용", "대중무용", "서양음악", "한국음악", "대중음악", "복합", "서커스", "뮤지컬"};
+
 
     // 회원ID로 프로필 정보 반환
     public ProfileResponse getProfileByUserId(Long userid){
@@ -69,17 +73,18 @@ public class ProfileService {
     @Transactional
     public Profile saveFirst(//Long userId, //방1
                              User user, //방2
-                             AddProfileRequest profile){
+                             AddProfileRequest addProfileRequest){
 //        String email = userRepository.findById(userId).get().getEmail(); //방1
         String email = user.getEmail(); //방2
-        return profileRepository.save(Profile.builder()
+        Profile profile = profileRepository.save(Profile.builder()
 //                .userId(userId) //방1
                 .user(user) //방2
                 .profileEmail(email)
-                .profileName(profile.profileName)
-                .profileGenre(getGenreToString(profile.profileGenre)) // 문자열 <- 리스트 변환해서 저장
-                .profileActiveFlag(true)
+                .profileName(addProfileRequest.profileName)
+                .profileGenre(getGenreToString(addProfileRequest.profileGenre)) // 문자열 <- 리스트 변환해서 저장
                 .build());
+        profile.updateProfileActiveFlag(); // 프로필 등록 여부 true로 전환
+        return profile;
     }
 
     // 프로필 업데이트
@@ -114,29 +119,5 @@ public class ProfileService {
                 .build();
     }
 
-    // 장르 타입 변환(리스트 -> 문자열 반환)
-    // 장르순서: {"연극", "무용", "대중무용", "서양음악", "한국음악", "대중음악", "복합", "서커스", "뮤지컬"}
-    public static String getGenreToString(List<String> genreList){
-        StringBuilder strG = new StringBuilder("000000000");
-        for (String genre:genreList){
-            for (int i = 0; i < GENRES.length; i++) {
-                if (genre.equals(GENRES[i])){
-                    strG.setCharAt(i, '1');
-                    break;
-                }
-            }
-        }
-        return strG.toString();
-    }
 
-    // 장르 타입 변환(문자열 -> 리스트)
-    public static List<String> getGenreToList(String strG){
-        List<String> genreList = new ArrayList<>();
-        for (int i = 0; i < strG.length(); i++) {
-            if(strG.charAt(i) == '1'){
-                genreList.add(GENRES[i]);
-            }
-        }
-        return genreList;
-    }
 }

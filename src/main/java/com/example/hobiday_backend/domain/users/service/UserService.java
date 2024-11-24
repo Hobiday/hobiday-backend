@@ -47,20 +47,20 @@ public class UserService implements UserDetailsService {
     }
 
     // no use ===============================================================================================
-    public UserResponse getUserResponse(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
-        return UserResponse.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .build();
-    }
-
-    public Long save(AddUserRequest dto){
-        return userRepository.save(User.builder()
-                .nickname(dto.getNickname())
-                .email(dto.getEmail())
-//                .password(encoder.encode(dto.getPassword()))
-                .build()).getId();
-    }
+//    public UserResponse getUserResponse(String email) {
+//        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
+//        return UserResponse.builder()
+//                .id(user.getId())
+//                .email(user.getEmail())
+//                .nickname(user.getNickname())
+//                .build();
+//    }
+//
+//    public Long save(AddUserRequest dto){
+//        return userRepository.save(User.builder()
+//                .nickname(dto.getNickname())
+//                .email(dto.getEmail())
+////                .password(encoder.encode(dto.getPassword()))
+//                .build()).getId();
+//    }
 }

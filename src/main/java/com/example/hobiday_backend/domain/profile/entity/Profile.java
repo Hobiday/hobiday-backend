@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class Profile {
     private String profileIntroduction;
 
     @Column(columnDefinition = "TINYINT(1)")
+    @ColumnDefault("false")
     private Boolean profileActiveFlag; // 프로필 등록 여부
 
     @Column(nullable = true)
@@ -48,19 +50,20 @@ public class Profile {
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followings = new ArrayList<>();
 
+    public void updateProfileActiveFlag(){
+        this.profileActiveFlag = true;
+    }
 
     @Builder(toBuilder = true)
     public Profile(//Long userId, //방법1
                    User user, // 방법2
                    String profileName, String profileGenre, String profileEmail,
-                   Boolean profileActiveFlag, String profileIntroduction, String profileImageUrl) {
-        // String profilePhoto
+                   String profileIntroduction, String profileImageUrl) {
 //        this.userId = userId; //방법1
         this.user = user;
         this.profileName = profileName;
         this.profileEmail = profileEmail;
         this.profileGenre = profileGenre;
-        this.profileActiveFlag = profileActiveFlag;
         this.profileIntroduction = profileIntroduction;
         this.profileImageUrl = profileImageUrl;
     }

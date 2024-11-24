@@ -1,4 +1,4 @@
-package com.example.hobiday_backend.domain.users.controller;//package com.example.hobiday_backend.domain.users.controller;
+//package com.example.hobiday_backend.domain.users.controller;//package com.example.hobiday_backend.domain.users.controller;
 //import com.example.hobiday_backend.domain.users.entity.User;
 //import com.example.hobiday_backend.domain.users.repository.UserRepository;
 //import com.example.hobiday_backend.domain.users.service.UserService;
@@ -39,6 +39,12 @@ package com.example.hobiday_backend.domain.users.controller;//package com.exampl
 ////        return "tokenSender";
 ////    }
 //
+//    @GetMapping("/home")
+//    public String homes() {
+//        return "home";
+//    }
+//
+//
 //    // 토큰으로 카카오 닉네임, 이메일 반환
 //    @PostMapping("/checker")
 //    public String home(Model model, @RequestHeader("Authorization") String token){
@@ -58,5 +64,11 @@ package com.example.hobiday_backend.domain.users.controller;//package com.exampl
 //        return "logoutTest";
 //    }
 //
+////     로그인 성공후 기존 회원이 아니면 회원가입 화면으로 이동(이전)
+//    @GetMapping("/signForm")
+//    public String getProfile(Model model) {
+//
+//        return "signList";
+//    }
 //}
 //

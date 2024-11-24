@@ -26,9 +26,10 @@ import java.util.Map;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
-    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14); // 리프레시 토큰 기간 설정 14일
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1); // 액세스 토큰 기간 설정 1일
-    public static final String REDIRECT_PATH = "/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(5); // 리프레시 토큰 기간 설정 5일
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(2); // 액세스 토큰 기간 설정 2일
+    public static final String REDIRECT_PATH = "/http://localhost:3000/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
+//    public static final String REDIRECT_PATH = "/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -69,7 +70,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // 클라이언트에서 액세스 토큰이 만료되면 재발급 요청하도록 해당 메서드로 쿠키에 리프레시 토큰을 저장
     private void addRefreshTokenToCookie(HttpServletRequest request, HttpServletResponse response, String refreshToken) {
         int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME); // 백엔드 로컬로 실험하는 용도
         CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
     }
 
