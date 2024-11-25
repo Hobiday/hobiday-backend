@@ -1,5 +1,6 @@
 package com.example.hobiday_backend.domain.users.controller;
 
+import com.example.hobiday_backend.domain.users.dto.FreePassResponse;
 import com.example.hobiday_backend.domain.users.dto.LogoutMessageResponse;
 import com.example.hobiday_backend.domain.users.dto.UserResponse;
 import com.example.hobiday_backend.domain.users.entity.User;
@@ -43,4 +44,18 @@ public class UserController {
                 .nickname(user.getNickname())
                 .build());
     }
+
+    // (개발용)자동으로 회원 생성하고 토큰 발급 -> 포스트맨으로만 검증함
+    @Operation(summary="(개발용)자동로그인", description="자동으로 회원 정보 생성하고 토큰 발급")
+    @GetMapping("/api/test/freepass")
+    public ResponseEntity<FreePassResponse> findFreePass(){
+        FreePassResponse freePassResponse = userService.getFreePassUser();
+//        log.info("프리패스: " + freePassResponse.getNickname());
+//        log.info("프리패스: " + freePassResponse.getEmail());
+//        log.info("프리패스: " + freePassResponse.getAccessToken());
+//        log.info("프리패스: " + freePassResponse.getRefreshToken());
+        return ResponseEntity.ok()
+                .body(freePassResponse);
+    }
+
 }
