@@ -6,7 +6,7 @@ import java.util.List;
 
 public class GenreCasting {
     //    private final static String[] GENRES = {"연극", "무용", "대중무용", "서양음악", "한국음악", "대중음악", "복합", "서커스", "뮤지컬"};
-    private final static HashMap<String, Integer> GENRES = new HashMap<>(){{
+    public final static HashMap<String, Integer> GENRES = new HashMap<>(){{
         put("연극", 0);
         put("무용", 1);
         put("대중무용", 2);
