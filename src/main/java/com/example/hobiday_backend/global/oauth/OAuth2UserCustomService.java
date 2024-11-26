@@ -44,7 +44,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         Map attributesKakaoAcount = (Map) attributes.get("kakao_account");
         String email = (String) attributesKakaoAcount.get("email");
 
-        log.info("OAuth2UserCustomService에서 nickname: {}, email: {}", nickname, email);
+//        log.info("OAuth2UserCustomService에서 nickname: {}, email: {}", nickname, email);
 
         User user = userRepository.findByEmail(email) // 기존 회원 여부 찾는 기준은 email
 //                .map(entity -> entity.update(email)) // 업데이트는 안함(폼 로그인 or 소셜로그인 추가 시에 동일인 하나로 통합할때 필요 가능성)

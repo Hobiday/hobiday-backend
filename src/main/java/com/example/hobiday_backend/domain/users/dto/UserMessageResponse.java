@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class LogoutMessageResponse {
+public class UserMessageResponse {
     String logoutMessage;
 }

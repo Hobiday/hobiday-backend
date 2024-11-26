@@ -2,6 +2,7 @@ package com.example.hobiday_backend.domain.profile.service;
 
 import com.example.hobiday_backend.domain.profile.dto.request.AddProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
+import com.example.hobiday_backend.domain.profile.dto.response.ProfileMessageResponse;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrationResponse;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
@@ -68,6 +69,13 @@ public class ProfileService {
         return new ProfileRegistrationResponse(false);
     }
 
+    // 닉네임 중복 여부
+    public ProfileMessageResponse isNicknameOverlap(String nickname){
+        if (profileRepository.findByNickname(nickname).isPresent()) { // 존재하는 닉네임이면
+            return new ProfileMessageResponse("overlapping");
+        }
+        return new ProfileMessageResponse("non-overlapping");
+    }
 
     // 프로필 등록(온보딩 작성)
     @Transactional

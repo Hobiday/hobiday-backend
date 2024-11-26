@@ -57,6 +57,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 인증 관련 설정값과 쿠키 제거
         clearAuthenticationAttributes(request, response);
+
         // 리다이렉트
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }

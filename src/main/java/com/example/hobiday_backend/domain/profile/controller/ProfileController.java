@@ -2,6 +2,7 @@ package com.example.hobiday_backend.domain.profile.controller;
 
 import com.example.hobiday_backend.domain.profile.dto.request.AddProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
+import com.example.hobiday_backend.domain.profile.dto.response.ProfileMessageResponse;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrationResponse;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
@@ -27,8 +28,7 @@ public class ProfileController {
     private final UserRepository userRepository;
 
     // 프로필 등록(처음)하는 api
-    @Operation(summary="프로필 등록(온보딩 작성) API", description = "온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다" +
-            "\n!닉네임 중복은 아직 안만들었음"+
+    @Operation(summary = "프로필 등록(온보딩 작성) API", description = "온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다" +
             "\n{\"연극\", \"무용\", \"대중무용\", \"서양음악\", \"한국음악\", \"대중음악\", \"복합\", \"서커스\", \"뮤지컬\"}")
     @PostMapping("/api/profiles/registration")
     public ResponseEntity<ProfileResponse> join(@RequestBody AddProfileRequest addProfileRequest,
@@ -41,8 +41,8 @@ public class ProfileController {
                 .body(profileService.getProfile(newProfile.getId())); // 생성한 프로필 정보 응답
     }
 
-    // 프로필등록 여부(O,X) api
-    @Operation(summary="프로필 등록(온보딩 작성) 여부 체크 API", description = "회원ID를 전달 받아 온보딩 작성한 회원이면 true, 아니면 false 리턴합니다.")
+    // 프로필등록 여부(O,X)
+    @Operation(summary = "프로필 등록(온보딩 작성) 여부 체크 API", description = "회원ID를 전달 받아 온보딩 작성한 회원이면 true, 아니면 false 리턴합니다.")
     @GetMapping("/api/profiles/registration/check")
     public ResponseEntity<ProfileRegistrationResponse> checkProfileRegistration(@RequestAttribute(value = "userId") Long userId) {
         ProfileRegistrationResponse profileRegistrationResponse = profileService.checkProfile(userId);
@@ -55,8 +55,15 @@ public class ProfileController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(profileService.checkProfile(userId)); // 없다고 응답
     }
 
+    // 닉네임 중복 체크
+    @Operation(summary = "닉네임 중복 여부", description = "닉네임 중복이면 overlapping | 중복 아니면 non-overlapping 문자열 리턴")
+    @GetMapping("/api/profiles/{nickname}")
+    public ResponseEntity<ProfileMessageResponse> isNicknameOverlap(@PathVariable String nickname) {
+        return ResponseEntity.status(HttpStatus.OK).body(profileService.isNicknameOverlap(nickname));
+    }
+
     // 프로필 정보 반환
-    @Operation(summary="프로필 조회(by토큰) API", description = "액세스 토큰으로 요청 받아 프로필 정보를 반환합니다.")
+    @Operation(summary = "프로필 조회(by토큰) API", description = "액세스 토큰으로 요청 받아 프로필 정보를 반환합니다.")
     @GetMapping("/api/profiles/myprofile")
     public ResponseEntity<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token){
         Long userId = userService.getUserIdByToken(token);

@@ -1,10 +1,11 @@
 package com.example.hobiday_backend.domain.users.controller;
 
 import com.example.hobiday_backend.domain.users.dto.FreePassResponse;
-import com.example.hobiday_backend.domain.users.dto.LogoutMessageResponse;
+import com.example.hobiday_backend.domain.users.dto.UserMessageResponse;
 import com.example.hobiday_backend.domain.users.dto.UserResponse;
 import com.example.hobiday_backend.domain.users.entity.User;
 import com.example.hobiday_backend.domain.users.service.UserService;
+import com.example.hobiday_backend.global.dto.SuccessRes;
 import com.example.hobiday_backend.global.jwt.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,10 +26,10 @@ public class UserController {
     @Operation(summary="로그아웃 API", description = "회원ID에 해당하는 리프레시 토큰을 DB에서 삭제하여 로그아웃 합니다." +
             "\n클라이언트 로컬 스토리지의 액세스 토큰과 쿠키에 저장된 리프레시 토큰은 프론트에서 제거해 주세요.")
     @DeleteMapping("/api/users/logout")
-    public ResponseEntity<LogoutMessageResponse> deleteRefreshToken() {
+    public ResponseEntity<UserMessageResponse> deleteRefreshToken() {
         refreshTokenService.delete();
         return ResponseEntity.ok()
-                .body(new LogoutMessageResponse("logout success"));
+                .body(new UserMessageResponse("logout success"));
     }
 
     // 회원(카카오) 정보 반환

@@ -71,12 +71,12 @@ public class UserService implements UserDetailsService {
                 .build();
     }
     private void saveRefreshToken(Long userId, String newRefreshToken) {
-        log.info("saveRefreshToken() 진입");
+//        log.info("saveRefreshToken() 진입");
         RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
                 .map(entity -> entity.update(newRefreshToken)) // 회원ID 대응되는 리프레시토큰 엔티티가 기존에 있으면 업데이트
                 .orElse(new RefreshToken(userId, newRefreshToken)); // 없으면 새로 생성
         refreshTokenRepository.save(refreshToken);
-        log.info("saveRefreshToken() 완료");
+//        log.info("saveRefreshToken() 완료");
     }
 
 
