@@ -53,18 +53,18 @@ public class ProfileService {
                 .build();
     }
 
-    // 프로필 등록 여부. 없는 경우도 알 수 있게 프로필 리턴 -> 아직 테스트 미실행
-    public ProfileRegistrationResponse checkProfile(Long userId){
-        Optional<Profile> profile = profileRepository.findById(userId); // 회원ID로 만들어진 프로필DB 있는지 확인
-
-        // 기존 회원일 경우
-        if (profile.isPresent()) {
-            return new ProfileRegistrationResponse(true);
-        }
-
-        // 신규 회원일 경우
-        return new ProfileRegistrationResponse(false);
-    }
+//    // 프로필 등록 여부. 없는 경우도 알 수 있게 프로필 리턴 -> 아직 테스트 미실행
+//    public ProfileRegistrationResponse checkProfile(Long memberId){
+//        Optional<Profile> profile = profileRepository.findById(); // 회원ID로 만들어진 프로필DB 있는지 확인
+//
+//        // 기존 회원일 경우
+//        if (profile.isPresent()) {
+//            return new ProfileRegistrationResponse(true);
+//        }
+//
+//        // 신규 회원일 경우
+//        return new ProfileRegistrationResponse(false);
+//    }
 
     // 닉네임 중복 여부
     public ProfileMessageResponse isNicknameOverlap(String nickname){

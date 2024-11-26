@@ -6,6 +6,7 @@ import com.example.hobiday_backend.domain.profile.dto.response.ProfileMessageRes
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrationResponse;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
+import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
 import com.example.hobiday_backend.domain.member.service.MemberService;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Optional;
 
 
 @Slf4j
@@ -26,6 +28,7 @@ import java.security.Principal;
 @Tag(name = "Profiles", description = "프로필 API")
 public class ProfileController {
     private final ProfileService profileService;
+    private final ProfileRepository profileRepository;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
@@ -49,14 +52,14 @@ public class ProfileController {
     @GetMapping("/api/profiles/registration/check")
     public ResponseEntity<ProfileRegistrationResponse> checkProfileRegistration(@RequestHeader("Authorization") String token) {
         Long memberId = memberService.getMemberIdByToken(token);
-        ProfileRegistrationResponse profileRegistrationResponse = profileService.checkProfile(memberId);
+        Optional<Profile> profileOptional = profileRepository.findByMemberId(memberId);
 
         // 있을때
-        if (profileRegistrationResponse.isRegister()) {
-            ResponseEntity.status(HttpStatus.OK).body(profileService.checkProfile(memberId));
+        if (profileOptional.isPresent()) {
+            ResponseEntity.status(HttpStatus.OK).body(new ProfileRegistrationResponse(true));
         }
         // 없을때
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(profileService.checkProfile(memberId)); // 없다고 응답
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ProfileRegistrationResponse(false));
     }
 
     // 닉네임 중복 체크
