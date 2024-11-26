@@ -24,7 +24,7 @@ public class Profile {
 
     //    private Long userId; // 방법1
     @OneToOne(fetch = FetchType.LAZY) // 방법2
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
     // FROM profile INNER JOIN users ON profile.user_id = users.id
     private Member member;
 
