@@ -1,7 +1,7 @@
-package com.example.hobiday_backend.domain.performance.service;
+package com.example.hobiday_backend.domain.perform.service;
 
-import com.example.hobiday_backend.domain.performance.entity.Performance;
-import com.example.hobiday_backend.domain.performance.repository.PerformanceRepository;
+import com.example.hobiday_backend.domain.perform.entity.Perform;
+import com.example.hobiday_backend.domain.perform.repository.PerformRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,8 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PerformanceService {
-    private final PerformanceRepository performanceRepository;
+public class PerformService {
+    private final PerformRepository performRepository;
     public void save() throws ParserConfigurationException, IOException, SAXException {
         log.info("파싱 작업 시행");
         /*
@@ -88,7 +88,7 @@ public class PerformanceService {
 //                System.out.println("공연시설명: "+element.getElementsByTagName("fcltynm").item(0).getTextContent());
 //                System.out.println("지역명: "+element.getElementsByTagName("area").item(0).getTextContent());
 //                System.out.println("공연포스터 경로: "+element.getElementsByTagName("poster").item(0).getTextContent());
-                performanceRepository.save(Performance.builder()
+                performRepository.save(Perform.builder()
                         .prfnm(prfnm)
                         .prfpdfrom(prfpdfrom)
                         .prfpdto(prfpdto)

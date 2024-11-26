@@ -3,7 +3,7 @@ package com.example.hobiday_backend.domain.member.service;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
-import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
+import com.example.hobiday_backend.domain.member.dto.response.FreePassResponse;
 import com.example.hobiday_backend.domain.member.dto.PrincipalDetails;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
@@ -94,7 +94,7 @@ public class MemberService implements UserDetailsService {
 
         String refreshToken = tokenProvider.generateToken(member, REFRESH_TOKEN_DURATION);
         saveRefreshToken(member.getId(), refreshToken); // 리프레시 토큰을 회원ID에 매칭해서 저장
-        String accessToken = tokenProvider.generateToken(member, ACCESS_TOKEN_DURATION);
+//        String accessToken = tokenProvider.generateToken(member, ACCESS_TOKEN_DURATION);
 
         // (개발용:DB데이터 선입력)프로필도 자동 생성
         Profile profile = profileRepository.save(Profile.builder()

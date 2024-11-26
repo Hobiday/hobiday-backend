@@ -1,6 +1,6 @@
-package com.example.hobiday_backend.domain.performance.controller;
+package com.example.hobiday_backend.domain.perform.controller;
 
-import com.example.hobiday_backend.domain.performance.service.PerformanceService;
+import com.example.hobiday_backend.domain.perform.service.PerformService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RestController
 @Tag(name="공연 정보")
-public class PerformanceController {
-    private final PerformanceService performanceService;
+public class PerformController {
+    private final PerformService performService;
 
-    @Operation(summary="프론트에서 사용X", description = "")
+    @Operation(summary="프론트에서 사용X")
     @GetMapping("/parsing")
     public void runTesT() throws ParserConfigurationException, IOException, SAXException {
-        performanceService.save();
+        performService.save();
     }
 }
 

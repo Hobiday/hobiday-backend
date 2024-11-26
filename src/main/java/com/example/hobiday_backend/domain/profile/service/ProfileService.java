@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.example.hobiday_backend.domain.performance.util.GenreCasting.getGenreToList;
-import static com.example.hobiday_backend.domain.performance.util.GenreCasting.getGenreToString;
+import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToList;
+import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToString;
 
 @RequiredArgsConstructor
 @Service
@@ -94,12 +94,12 @@ public class ProfileService {
 
     // 프로필 업데이트
     public ProfileResponse updateProfile(String token, UpdateProfileRequest updateProfileRequest) {
-        Long userId = memberService.getMemberIdByToken(token);
-        Profile profile = profileRepository.findById(userId)
+        Long memberId = memberService.getMemberIdByToken(token);
+        Profile profile = profileRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));
-        Member member = memberRepository.findById(userId).get();
+        Member member = memberRepository.findById(memberId).get();
         // 사용자 일치 여부 확인
-        if(!profile.getMember().getId().equals(userId)) {
+        if(!profile.getMember().getId().equals(memberId)) {
             throw new IllegalArgumentException("프로필 수정 권한이 없습니다.");
         }
         profile = profileRepository.save(Profile.builder()

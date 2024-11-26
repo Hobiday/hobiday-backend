@@ -1,4 +1,4 @@
-package com.example.hobiday_backend.domain.performance.util;
+package com.example.hobiday_backend.domain.perform.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ public class GenreCasting {
     public static String getGenreToString(List<String> genreList){
         StringBuilder genreStrBuilder = new StringBuilder("000000000");
         for (String genre:genreList){
-            genreStrBuilder.setCharAt((int)GENRES.get(genre), '1');
+            genreStrBuilder.setCharAt(GENRES.get(genre), '1');
         }
         return genreStrBuilder.toString();
     }
@@ -32,7 +32,7 @@ public class GenreCasting {
     public static List<String> getGenreToList(String genreStr){
         List<String> genreList = new ArrayList<>();
         for (String genre:GENRES.keySet()){
-            if(genreStr.charAt((int)GENRES.get(genre)) == '1'){
+            if(genreStr.charAt(GENRES.get(genre)) == '1'){
                 genreList.add(genre);
             }
         }
