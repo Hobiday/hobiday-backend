@@ -7,6 +7,8 @@ import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.users.repository.UserRepository;
+import com.example.hobiday_backend.global.jwt.TokenProvider;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -93,4 +95,5 @@ public class ProfileService {
                 .profilePhoto(profile.getProfilePhoto())
                 .build();
     }
+
 }
