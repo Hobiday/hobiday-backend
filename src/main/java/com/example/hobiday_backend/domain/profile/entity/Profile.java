@@ -1,7 +1,7 @@
 package com.example.hobiday_backend.domain.profile.entity;
 
 import com.example.hobiday_backend.domain.follow.entity.Follow;
-import com.example.hobiday_backend.domain.users.entity.Member;
+import com.example.hobiday_backend.domain.members.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

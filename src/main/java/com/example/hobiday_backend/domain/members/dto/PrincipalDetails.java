@@ -1,6 +1,6 @@
-package com.example.hobiday_backend.domain.users.dto;
+package com.example.hobiday_backend.domain.members.dto;
 
-import com.example.hobiday_backend.domain.users.entity.Member;
+import com.example.hobiday_backend.domain.members.entity.Member;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

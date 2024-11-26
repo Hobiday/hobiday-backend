@@ -2,7 +2,7 @@ package com.example.hobiday_backend.domain.like.controller;
 
 import com.example.hobiday_backend.domain.like.dto.LikeRes;
 import com.example.hobiday_backend.domain.like.service.LikeService;
-import com.example.hobiday_backend.domain.users.service.MemberService;
+import com.example.hobiday_backend.domain.members.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

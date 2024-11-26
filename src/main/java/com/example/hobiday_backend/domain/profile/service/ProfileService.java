@@ -7,9 +7,9 @@ import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrati
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
-import com.example.hobiday_backend.domain.users.entity.Member;
-import com.example.hobiday_backend.domain.users.repository.MemberRepository;
-import com.example.hobiday_backend.domain.users.service.MemberService;
+import com.example.hobiday_backend.domain.members.entity.Member;
+import com.example.hobiday_backend.domain.members.repository.MemberRepository;
+import com.example.hobiday_backend.domain.members.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

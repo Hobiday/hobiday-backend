@@ -1,10 +1,10 @@
-package com.example.hobiday_backend.domain.users.controller;
+package com.example.hobiday_backend.domain.members.controller;
 
-import com.example.hobiday_backend.domain.users.dto.FreePassResponse;
-import com.example.hobiday_backend.domain.users.dto.MemberMessageResponse;
-import com.example.hobiday_backend.domain.users.dto.MemberResponse;
-import com.example.hobiday_backend.domain.users.entity.Member;
-import com.example.hobiday_backend.domain.users.service.MemberService;
+import com.example.hobiday_backend.domain.members.dto.FreePassResponse;
+import com.example.hobiday_backend.domain.members.dto.MemberMessageResponse;
+import com.example.hobiday_backend.domain.members.dto.MemberResponse;
+import com.example.hobiday_backend.domain.members.entity.Member;
+import com.example.hobiday_backend.domain.members.service.MemberService;
 import com.example.hobiday_backend.global.jwt.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

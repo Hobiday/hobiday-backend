@@ -1,8 +1,8 @@
 package com.example.hobiday_backend.global.oauth;
 
-import com.example.hobiday_backend.domain.users.dto.PrincipalDetails;
-import com.example.hobiday_backend.domain.users.entity.Member;
-import com.example.hobiday_backend.domain.users.repository.MemberRepository;
+import com.example.hobiday_backend.domain.members.dto.PrincipalDetails;
+import com.example.hobiday_backend.domain.members.entity.Member;
+import com.example.hobiday_backend.domain.members.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

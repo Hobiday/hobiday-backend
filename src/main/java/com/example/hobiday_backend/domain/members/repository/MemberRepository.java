@@ -1,6 +1,6 @@
-package com.example.hobiday_backend.domain.users.repository;
+package com.example.hobiday_backend.domain.members.repository;
 
-import com.example.hobiday_backend.domain.users.entity.Member;
+import com.example.hobiday_backend.domain.members.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

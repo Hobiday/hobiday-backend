@@ -1,11 +1,11 @@
-package com.example.hobiday_backend.domain.users.service;
+package com.example.hobiday_backend.domain.members.service;
 
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
-import com.example.hobiday_backend.domain.users.dto.FreePassResponse;
-import com.example.hobiday_backend.domain.users.dto.PrincipalDetails;
-import com.example.hobiday_backend.domain.users.entity.Member;
-import com.example.hobiday_backend.domain.users.repository.MemberRepository;
+import com.example.hobiday_backend.domain.members.dto.FreePassResponse;
+import com.example.hobiday_backend.domain.members.dto.PrincipalDetails;
+import com.example.hobiday_backend.domain.members.entity.Member;
+import com.example.hobiday_backend.domain.members.repository.MemberRepository;
 import com.example.hobiday_backend.global.jwt.RefreshToken;
 import com.example.hobiday_backend.global.jwt.RefreshTokenRepository;
 import com.example.hobiday_backend.global.jwt.TokenProvider;

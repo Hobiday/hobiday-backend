@@ -7,8 +7,8 @@ import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrati
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
-import com.example.hobiday_backend.domain.users.repository.MemberRepository;
-import com.example.hobiday_backend.domain.users.service.MemberService;
+import com.example.hobiday_backend.domain.members.repository.MemberRepository;
+import com.example.hobiday_backend.domain.members.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

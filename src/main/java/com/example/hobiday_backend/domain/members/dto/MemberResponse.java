@@ -1,4 +1,4 @@
-package com.example.hobiday_backend.domain.users.dto;
+package com.example.hobiday_backend.domain.members.dto;
 
 
 import lombok.AllArgsConstructor;

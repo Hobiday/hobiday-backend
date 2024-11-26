@@ -5,7 +5,7 @@ import com.example.hobiday_backend.domain.comment.dto.CommentRes;
 import com.example.hobiday_backend.domain.comment.entity.Comment;
 import com.example.hobiday_backend.domain.comment.exception.CommentErrorCode;
 import com.example.hobiday_backend.domain.comment.exception.CommentException;
-import com.example.hobiday_backend.domain.users.entity.Member;
+import com.example.hobiday_backend.domain.members.entity.Member;
 import com.example.hobiday_backend.domain.comment.repository.CommentRepository;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;

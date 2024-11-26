@@ -1,6 +1,6 @@
 package com.example.hobiday_backend.global.jwt;
 
-import com.example.hobiday_backend.domain.users.entity.Member;
+import com.example.hobiday_backend.domain.members.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;

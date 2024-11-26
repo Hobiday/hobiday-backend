@@ -1,6 +1,6 @@
 package com.example.hobiday_backend.global.oauth;
 
-import com.example.hobiday_backend.domain.users.service.MemberService;
+import com.example.hobiday_backend.domain.members.service.MemberService;
 import com.example.hobiday_backend.global.jwt.RefreshTokenRepository;
 import com.example.hobiday_backend.global.jwt.TokenAuthenticationFilter;
 import com.example.hobiday_backend.global.jwt.TokenProvider;
