@@ -7,8 +7,8 @@ import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrati
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
-import com.example.hobiday_backend.domain.users.repository.UserRepository;
-import com.example.hobiday_backend.domain.users.service.UserService;
+import com.example.hobiday_backend.domain.users.repository.MemberRepository;
+import com.example.hobiday_backend.domain.users.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Profiles", description = "프로필 API")
 public class ProfileController {
     private final ProfileService profileService;
-    private final UserService userService;
-    private final UserRepository userRepository;
+    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     // 프로필 등록(처음)하는 api
     @Operation(summary = "프로필 등록(온보딩 작성) API", description = "온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다" +
@@ -35,7 +35,7 @@ public class ProfileController {
                                                 @RequestAttribute(value = "userId") Long userId) {
         // 기존 프로필 없을 경우
 //        Profile newProfile = profileService.saveFirst(userId, addProfileRequest); //방법1
-        Profile newProfile = profileService.saveFirst(userRepository.findById(userId).get(), addProfileRequest); //방법2
+        Profile newProfile = profileService.saveFirst(memberRepository.findById(userId).get(), addProfileRequest); //방법2
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(profileService.getProfile(newProfile.getId())); // 생성한 프로필 정보 응답
@@ -66,7 +66,7 @@ public class ProfileController {
     @Operation(summary = "프로필 조회(by토큰) API", description = "액세스 토큰으로 요청 받아 프로필 정보를 반환합니다.")
     @GetMapping("/api/profiles/myprofile")
     public ResponseEntity<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token){
-        Long userId = userService.getUserIdByToken(token);
+        Long userId = memberService.getUserIdByToken(token);
         ProfileResponse profileResponse = profileService.getProfileByUserId(userId);
         if (profileResponse == null) { // 프로필 작성이 없는 회원이면
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(profileResponse);

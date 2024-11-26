@@ -1,9 +1,11 @@
 package com.example.hobiday_backend.domain.users.service;
 
+import com.example.hobiday_backend.domain.profile.entity.Profile;
+import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.users.dto.FreePassResponse;
 import com.example.hobiday_backend.domain.users.dto.PrincipalDetails;
-import com.example.hobiday_backend.domain.users.entity.User;
-import com.example.hobiday_backend.domain.users.repository.UserRepository;
+import com.example.hobiday_backend.domain.users.entity.Member;
+import com.example.hobiday_backend.domain.users.repository.MemberRepository;
 import com.example.hobiday_backend.global.jwt.RefreshToken;
 import com.example.hobiday_backend.global.jwt.RefreshTokenRepository;
 import com.example.hobiday_backend.global.jwt.TokenProvider;
@@ -20,11 +22,12 @@ import static com.example.hobiday_backend.global.oauth.OAuth2SuccessHandler.REFR
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserService implements UserDetailsService {
-    private final UserRepository userRepository;
+public class MemberService implements UserDetailsService {
+    private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private static int freePassNum = 1;
+    private final ProfileRepository profileRepository;
 
     // 토큰 기반으로 카카오 회원 ID를 가져오는 메서드
     public Long getUserIdByToken(String token) {
@@ -33,19 +36,19 @@ public class UserService implements UserDetailsService {
         return tokenProvider.getUserId(accessToken);
     }
 
-    public User findById(Long userId){
-        return userRepository.findById(userId)
+    public Member findById(Long userId){
+        return memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
     }
 
-    public User findByEmail(String email){ // OAuth2에서 제공하는 정보는 유일 값이므로 해당 메서드로 회원 찾을 수 있음
-        return userRepository.findByEmail(email)
+    public Member findByEmail(String email){ // OAuth2에서 제공하는 정보는 유일 값이므로 해당 메서드로 회원 찾을 수 있음
+        return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return (UserDetails) userRepository.findByEmail(username)
+        return (UserDetails) memberRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
@@ -53,19 +56,25 @@ public class UserService implements UserDetailsService {
     public FreePassResponse getFreePassUser(){
         String nickname = "FreePassUser" + (freePassNum++);
         String email = nickname + "@freepass.com";
-        User user = userRepository.save(User.builder()
+        Member member = memberRepository.save(Member.builder()
                 .nickname(nickname)
                 .email(email)
                 .build());
-        new PrincipalDetails(user); // 회원을 현재의 UserDetails에 저장 => 필요 없나?
+        new PrincipalDetails(member); // 회원을 현재의 UserDetails에 저장 => 필요 없나?
 
-        String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
-        saveRefreshToken(user.getId(), refreshToken); // 리프레시 토큰을 회원ID에 매칭해서 저장
-        String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
+        String refreshToken = tokenProvider.generateToken(member, REFRESH_TOKEN_DURATION);
+        saveRefreshToken(member.getId(), refreshToken); // 리프레시 토큰을 회원ID에 매칭해서 저장
+        String accessToken = tokenProvider.generateToken(member, ACCESS_TOKEN_DURATION);
+
+        // (개발용:DB데이터 선입력)프로필도 자동 생성
+        Profile profile = profileRepository.save(Profile.builder()
+                .member(member)
+                .build());
+
         return FreePassResponse.builder()
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .email(user.getEmail())
+                .id(member.getId())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
                 .refreshToken(refreshToken)
                 .accessToken(accessToken)
                 .build();
