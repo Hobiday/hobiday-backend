@@ -66,7 +66,7 @@ public class ProfileController {
     @Operation(summary = "프로필 조회(by토큰) API", description = "액세스 토큰으로 요청 받아 프로필 정보를 반환합니다.")
     @GetMapping("/api/profiles/myprofile")
     public ResponseEntity<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token){
-        Long userId = memberService.getUserIdByToken(token);
+        Long userId = memberService.getMemberIdByToken(token);
         ProfileResponse profileResponse = profileService.getProfileByUserId(userId);
         if (profileResponse == null) { // 프로필 작성이 없는 회원이면
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(profileResponse);

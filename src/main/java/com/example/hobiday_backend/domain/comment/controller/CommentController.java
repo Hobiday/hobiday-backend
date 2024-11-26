@@ -27,7 +27,7 @@ public class CommentController {
             @PathVariable Long feedId,
             @RequestBody CommentReq commentReq,
             @RequestHeader("Authorization") String token) {
-        Long userId = memberService.getUserIdByToken(token);
+        Long userId = memberService.getMemberIdByToken(token);
         Member member = memberService.findById(userId);
         CommentRes comment = commentService.createComment(feedId, commentReq, member);
         return ResponseEntity.ok(SuccessRes.success(comment));
@@ -46,7 +46,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestBody CommentReq commentReq,
             @RequestHeader("Authorization") String token) {
-        Long userId = memberService.getUserIdByToken(token);
+        Long userId = memberService.getMemberIdByToken(token);
         Member member = memberService.findById(userId);
         CommentRes updatedComment = commentService.updateComment(commentId, commentReq, member);
         return ResponseEntity.ok(SuccessRes.success(updatedComment));
@@ -57,7 +57,7 @@ public class CommentController {
     public ResponseEntity<SuccessRes<Void>> deleteComment(
             @PathVariable Long commentId,
             @RequestHeader("Authorization") String token) {
-        Long userId = memberService.getUserIdByToken(token);
+        Long userId = memberService.getMemberIdByToken(token);
         Member member = memberService.findById(userId);
         commentService.deleteComment(commentId, member);
         return ResponseEntity.ok(SuccessRes.success(null));

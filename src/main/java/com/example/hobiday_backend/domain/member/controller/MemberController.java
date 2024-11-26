@@ -6,6 +6,7 @@ import com.example.hobiday_backend.domain.member.dto.MemberResponse;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
+import com.example.hobiday_backend.global.dto.SuccessRes;
 import com.example.hobiday_backend.global.jwt.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

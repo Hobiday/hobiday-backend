@@ -63,10 +63,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     // 생성된 리프레시 토큰을 전달받아 유저 아이디와 데이터베이스에 저장
-    private void saveRefreshToken(Long userId, String newRefreshToken) {
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
+    private void saveRefreshToken(Long memberId, String newRefreshToken) {
+        RefreshToken refreshToken = refreshTokenRepository.findByMemberId(memberId)
                 .map(entity -> entity.update(newRefreshToken)) // 회원ID 대응되는 리프레시토큰 엔티티가 기존에 있으면 업데이트
-                .orElse(new RefreshToken(userId, newRefreshToken)); // 없으면 새로 생성
+                .orElse(new RefreshToken(memberId, newRefreshToken)); // 없으면 새로 생성
         refreshTokenRepository.save(refreshToken);
     }
 

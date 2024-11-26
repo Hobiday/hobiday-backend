@@ -32,7 +32,7 @@ public class LikeController {
     public ResponseEntity<LikeRes> toggleLike(
             @PathVariable Long feedId,
             @RequestHeader String token) {
-        Long userId = memberService.getUserIdByToken(token);
+        Long userId = memberService.getMemberIdByToken(token);
         LikeRes likeRes = likeService.toggleLike(feedId, userId);
         return ResponseEntity.ok(likeRes);
     }

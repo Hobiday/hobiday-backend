@@ -1,7 +1,9 @@
--- INSERT INTO users (nickname, email) VALUES ('&sample1', '&sample1@samplemail.com');
--- INSERT INTO users (nickname, email) VALUES ('&sample2', '&sample2@samplemail.com');
--- INSERT INTO users (nickname, email) VALUES ('&sample3', '&sample3@samplemail.com');
+-- INSERT INTO members (nickname, email) VALUES ('&sample1', '&sample1@samplemail.com');
+-- INSERT INTO members (nickname, email) VALUES ('&sample2', '&sample2@samplemail.com');
+-- INSERT INTO members (nickname, email) VALUES ('&sample3', '&sample3@samplemail.com');
 --
--- UPDATE profiles SET profile_nickname = 'sample1' WHERE user_id = 1;
--- UPDATE profiles SET profile_nickname = 'sample2' WHERE user_id = 2;
--- UPDATE profiles SET profile_nickname = 'sample3' WHERE user_id = 3;
+-- UPDATE profiles SET profile_nickname = 'sample1' WHERE member_id = 1;
+-- UPDATE profiles SET profile_nickname = 'sample2' WHERE member_id = 2;
+-- UPDATE profiles SET profile_nickname = 'sample3' WHERE member_id = 3;
+--
+-- INSERT INTO profiles (profile_nickname, member_id) VALUES ('&sample3', id from members where id = 1);

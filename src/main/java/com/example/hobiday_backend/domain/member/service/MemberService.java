@@ -114,7 +114,7 @@ public class MemberService implements UserDetailsService {
     // 위에서 사용
     private void saveRefreshToken(Long memberId, String newRefreshToken) {
 //        log.info("saveRefreshToken() 진입");
-        RefreshToken refreshToken = refreshTokenRepository.findByMemeberId(memberId)
+        RefreshToken refreshToken = refreshTokenRepository.findByMemberId(memberId)
                 .map(entity -> entity.update(newRefreshToken)) // 회원ID 대응되는 리프레시토큰 엔티티가 기존에 있으면 업데이트
                 .orElse(new RefreshToken(memberId, newRefreshToken)); // 없으면 새로 생성
         refreshTokenRepository.save(refreshToken);

@@ -25,7 +25,7 @@ public class TokenService {
             log.info("토큰 유효 검증 실패");
             throw new IllegalArgumentException("Unexpected token");
         }
-        Long userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();
+        Long userId = refreshTokenService.findByRefreshToken(refreshToken).getMemberId();
         Member member = memberService.findById(userId);
         log.info("토큰 유효 검증 성공");
 
