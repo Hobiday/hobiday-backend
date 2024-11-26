@@ -1,8 +1,8 @@
 package com.example.hobiday_backend.domain.member.controller;
 
-import com.example.hobiday_backend.domain.member.dto.response.FreePassResponse;
-import com.example.hobiday_backend.domain.member.dto.response.MemberMessageResponse;
-import com.example.hobiday_backend.domain.member.dto.response.MemberResponse;
+import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
+import com.example.hobiday_backend.domain.member.dto.MemberMessageResponse;
+import com.example.hobiday_backend.domain.member.dto.MemberResponse;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.jwt.RefreshTokenService;

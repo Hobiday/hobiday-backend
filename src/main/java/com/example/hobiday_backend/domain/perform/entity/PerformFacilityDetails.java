@@ -1,6 +1,5 @@
 package com.example.hobiday_backend.domain.perform.entity;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 //@Entity
-public class FacilityDetails {
+public class PerformFacilityDetails {
     /* ========================= 공연상세 =========================*/
     private String mt10id;          // 시설상세ID
     private String prfcast;         // 공연 출연진

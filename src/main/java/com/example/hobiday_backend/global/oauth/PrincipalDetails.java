@@ -1,4 +1,4 @@
-package com.example.hobiday_backend.domain.member.dto;
+package com.example.hobiday_backend.global.oauth;
 
 import com.example.hobiday_backend.domain.member.entity.Member;
 import lombok.Data;

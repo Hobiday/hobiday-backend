@@ -17,10 +17,10 @@ import java.io.IOException;
 public class PerformController {
     private final PerformService performService;
 
-    @Operation(summary="프론트에서 사용X")
-    @GetMapping("/parsing")
-    public void runTesT() throws ParserConfigurationException, IOException, SAXException {
-        performService.save();
-    }
+//    @Operation(summary="프론트에서 사용X")
+//    @GetMapping("/parsing")
+//    public void runTesT() throws ParserConfigurationException, IOException, SAXException {
+//        performService.save();
+//    }
 }
 

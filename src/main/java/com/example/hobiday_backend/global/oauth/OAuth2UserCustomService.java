@@ -1,6 +1,5 @@
 package com.example.hobiday_backend.global.oauth;
 
-import com.example.hobiday_backend.domain.member.dto.PrincipalDetails;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

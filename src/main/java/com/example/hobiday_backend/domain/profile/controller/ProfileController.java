@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 
 @Slf4j
 @RestController
@@ -80,6 +82,7 @@ public class ProfileController {
 
 
     // 프로필 수정
+    @Operation(summary = "프로필 수정", description = "프로필을 수정합니다.")
     @PostMapping("/updateProfile")
     public ResponseEntity<ProfileResponse> updateProfile(@RequestHeader("Authorization") String token,
                                                          @RequestBody UpdateProfileRequest updateProfileRequest) {
@@ -101,10 +104,17 @@ public class ProfileController {
 //    public ResponseEntity<?> addProfile(@RequestBody AddProfileRequest addProfileRequest,
 //                                        Principal principal, @RequestHeader("Authorization") String token) {
 //        log.info("/api/profile 토큰:" + token);
-//        Long userId = userService.getUserIdByToken(token);
-//        String name = userRepository.findById(userId).get().getEmail();
+//        Long memberId = memberService.getMemberIdByToken(token);
+//        String name = memberRepository.findById(memberId).get().getEmail();
 //        log.info("현재 로그인한 사용자명(액세스토큰): " + name);
 //        log.info("현재 로그인한 사용자명(principal): " + principal.getName());
+//
+//        // 프로필에 저장
+////        addProfileRequest.profileGenre =
+//        profileService.saveFirst(memberService.findById(memberId), addProfileRequest);
+//
+//        log.info("입력 받은 닉네임: " + addProfileRequest.profileNickname);
+//        log.info("입력 받은 장르: " + addProfileRequest.profileGenre);
 //
 ////        addProfileRequest.profileName = userRepository.findByEmail(principal.getName()).get().getNickname();
 ////        User user = userRepository.findByEmail(principal.getName()).get();
