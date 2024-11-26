@@ -1,4 +1,4 @@
-package com.example.hobiday_backend.domain.members.entity;
+package com.example.hobiday_backend.domain.member.entity;
 
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import jakarta.persistence.*;

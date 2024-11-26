@@ -7,9 +7,9 @@ import com.example.hobiday_backend.domain.profile.dto.response.ProfileRegistrati
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
-import com.example.hobiday_backend.domain.members.entity.Member;
-import com.example.hobiday_backend.domain.members.repository.MemberRepository;
-import com.example.hobiday_backend.domain.members.service.MemberService;
+import com.example.hobiday_backend.domain.member.entity.Member;
+import com.example.hobiday_backend.domain.member.repository.MemberRepository;
+import com.example.hobiday_backend.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,7 @@ public class ProfileService {
         return ProfileResponse.builder()
                 .profileId(profile.getId())
 //                .userId(profile.getUserId()) // 방1
-                .userId(profile.getMember().getId()) // 방2
+                .memberId(profile.getMember().getId()) // 방2
                 .profileNickname(profile.getProfileNickname())
                 .profileEmail(profile.getProfileEmail())
 //                .profileGenre(profile.getProfileGenre())
@@ -46,7 +46,7 @@ public class ProfileService {
         Profile profile = profileRepository.findById(profieId).get();
         return ProfileResponse.builder()
                 .profileId(profile.getId())
-                .userId(profile.getMember().getId())
+                .memberId(profile.getMember().getId())
                 .profileNickname(profile.getProfileNickname())
                 .profileEmail(profile.getProfileEmail())
 //                .profileGenre(profile.getProfileGenre())
@@ -94,7 +94,7 @@ public class ProfileService {
 
     // 프로필 업데이트
     public ProfileResponse updateProfile(String token, UpdateProfileRequest updateProfileRequest) {
-        Long userId = memberService.getUserIdByToken(token);
+        Long userId = memberService.getMemberIdByToken(token);
         Profile profile = profileRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));
         Member member = memberRepository.findById(userId).get();
@@ -115,7 +115,7 @@ public class ProfileService {
 
         return ProfileResponse.builder()
                 .profileId(profile.getId())
-                .userId(member.getId())
+                .memberId(member.getId())
                 .profileNickname(profile.getProfileNickname())
                 .profileEmail(profile.getProfileEmail())
                 .profileGenre(getGenreToList(profile.getProfileGenre()))

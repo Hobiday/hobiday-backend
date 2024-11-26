@@ -1,10 +1,11 @@
-package com.example.hobiday_backend.domain.members.controller;
+package com.example.hobiday_backend.domain.member.controller;
 
-import com.example.hobiday_backend.domain.members.dto.FreePassResponse;
-import com.example.hobiday_backend.domain.members.dto.MemberMessageResponse;
-import com.example.hobiday_backend.domain.members.dto.MemberResponse;
-import com.example.hobiday_backend.domain.members.entity.Member;
-import com.example.hobiday_backend.domain.members.service.MemberService;
+import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
+import com.example.hobiday_backend.domain.member.dto.MemberMessageResponse;
+import com.example.hobiday_backend.domain.member.dto.MemberResponse;
+import com.example.hobiday_backend.domain.member.entity.Member;
+import com.example.hobiday_backend.domain.member.service.MemberService;
+import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.global.jwt.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +36,7 @@ public class MemberController {
     @Operation(summary="회원(카카오) 정보 반환 API", description = "헤더 액세스 토큰으로 요청 받아 회원(카카오) 정보를 반환합니다.")
     @GetMapping("/api/users")
     public ResponseEntity<MemberResponse> findId(@RequestHeader("Authorization") String token){
-        Long userId = memberService.getUserIdByToken(token);
+        Long userId = memberService.getMemberIdByToken(token);
         Member member = memberService.findById(userId);
         return ResponseEntity.ok()
                 .body(MemberResponse.builder()
@@ -48,8 +49,8 @@ public class MemberController {
     // (개발용)자동으로 회원 생성하고 토큰 발급 -> 포스트맨으로만 검증함
     @Operation(summary="(개발용)자동로그인", description="자동으로 회원 정보 생성하고 토큰 발급")
     @GetMapping("/api/test/freepass")
-    public ResponseEntity<FreePassResponse> findFreePass(){
-        FreePassResponse freePassResponse = memberService.getFreePassUser();
+    public ResponseEntity<FreePassResponse> getFreePass(){
+        FreePassResponse freePassResponse = memberService.getFreePassMember();
 //        log.info("프리패스: " + freePassResponse.getNickname());
 //        log.info("프리패스: " + freePassResponse.getEmail());
 //        log.info("프리패스: " + freePassResponse.getAccessToken());
@@ -57,5 +58,14 @@ public class MemberController {
         return ResponseEntity.ok()
                 .body(freePassResponse);
     }
+
+//    // (백엔드용)자동으로 회원 생성하고 토큰 발급 -> 포스트맨으로만 검증함
+//    @Operation(summary="백엔드 테스트용")
+//    @GetMapping("/api/test/allpass")
+//    public ResponseEntity<?> getAllPass(){
+//        ProfileResponse profileResponse = memberService.getFreePassProfile();
+//        return ResponseEntity.ok()
+//                .body(profileResponse);
+//    }
 
 }

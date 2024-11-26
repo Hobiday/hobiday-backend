@@ -1,8 +1,8 @@
-package com.example.hobiday_backend.domain.members.service;
+package com.example.hobiday_backend.domain.member.service;
 
-import com.example.hobiday_backend.domain.members.dto.PrincipalDetails;
-import com.example.hobiday_backend.domain.members.entity.Member;
-import com.example.hobiday_backend.domain.members.repository.MemberRepository;
+import com.example.hobiday_backend.domain.member.dto.PrincipalDetails;
+import com.example.hobiday_backend.domain.member.entity.Member;
+import com.example.hobiday_backend.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,16 +11,14 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class PrincipalService implements UserDetailsService {
+//UserDetailsService: 스프링 시큐리티에서 사용자 정보를 가져오는 인터페이스
+public class UserDetailService implements UserDetailsService  {
     private final MemberRepository memberRepository;
 
-    // 시큐리티 session => Authentication => UserDetails
-    // 여기서 리턴된 값이 Authentication 안에 들어간다.(리턴될때 들어간다.)
-    // 그리고 시큐리티 session 안에 Authentication 이 들어간다.
-    // 함수 종료시 @AuthenticationPrincipal 어노테이션이 만들어진다.
+
+    // 맞는지 불확실
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         Member findMember = memberRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
         if(findMember !=null) {

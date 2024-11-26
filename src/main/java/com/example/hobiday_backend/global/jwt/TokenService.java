@@ -1,8 +1,8 @@
 package com.example.hobiday_backend.global.jwt;
 
 
-import com.example.hobiday_backend.domain.members.entity.Member;
-import com.example.hobiday_backend.domain.members.service.MemberService;
+import com.example.hobiday_backend.domain.member.entity.Member;
+import com.example.hobiday_backend.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

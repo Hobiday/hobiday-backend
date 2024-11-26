@@ -1,11 +1,12 @@
-package com.example.hobiday_backend.domain.members.service;
+package com.example.hobiday_backend.domain.member.service;
 
+import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
-import com.example.hobiday_backend.domain.members.dto.FreePassResponse;
-import com.example.hobiday_backend.domain.members.dto.PrincipalDetails;
-import com.example.hobiday_backend.domain.members.entity.Member;
-import com.example.hobiday_backend.domain.members.repository.MemberRepository;
+import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
+import com.example.hobiday_backend.domain.member.dto.PrincipalDetails;
+import com.example.hobiday_backend.domain.member.entity.Member;
+import com.example.hobiday_backend.domain.member.repository.MemberRepository;
 import com.example.hobiday_backend.global.jwt.RefreshToken;
 import com.example.hobiday_backend.global.jwt.RefreshTokenRepository;
 import com.example.hobiday_backend.global.jwt.TokenProvider;
@@ -30,14 +31,14 @@ public class MemberService implements UserDetailsService {
     private final ProfileRepository profileRepository;
 
     // 토큰 기반으로 카카오 회원 ID를 가져오는 메서드
-    public Long getUserIdByToken(String token) {
+    public Long getMemberIdByToken(String token) {
         //token: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhc2R 에서 Bearer 뒤에만 사용해서 탐색
         String accessToken = token.split(" ")[1];
-        return tokenProvider.getUserId(accessToken);
+        return tokenProvider.getMemberId(accessToken);
     }
 
-    public Member findById(Long userId){
-        return memberRepository.findById(userId)
+    public Member findById(Long memberId){
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
     }
 
@@ -52,8 +53,37 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
+// 개발 테스트용도 ==============================================================================================================
     // (개발환경용)자동으로 회원 생성하고 토큰 발급하는 메서드
-    public FreePassResponse getFreePassUser(){
+    public FreePassResponse getFreePassMember(){
+        String nickname = "FreePassUser" + (freePassNum++);
+        String email = nickname + "@freepass.com";
+        Member member = memberRepository.save(Member.builder()
+                .nickname(nickname)
+                .email(email)
+                .build());
+        new PrincipalDetails(member); // 회원을 현재의 UserDetails에 저장 => 필요 없나?
+
+        String refreshToken = tokenProvider.generateToken(member, REFRESH_TOKEN_DURATION);
+        saveRefreshToken(member.getId(), refreshToken); // 리프레시 토큰을 회원ID에 매칭해서 저장
+        String accessToken = tokenProvider.generateToken(member, ACCESS_TOKEN_DURATION);
+
+        // (개발용:DB데이터 선입력)프로필도 자동 생성
+        profileRepository.save(Profile.builder()
+                .member(member)
+                .build());
+
+        return FreePassResponse.builder()
+                .id(member.getId())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .refreshToken(refreshToken)
+                .accessToken(accessToken)
+                .build();
+    }
+
+    // (백엔드용)자동으로 회원, 토큰, 프로필 생성하는 메서드
+    public ProfileResponse getFreePassProfile(){
         String nickname = "FreePassUser" + (freePassNum++);
         String email = nickname + "@freepass.com";
         Member member = memberRepository.save(Member.builder()
@@ -69,21 +99,24 @@ public class MemberService implements UserDetailsService {
         // (개발용:DB데이터 선입력)프로필도 자동 생성
         Profile profile = profileRepository.save(Profile.builder()
                 .member(member)
+                .profileEmail(member.getEmail())
                 .build());
 
-        return FreePassResponse.builder()
-                .id(member.getId())
-                .nickname(member.getNickname())
-                .email(member.getEmail())
-                .refreshToken(refreshToken)
-                .accessToken(accessToken)
+        return ProfileResponse.builder()
+                .profileId(profile.getId())
+                .memberId(profile.getId())
+                .profileNickname(member.getNickname())
+                .profileEmail(member.getEmail())
                 .build();
     }
-    private void saveRefreshToken(Long userId, String newRefreshToken) {
+
+
+    // 위에서 사용
+    private void saveRefreshToken(Long memberId, String newRefreshToken) {
 //        log.info("saveRefreshToken() 진입");
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
+        RefreshToken refreshToken = refreshTokenRepository.findByMemeberId(memberId)
                 .map(entity -> entity.update(newRefreshToken)) // 회원ID 대응되는 리프레시토큰 엔티티가 기존에 있으면 업데이트
-                .orElse(new RefreshToken(userId, newRefreshToken)); // 없으면 새로 생성
+                .orElse(new RefreshToken(memberId, newRefreshToken)); // 없으면 새로 생성
         refreshTokenRepository.save(refreshToken);
 //        log.info("saveRefreshToken() 완료");
     }

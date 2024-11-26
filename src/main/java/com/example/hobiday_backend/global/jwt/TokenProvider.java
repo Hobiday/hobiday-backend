@@ -1,6 +1,6 @@
 package com.example.hobiday_backend.global.jwt;
 
-import com.example.hobiday_backend.domain.members.entity.Member;
+import com.example.hobiday_backend.domain.member.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -64,7 +64,7 @@ public class TokenProvider {
     }
 
     // 토큰 기반으로 유저 ID를 가져오는 메서드
-    public Long getUserId(String token){
+    public Long getMemberId(String token){
         Claims claims = getClaims(token);
         return claims.get("id", Long.class);
     }
