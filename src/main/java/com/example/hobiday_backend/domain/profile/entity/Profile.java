@@ -28,10 +28,10 @@ public class Profile {
     private Boolean profileActiveFlag;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> followers = new ArrayList<>();
+    private final List<Follow> followers = new ArrayList<>();
 
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> followings = new ArrayList<>();
+    private final List<Follow> followings = new ArrayList<>();
 
     @Builder
     public Profile(Long userId, String profileName, String profileGenre, String profileEmail, String profileIntroduction, String profilePhoto, Boolean profileActiveFlag) {
