@@ -40,6 +40,7 @@ public class FollowController {
                                            @Parameter(description = "사용자 인증 토큰", required = true) String token,
                                            @RequestParam
                                            @Parameter(description = "언팔로우 할 사용자의 id", required = true) Long followingId) {
+
         Long followerId = tokenProvider.getUserId(token);
 
         try {
