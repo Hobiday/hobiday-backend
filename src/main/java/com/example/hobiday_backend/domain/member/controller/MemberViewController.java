@@ -71,30 +71,6 @@
 //
 //        return "signList";
 //    }
-
-//    ============================= 백엔드 테스트용: 1.토큰으로 유저 확인 2.로그인->프로필 등록 =============================
-//    @PostMapping("/api/profile")
-//    public ResponseEntity<?> addProfile(@RequestBody AddProfileRequest addProfileRequest,
-//                                        Principal principal, @RequestHeader("Authorization") String token) {
-//        log.info("/api/profile 토큰:" + token);
-//        Long memberId = memberService.getMemberIdByToken(token);
-//        String name = memberRepository.findById(memberId).get().getEmail();
-//        log.info("현재 로그인한 사용자명(액세스토큰): " + name);
-//        log.info("현재 로그인한 사용자명(principal): " + principal.getName());
-//
-//        // 프로필에 저장
-////        addProfileRequest.profileGenre =
-//        profileService.saveFirst(memberService.findById(memberId), addProfileRequest);
-//
-//        log.info("입력 받은 닉네임: " + addProfileRequest.profileNickname);
-//        log.info("입력 받은 장르: " + addProfileRequest.profileGenre);
-//
-////        addProfileRequest.profileName = userRepository.findByEmail(principal.getName()).get().getNickname();
-////        User user = userRepository.findByEmail(principal.getName()).get();
-//////        Profile profile = profileService.saveProfile(addProfileRequest, user);
-////        Profile profile = profileService.saveFirst(user, addProfileRequest);
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(null);
-//    }
 //}
+//
 //
