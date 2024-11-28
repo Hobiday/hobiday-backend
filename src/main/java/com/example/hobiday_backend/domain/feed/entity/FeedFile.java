@@ -9,21 +9,21 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HashTag {
+public class FeedFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
-    private String hashTag;
+    private String fileUrl; // S3 파일 URL
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id", nullable = false)
-    private Feed feed;
+    private Feed feed; // 피드와 연관 관계
 
     @Builder
-    public HashTag(String hashTag, Feed feed) {
-        this.hashTag = hashTag;
+    public FeedFile(String fileUrl, Feed feed) {
+        this.fileUrl = fileUrl;
         this.feed = feed;
     }
 }
+
