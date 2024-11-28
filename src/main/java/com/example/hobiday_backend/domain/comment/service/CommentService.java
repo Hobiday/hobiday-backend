@@ -5,60 +5,66 @@ import com.example.hobiday_backend.domain.comment.dto.CommentRes;
 import com.example.hobiday_backend.domain.comment.entity.Comment;
 import com.example.hobiday_backend.domain.comment.exception.CommentErrorCode;
 import com.example.hobiday_backend.domain.comment.exception.CommentException;
+import com.example.hobiday_backend.domain.users.entity.User; // Import User entity
 import com.example.hobiday_backend.domain.comment.repository.CommentRepository;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
-import com.example.hobiday_backend.domain.feed.exception.FeedErrorCode;
-import com.example.hobiday_backend.domain.feed.exception.FeedException;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
+import com.example.hobiday_backend.domain.profile.entity.Profile;
+import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
     private final FeedRepository feedRepository;
+    private final ProfileRepository profileRepository;
 
-    // 댓글 작성
-    @Transactional
-    public CommentRes getComments(Long id, CommentReq commentReq) {
-        // 댓글 등록
-        Feed targetFeed = feedRepository.findById(id)
-                .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
-        Long parentCommentId = commentReq.getParentCommentId();
-        // comment entity 생성
-        Comment targetComment = Comment.builder()
-                .feed(targetFeed)
-                .contents(commentReq.getContents())
-                .parentCommentId(commentReq.getParentCommentId())
-                .build();
-      /*  //피드에 댓글 추가// 이건 피드 서비스에서 처리하기
-        targetComment.getFeed().getCommentList().add(targetComment);*/
+    public CommentRes createComment(Long feedId, CommentReq commentReq, User user) {
+        // 피드 프로필 예외 추가 시켜줘야 함
+        Feed feed = feedRepository.findById(feedId)
+                .orElseThrow(() -> new RuntimeException("피드를 찾을 수 없습니다."));
+        Profile profile = profileRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("프로필을 찾을 수 없습니다."));
 
-        if (targetComment.getParentCommentId() == null) {
-            commentRepository.save(targetComment);
-        }
-        // parentComment 가 있다면 parent comment 에 childComment 를 추가
-        Comment parentComment = commentRepository.findById(parentCommentId)
-                .orElseThrow(() -> new CommentException(CommentErrorCode.PARENT_COMMENT_NOT_FOUND));
-        parentComment.addChildComment(targetComment);
-        commentRepository.save(targetComment);
+        Comment comment = new Comment(commentReq.getContents(), feed, profile); //
+        Comment savedComment = commentRepository.save(comment);
 
-        log.info(targetComment.toString());
-        // dto로 반환 빌더 추가로 만들어주기
-        return null; // 일단은 null
+        return CommentRes.from(savedComment);
     }
 
+    public List<CommentRes> getCommentsByFeedId(Long feedId) {
+        List<Comment> comments = commentRepository.findAllByFeedIdOrderByCreatedTimeAsc(feedId);
+        return comments.stream()
+                .map(CommentRes::from)
+                .collect(Collectors.toList());
+    }
 
-    // 댓글 수정
+    public CommentRes updateComment(Long commentId, CommentReq commentReq, User user) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
+        if (!comment.getProfile().getUser().getId().equals(user.getId())) {
+            throw new CommentException(CommentErrorCode.COMMENT_UPDATE_ACCESS_DENIED);
+        }
 
-    // 댓글 삭제
+        comment.updateContents(commentReq.getContents());
+        return CommentRes.from(commentRepository.save(comment));
+    }
 
-    // 댓글 조회
+    public void deleteComment(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentException(CommentErrorCode.COMMENT_NOT_FOUND));
 
+        if (!comment.getProfile().getUser().getId().equals(user.getId())) {
+            throw new CommentException(CommentErrorCode.COMMENT_DELETE_ACCESS_DENIED);
+        }
 
+        commentRepository.delete(comment);
+    }
 }

@@ -17,8 +17,8 @@ public class Performance {
     private Long id;
 
     private String prfnm; // 공연명
-    private String prfpdfrom; // 시작일
     private String prfpdto; // 종료일
+    private String prfpdfrom; // 시작일
     private String genrenm; // 장르명
     private String fcltynm; // 공연시설명
     private String area; // 지역명

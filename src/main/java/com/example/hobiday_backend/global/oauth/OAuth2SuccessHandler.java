@@ -26,9 +26,10 @@ import java.util.Map;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
-    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14); // 리프레시 토큰 기간 설정 14일
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1); // 액세스 토큰 기간 설정 1일
-    public static final String REDIRECT_PATH = "/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(5); // 리프레시 토큰 기간 설정 5일
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2); // 액세스 토큰 기간 설정 2일
+    public static final String REDIRECT_PATH = "http://localhost:3000/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
+//    public static final String REDIRECT_PATH = "/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -48,9 +49,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
         saveRefreshToken(user.getId(), refreshToken);
         addRefreshTokenToCookie(request, response, refreshToken);
+
         // 액세스 토큰 생성 -> 패스에 엑세스 토큰 추가
         String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-        String targetUrl = getTargetUrl(accessToken);
+        String targetUrl = getTargetUrl(accessToken, refreshToken);
+
+//        String targetUrl = getTargetUrl(accessToken);
+
         // 인증 관련 설정값과 쿠키 제거
         clearAuthenticationAttributes(request, response);
         // 리다이렉트
@@ -69,16 +74,17 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     // 클라이언트에서 액세스 토큰이 만료되면 재발급 요청하도록 해당 메서드로 쿠키에 리프레시 토큰을 저장
     private void addRefreshTokenToCookie(HttpServletRequest request, HttpServletResponse response, String refreshToken) {
         int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME); // 백엔드 로컬로 실험하는 용도
         CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
     }
 
     // 액세스 토큰을 패스에 추가
     // 쿠키에서 리다이렉트 경로가 담긴 값을 가져와 쿼리 파라미터에 액세스 토큰을 추가한다
     // 액세스 토큰을 클라이언트에게 전달
-    private String getTargetUrl(String token) {
+    private String getTargetUrl(String access, String refresh) {
         return UriComponentsBuilder.fromUriString(REDIRECT_PATH)
-                .queryParam("token", token)
+                .queryParam("access", access)
+                .queryParam("refresh", refresh)
                 .build()
                 .toUriString();
     }
