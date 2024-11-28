@@ -1,4 +1,4 @@
-//package com.example.hobiday_backend.domain.users.controller;//package com.example.hobiday_backend.domain.users.controller;
+package com.example.hobiday_backend.domain.member.controller;//package com.example.hobiday_backend.domain.users.controller;//package com.example.hobiday_backend.domain.users.controller;
 //import com.example.hobiday_backend.domain.member.entity.Member;
 //import com.example.hobiday_backend.domain.member.repository.MemberRepository;
 //import com.example.hobiday_backend.domain.member.service.MemberService;
