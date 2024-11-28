@@ -1,7 +1,7 @@
 package com.example.hobiday_backend.domain.profile.entity;
 
 import com.example.hobiday_backend.domain.follow.entity.Follow;
-import com.example.hobiday_backend.domain.users.entity.User;
+import com.example.hobiday_backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Table(name = "profile")
+@Table(name = "profiles")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
@@ -22,12 +22,13 @@ public class Profile {
     private Long id;
 
     //    private Long userId; // 방법1
-    @OneToOne // 방법2
-    @JoinColumn(name="user_id")
-    private User user;
+    @OneToOne(fetch = FetchType.LAZY) // 방법2
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    // FROM profile INNER JOIN users ON profile.user_id = users.id
+    private Member member;
 
     @Column(length=20)
-    private String profileName;
+    private String profileNickname;
     private String profileEmail;
 
     @Column(length=20)
@@ -35,9 +36,6 @@ public class Profile {
 
     @Column(length=500)
     private String profileIntroduction;
-
-    @Column(columnDefinition = "TINYINT(1)")
-    private Boolean profileActiveFlag; // 프로필 등록 여부
 
     @Column(nullable = true)
     private String profileImageUrl;
@@ -49,18 +47,16 @@ public class Profile {
     private List<Follow> followings = new ArrayList<>();
 
 
-    @Builder(toBuilder = true)
+    @Builder
     public Profile(//Long userId, //방법1
-                   User user, // 방법2
-                   String profileName, String profileGenre, String profileEmail,
-                   Boolean profileActiveFlag, String profileIntroduction, String profileImageUrl) {
-        // String profilePhoto
+                   Member member, // 방법2
+                   String profileNickname, String profileGenre, String profileEmail,
+                   String profileIntroduction, String profileImageUrl) {
 //        this.userId = userId; //방법1
-        this.user = user;
-        this.profileName = profileName;
+        this.member = member;
+        this.profileNickname = profileNickname;
         this.profileEmail = profileEmail;
         this.profileGenre = profileGenre;
-        this.profileActiveFlag = profileActiveFlag;
         this.profileIntroduction = profileIntroduction;
         this.profileImageUrl = profileImageUrl;
     }
