@@ -18,7 +18,7 @@ public class FollowController {
     private final TokenProvider tokenProvider;
 
     @Operation(summary = "팔로우 기능", description = "사용자가 로그인 후 받은 인증 토큰과 팔로우 하고자 하는 사용자의 id를 전달하여 해당 사용자를 팔로우 합니다.")
-    @GetMapping("/follow")
+    @GetMapping("/api/follow")
     public ResponseEntity<String>  follow(@RequestParam(value = "token")
                                           @Parameter(description = "사용자 인증 토큰", required = true) String token,
                                           @RequestParam
@@ -35,7 +35,7 @@ public class FollowController {
     }
 
     @Operation(summary = "언팔로우 기능", description = "사용자가 로그인 후 받은 인증 토큰과 언팔로우 하고자 하는 사용자의 id를 전달하여 해당 사용자를 언팔로우 합니다.")
-    @DeleteMapping("/unfollow")
+    @DeleteMapping("/api/unfollow")
     public ResponseEntity<String> unfollow(@RequestParam(value = "token")
                                            @Parameter(description = "사용자 인증 토큰", required = true) String token,
                                            @RequestParam
