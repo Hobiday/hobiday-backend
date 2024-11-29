@@ -28,12 +28,12 @@ public class FollowService {
                 .follower(follower)
                 .build());
     }
-
-    public void unfollow(Long followingId, Long followerId) {
-        Follow follow = followRepository.findByFollowingAndFollower(followingId, followerId)
-                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-
-        followRepository.delete(follow);
-
-    }
+//
+//    public void unfollow(Long followingId, Long followerId) {
+//        Follow follow = followRepository.findByFollowingAndFollower(followingId, followerId)
+//                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+//
+//        followRepository.delete(follow);
+//
+//    }
 }

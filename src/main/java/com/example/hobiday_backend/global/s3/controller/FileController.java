@@ -18,7 +18,8 @@ public class FileController {
 
     private final FileService fileService;
 
-    @Operation(summary = "Presigned URL 요청", description = "파일 업로드를 위한 presigned URL을 생성하는 API")
+    @Operation(summary = "Presigned URL 요청", description = "파일 업로드를 위한 presigned URL을 생성하는 API" +
+            "\n버킷명/prefix/fileName 위치에 파일 생성")
     @PostMapping
     public ResponseEntity<PresignedUrlResponse> uploadPhoto(@RequestBody PreSignedUrlRequest presignedUrlRequest) {
         // Presigned URL 생성 요청 처리
