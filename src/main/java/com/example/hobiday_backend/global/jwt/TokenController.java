@@ -3,6 +3,7 @@ package com.example.hobiday_backend.global.jwt;
 import com.example.hobiday_backend.global.jwt.dto.CreateAccessTokenRequest;
 import com.example.hobiday_backend.global.jwt.dto.CreateAccessTokenResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "Token", description = "댓글 API") // 컨트롤러 전체 설명
 public class TokenController {
     private final TokenService tokenService;
 

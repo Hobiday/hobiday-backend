@@ -3,39 +3,33 @@ package com.example.hobiday_backend.domain.feed.controller;
 import com.example.hobiday_backend.domain.feed.dto.FeedReq;
 import com.example.hobiday_backend.domain.feed.dto.FeedRes;
 import com.example.hobiday_backend.domain.feed.service.FeedService;
+import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.dto.SuccessRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/feeds")
 public class FeedController {
     private final FeedService feedService;
-
-    // 피드 전체 목록 조회
-    @GetMapping("/api/feeds")
-    public ResponseEntity<SuccessRes<List<FeedRes>>> getFeeds(@RequestBody FeedReq feedReq) {
-        List<FeedRes> feeds = feedService.getAllFeeds(feedReq);
-        return ResponseEntity.ok(SuccessRes.success(feeds));
+    private final MemberService memberService;
+    //피드 작성
+    @PostMapping
+    public ResponseEntity<SuccessRes<FeedRes>> createFeed(@RequestBody FeedReq feedReq,
+                                                          @RequestHeader("Authorization") String token) {
+        // 1. 토큰을 사용해 사용자 ID 가져오기
+        Long userId = memberService.getMemberIdByToken(token);
+        // 2. 피드 생성
+        FeedRes feedRes = feedService.createFeed(feedReq, userId);
+        return ResponseEntity.ok(SuccessRes.success(feedRes));
     }
 
-    // 피드 게시물 조회
-    @GetMapping("/api/feeds/{id}")
-    public ResponseEntity<SuccessRes<FeedRes>> getPost(@PathVariable Long id) {
-        FeedRes targetFeed = feedService.getFeed(id);
-        return ResponseEntity.ok(SuccessRes.success(targetFeed));
-    }
-
-    // 게시물 생성
-
-    // 게시물 수정
-
-    // 게시물 삭제
+    // 전체 피드 조회
+ /*   @GetMapping
+    public ResponseEntity<SuccessRes<List<FeedRes>>>*/
 
 }
