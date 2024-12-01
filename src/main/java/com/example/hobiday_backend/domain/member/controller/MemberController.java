@@ -39,16 +39,10 @@ public class MemberController {
         Long memberId = memberService.getMemberIdByToken(token);
         Member member = memberService.findById(memberId);
         return ApiResponse.success(MemberResponse.builder()
-                .id(member.getId())
+                .id(memberId)
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .build());
-//        return ResponseEntity.ok()
-//                .body(MemberResponse.builder()
-//                .id(member.getId())
-//                .email(member.getEmail())
-//                .nickname(member.getNickname())
-//                .build());
     }
 
     @Operation(summary="(개발용)기존회원 로그인", description="미리 만들어둔 회원에 로그인, 토큰 받음")

@@ -28,7 +28,7 @@ public class ProfileService {
 
 
     // 회원ID로 프로필 정보 반환
-    public ProfileResponse getProfileByUserId(Long memberId){
+    public ProfileResponse getProfileByMemberId(Long memberId){
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
         return ProfileResponse.builder()
@@ -64,7 +64,7 @@ public class ProfileService {
                 .profileNickname(addProfileRequest.profileNickname)
                 .profileGenre(getGenreToString(addProfileRequest.profileGenre)) // 문자열 <- 리스트 변환해서 저장
                 .build());
-        return getProfileByUserId(member.getId());
+        return getProfileByMemberId(member.getId());
     }
 
     // 프로필 업데이트

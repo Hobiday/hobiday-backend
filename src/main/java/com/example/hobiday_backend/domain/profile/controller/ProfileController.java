@@ -82,9 +82,10 @@ public class ProfileController {
     @Operation(summary = "프로필 조회(by토큰) API", description = "토큰을 요청 받아 프로필 정보를 반환합니다.")
     @GetMapping("/api/profiles/myprofile")
     public ApiResponse<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token){
-        Long userId = memberService.getMemberIdByToken(token);
-        ProfileResponse profileResponse = profileService.getProfileByUserId(userId);
+        Long memberId = memberService.getMemberIdByToken(token);
+        ProfileResponse profileResponse = profileService.getProfileByMemberId(memberId);
         if (profileResponse == null) { // 프로필 작성이 없는 회원이면
+            profileResponse = ProfileResponse.builder().build();
             return ApiResponse.success(profileResponse);
 //            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(profileResponse);
         }
