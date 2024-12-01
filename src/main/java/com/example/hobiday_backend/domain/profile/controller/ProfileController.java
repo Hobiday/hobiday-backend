@@ -47,8 +47,6 @@ public class ProfileController {
         ProfileResponse newProfile = profileService.saveFirst(member, addProfileRequest);
 
         return ApiResponse.success(newProfile);
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .body(newProfile); // 생성한 프로필 정보 응답
     }
 
     // 프로필등록 여부(O,X)
@@ -62,11 +60,9 @@ public class ProfileController {
 
         // 있을때
         if (profileOptional.isPresent()) {
-//           return ResponseEntity.status(HttpStatus.OK).body(new ProfileRegistrationResponse(true));
             return ApiResponse.success(new ProfileRegistrationResponse(true));
         }
         // 없을때
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ProfileRegistrationResponse(false));
         return ApiResponse.success(new ProfileRegistrationResponse(false));
     }
 
@@ -75,7 +71,6 @@ public class ProfileController {
     @GetMapping("/api/profiles/registration/{nickname}")
     public ApiResponse<ProfileMessageResponse> isNicknameOverlap(@PathVariable String nickname) {
         return ApiResponse.success(profileService.isNicknameOverlap(nickname));
-//        return ResponseEntity.status(HttpStatus.OK).body(profileService.isNicknameOverlap(nickname));
     }
 
     // 프로필 정보 반환
@@ -84,14 +79,6 @@ public class ProfileController {
     public ApiResponse<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token){
         Long memberId = memberService.getMemberIdByToken(token);
         ProfileResponse profileResponse = profileService.getProfileByMemberId(memberId);
-        if (profileResponse == null) { // 프로필 작성이 없는 회원이면
-            profileResponse = ProfileResponse.builder().build();
-            return ApiResponse.success(profileResponse);
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(profileResponse);
-        }
-
-        // 있으면 정보 리턴
-//        return ResponseEntity.status(HttpStatus.OK).body(profileResponse);
         return ApiResponse.success(profileResponse);
     }
 

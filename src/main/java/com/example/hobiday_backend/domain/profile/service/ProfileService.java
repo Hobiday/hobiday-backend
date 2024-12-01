@@ -5,6 +5,8 @@ import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileReque
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileMessageResponse;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
+import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
+import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
@@ -30,7 +32,7 @@ public class ProfileService {
     // 회원ID로 프로필 정보 반환
     public ProfileResponse getProfileByMemberId(Long memberId){
         Profile profile = profileRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() ->new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
         return ProfileResponse.builder()
                 .profileId(profile.getId())
 //                .userId(profile.getUserId()) // 방1

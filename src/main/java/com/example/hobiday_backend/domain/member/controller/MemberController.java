@@ -3,7 +3,6 @@ package com.example.hobiday_backend.domain.member.controller;
 import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberMessageResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberResponse;
-import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
 import com.example.hobiday_backend.global.jwt.RefreshTokenService;
@@ -36,13 +35,7 @@ public class MemberController {
     @Operation(summary="회원(카카오) 정보 반환 API", description = "헤더 액세스 토큰으로 요청 받아 회원(카카오) 정보를 반환합니다.")
     @GetMapping("/api/members")
     public ApiResponse<MemberResponse> findId(@RequestHeader("Authorization") String token){
-        Long memberId = memberService.getMemberIdByToken(token);
-        Member member = memberService.findById(memberId);
-        return ApiResponse.success(MemberResponse.builder()
-                .id(memberId)
-                .email(member.getEmail())
-                .nickname(member.getNickname())
-                .build());
+        return ApiResponse.success(memberService.getMemberInfoByToken(token));
     }
 
     @Operation(summary="(개발용)기존회원 로그인", description="미리 만들어둔 회원에 로그인, 토큰 받음")
