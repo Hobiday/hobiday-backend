@@ -5,6 +5,8 @@ import com.example.hobiday_backend.domain.feed.dto.FeedRes;
 import com.example.hobiday_backend.domain.feed.service.FeedService;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.dto.SuccessRes;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/feeds")
+@Tag(name = "Feed", description = "피드 API")
 public class FeedController {
     private final FeedService feedService;
     private final MemberService memberService;
@@ -32,4 +35,11 @@ public class FeedController {
  /*   @GetMapping
     public ResponseEntity<SuccessRes<List<FeedRes>>>*/
 
+    // 최신순 피드 조회
+    @Operation(summary = "최신순 피드 조회 기능", description = "피드를 최신순으로 조회합니다.")
+    @GetMapping("/latest")
+    public ResponseEntity<List<FeedRes>> getFeedsByLatest() {
+        List<FeedRes> feedResList = feedService.getFeedsByLatest();
+        return ResponseEntity.ok(feedResList);
+    }
 }
