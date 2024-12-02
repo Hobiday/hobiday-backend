@@ -1,6 +1,6 @@
 package com.example.hobiday_backend.global.oauth;
 
-import com.example.hobiday_backend.domain.users.service.UserService;
+import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.jwt.RefreshTokenRepository;
 import com.example.hobiday_backend.global.jwt.TokenAuthenticationFilter;
 import com.example.hobiday_backend.global.jwt.TokenProvider;
@@ -18,8 +18,6 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
-
 
 @RequiredArgsConstructor
 @Configuration
@@ -27,18 +25,17 @@ public class WebOAuthSecurityConfig {
     private final OAuth2UserCustomService oAuth2UserCustomService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
+    private final MemberService memberService;
 
-    @Bean
-    public WebSecurityCustomizer configure(){ // 스프링 시큐리티 기능 비활성화
-        return (web) -> web.ignoring()
-                .requestMatchers(toH2Console())
-                .requestMatchers(
-                        new AntPathRequestMatcher("/img/**"),
-                        new AntPathRequestMatcher("/css/**"),
-                        new AntPathRequestMatcher("/js/**")
-                );
-    }
+//    @Bean
+//    public WebSecurityCustomizer configure(){ // 스프링 시큐리티 기능 비활성화
+//        return (web) -> web.ignoring()
+//                .requestMatchers(
+//                        new AntPathRequestMatcher("/img/**"),
+//                        new AntPathRequestMatcher("/css/**"),
+//                        new AntPathRequestMatcher("/js/**")
+//                );
+//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -58,6 +55,7 @@ public class WebOAuthSecurityConfig {
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/token")).permitAll() // 토큰 재발급 URL은 인증 없이 접근 가능하도록 설정.
+                        .requestMatchers(new AntPathRequestMatcher("/api/test/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated() // 나머지 API URL은 인증 필요
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
@@ -83,7 +81,7 @@ public class WebOAuthSecurityConfig {
         return new OAuth2SuccessHandler(tokenProvider,
                 refreshTokenRepository,
                 oAuth2AuthorizationRequestBasedOnCookieRepository(),
-                userService);
+                memberService);
     }
 
     @Bean
