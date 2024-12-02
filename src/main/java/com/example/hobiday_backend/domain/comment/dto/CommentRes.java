@@ -6,27 +6,28 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
+@Builder
 public class CommentRes {
     private Long id;
     private String contents;
-    private String username;
+    private String profileName;
+    private String profileImageUrl;
     private LocalDateTime createdTime;
     private LocalDateTime modifiedTime;
-    private Integer likeCount;
-    private List<CommentRes> childCommentList;
+    private boolean isAuthor;
 
-    // from 메서드 추가
-    @Builder
-    public CommentRes(Comment comment) {
-        this.id = comment.getId();
-        this.contents = comment.getContents();
-        /*this.username = comment.getUser().getUsername();*/
-        this.createdTime = comment.getCreatedTime();
-        this.modifiedTime = comment.getModifiedTime();
-        this.likeCount = (int) comment.getLikeList().stream().count();
-        //this.childCommentList = comment.getChildCommentList().stream().map(CommentRes::from).toList();
+    public static CommentRes from(Comment comment) {
+        return CommentRes.builder()
+                .id(comment.getId())
+                .contents(comment.getContents())
+                .profileName(comment.getProfile().getProfileNickname())
+                .profileImageUrl(comment.getProfile().getProfileImageUrl())
+                .createdTime(comment.getCreatedTime())
+                .modifiedTime(comment.getModifiedTime())
+                .build();
     }
-
 }
+

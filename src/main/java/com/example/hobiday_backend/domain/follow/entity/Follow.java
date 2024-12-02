@@ -4,9 +4,6 @@ import com.example.hobiday_backend.domain.profile.entity.Profile;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @AllArgsConstructor

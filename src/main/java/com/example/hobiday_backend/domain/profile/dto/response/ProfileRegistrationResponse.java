@@ -7,5 +7,4 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ProfileRegistrationResponse {
     private boolean isRegister;
-
 }

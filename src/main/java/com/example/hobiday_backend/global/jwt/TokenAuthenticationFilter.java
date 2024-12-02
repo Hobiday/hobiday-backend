@@ -20,6 +20,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final static String TOKEN_PREFIX = "Bearer";
 
 
+    // 로그인 후 API 호출(헤더에 토큰 포함)을 처음 시도할때부터 작동하는듯
+    // 현재 설정상 "/api/**" 호출시 매번 헤더 토큰을 받아서 인증 통과해야 서비스 응답을 줄 수 있음
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,

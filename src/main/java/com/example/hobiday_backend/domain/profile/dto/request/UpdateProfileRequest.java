@@ -1,13 +1,15 @@
 package com.example.hobiday_backend.domain.profile.dto.request;
 
 import lombok.Getter;
-import lombok.Setter;
+
+import java.util.List;
 
 @Getter
-@Setter
 public class UpdateProfileRequest {
-    public String profileName;
-    public String profileGenre;
-    public String profileIntroduction;
-    public String profilePhoto;
+    private String profileNickname;
+    private String profileEmail;
+    private List<String> profileGenre;
+    private String profileIntroduction;
+    private String profileImageUrl;
+
 }
