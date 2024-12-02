@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/feeds")
+@RequestMapping("/feeds")
 @Tag(name = "Feed", description = "피드 API")
 public class FeedController {
     private final FeedService feedService;
@@ -40,6 +40,14 @@ public class FeedController {
     @GetMapping("/latest")
     public ResponseEntity<List<FeedRes>> getFeedsByLatest() {
         List<FeedRes> feedResList = feedService.getFeedsByLatest();
+        return ResponseEntity.ok(feedResList);
+    }
+
+    // 추천순 피드 조회
+    @Operation(summary = "추천순 피드 조회 기능", description = "피드를 추천순으로 조회합니다.")
+    @GetMapping("/recommendation")
+    public ResponseEntity<List<FeedRes>> getFeedsByLikeCount() {
+        List<FeedRes> feedResList = feedService.getFeedsByLikeCount();
         return ResponseEntity.ok(feedResList);
     }
 }
