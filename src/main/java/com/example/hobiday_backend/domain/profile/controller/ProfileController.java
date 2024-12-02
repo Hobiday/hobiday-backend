@@ -11,6 +11,7 @@ import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
 import com.example.hobiday_backend.domain.member.service.MemberService;
+import com.example.hobiday_backend.global.dto.SuccessRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -90,20 +91,21 @@ public class ProfileController {
 
     // 프로필 수정
     @Operation(summary = "프로필 수정", description = "프로필을 수정합니다.")
-    @PostMapping("/updateProfile")
-    public ResponseEntity<ProfileResponse> updateProfile(@RequestHeader("Authorization") String token,
-                                                         @RequestBody UpdateProfileRequest updateProfileRequest) {
+    @PutMapping("/api/profiles/{profileId}")
+    public ResponseEntity<SuccessRes<ProfileResponse>> updateProfile(
+            @PathVariable Long profileId,
+            @RequestHeader("Authorization") String token,
+            @RequestBody UpdateProfileRequest updateProfileRequest) {
 
-        try {
-            ProfileResponse updateProfile = profileService.updateProfile(token, updateProfileRequest);
+        Long memberId = memberService.getMemberIdByToken(token);
+        Member member = memberService.findById(memberId);
 
-            if (updateProfile == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-            return ResponseEntity.status(HttpStatus.OK).body(updateProfile);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value()).build();
+        ProfileResponse profileResponses = profileService.updateProfile(profileId, updateProfileRequest, member);
+
+        return ResponseEntity.ok(SuccessRes.success(profileResponses));
+
         }
+
     }
 
 //    //    ============================= 백엔드 테스트용: 1.토큰으로 유저 확인 2.로그인->프로필 등록 =============================
@@ -133,4 +135,4 @@ public class ProfileController {
 
 
 
-}
+//}

@@ -5,6 +5,8 @@ import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileReque
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileMessageResponse;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
+import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
+import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
@@ -28,7 +30,7 @@ public class ProfileService {
 
 
     // 회원ID로 프로필 정보 반환
-    public ProfileResponse getProfileByUserId(Long memberId){
+    public ProfileResponse getProfileByUserId(Long memberId) {
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
         return ProfileResponse.builder()
@@ -42,7 +44,7 @@ public class ProfileService {
     }
 
     // 닉네임 중복 여부
-    public ProfileMessageResponse isNicknameOverlap(String nickname){
+    public ProfileMessageResponse isNicknameOverlap(String nickname) {
         if (profileRepository.findByProfileNickname(nickname).isPresent()) { // 존재하는 닉네임이면
             return new ProfileMessageResponse("overlapping");
         }
@@ -52,8 +54,8 @@ public class ProfileService {
     // 프로필 등록(온보딩 작성)
     @Transactional
     public ProfileResponse saveFirst(//Long userId, //방1
-                             Member member, //방2
-                             AddProfileRequest addProfileRequest){
+                                     Member member, //방2
+                                     AddProfileRequest addProfileRequest) {
 //        String email = userRepository.findById(userId).get().getEmail(); //방1
         String email = member.getEmail(); //방2
 //        log.info("dto 장르: " + addProfileRequest.profileGenre);
@@ -68,37 +70,27 @@ public class ProfileService {
     }
 
     // 프로필 업데이트
-    public ProfileResponse updateProfile(String token, UpdateProfileRequest updateProfileRequest) {
-        Long memberId = memberService.getMemberIdByToken(token);
-        Profile profile = profileRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원 찾을 수 없습니다."));
-        // 사용자 일치 여부 확인
-        if(!profile.getMember().getId().equals(memberId)) {
-            throw new IllegalArgumentException("프로필 수정 권한이 없습니다.");
+    public ProfileResponse updateProfile(Long profileId, UpdateProfileRequest updateProfileRequest, Member member) {
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+
+        if (!profile.getMember().getId().equals(member.getId())) {
+            throw new ProfileException(ProfileErrorCode.PROFILE_UPDATE_ACCESS_DENIED);
         }
-        profile = profileRepository.save(Profile.builder()
-                .member(member)
-                .profileEmail(profile.getProfileEmail())
-                .profileNickname(profile.getProfileNickname())
-                .profileGenre(!getGenreToString(updateProfileRequest.getProfileGenre()).isEmpty() ? getGenreToString(updateProfileRequest.getProfileGenre()) : profile.getProfileGenre())
-                .profileIntroduction(updateProfileRequest.getProfileIntroduction() != null ? updateProfileRequest.getProfileIntroduction() : profile.getProfileIntroduction())
-                .profileImageUrl(updateProfileRequest.getProfileImageUrl() != null ? updateProfileRequest.getProfileImageUrl() : profile.getProfileImageUrl())
-                .build());
+        String profileGenre = updateProfileRequest.getProfileGenre() != null ?
+                getGenreToString(updateProfileRequest.getProfileGenre()) : null;
 
-        profileRepository.save(profile);
+        profile.updateProfile(
+                updateProfileRequest.getProfileNickname(),
+                updateProfileRequest.getProfileEmail(),
+                profileGenre,
+                updateProfileRequest.getProfileIntroduction(),
+                updateProfileRequest.getProfileImageUrl()
+        );
+        return ProfileResponse.res(profileRepository.save(profile));
+    };
 
-        return ProfileResponse.builder()
-                .profileId(profile.getId())
-                .memberId(member.getId())
-                .profileNickname(profile.getProfileNickname())
-                .profileEmail(profile.getProfileEmail())
-                .profileGenre(getGenreToList(profile.getProfileGenre()))
-                .profileIntroduction(profile.getProfileIntroduction())
-                .profileImageUrl(profile.getProfileImageUrl())
-                .build();
-    }
+
 
 // no use ============================================================================================================
 //    // 프로필ID로 프로필 정보 반환

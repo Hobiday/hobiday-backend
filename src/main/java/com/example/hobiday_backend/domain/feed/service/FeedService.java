@@ -77,7 +77,31 @@ public class FeedService {
                 .build();
     }
 
+    public List<FeedRes> getFeedsByLatest() {
+        List<Feed> feeds = feedRepository.findAllByOrderByWriteDateDesc();
 
+        return feeds.stream()
+                .map(feed -> FeedRes.builder()
+                        .contents(feed.getContent())
+                        .profileName(feed.getProfile().getProfileNickname())
+                        .hashTag(feed.getHashTags())
+                        .likeCount(feed.getLikeCount())
+                        .isLiked(false)
+                        .build())
+                .toList();
+    }
 
+    public List<FeedRes> getFeedsByLikeCount() {
+        List<Feed> feeds = feedRepository.findAllByOrderByLikeCountDesc();
 
+        return feeds.stream()
+                .map(feed -> FeedRes.builder()
+                        .contents(feed.getContent())
+                        .profileName(feed.getProfile().getProfileNickname())
+                        .hashTag(feed.getHashTags())
+                        .likeCount(feed.getLikeCount())
+                        .isLiked(false)
+                        .build())
+                .toList();
+    }
 }

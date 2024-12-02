@@ -50,7 +50,7 @@ public class Profile {
     @Builder
     public Profile(//Long userId, //방법1
                    Member member, // 방법2
-                   String profileNickname, String profileGenre, String profileEmail,
+                   String profileNickname, String profileEmail, String profileGenre,
                    String profileIntroduction, String profileImageUrl) {
 //        this.userId = userId; //방법1
         this.member = member;
@@ -59,5 +59,23 @@ public class Profile {
         this.profileGenre = profileGenre;
         this.profileIntroduction = profileIntroduction;
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updateProfile(String profileNickname, String profileEmail, String profileGenre, String profileIntroduction, String profileImageUrl) {
+        if (profileNickname != null && !profileNickname.isEmpty()) {
+            this.profileNickname = profileNickname;
+        }
+        if (profileEmail != null && !profileEmail.isEmpty()) {
+            this.profileEmail = profileEmail;
+        }
+        if (profileGenre != null && !profileGenre.isEmpty()) {
+            this.profileGenre = profileGenre;
+        }
+        if (profileIntroduction != null && !profileIntroduction.isEmpty()) {
+            this.profileIntroduction = profileIntroduction;
+        }
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            this.profileImageUrl = profileImageUrl;
+        }
     }
 }
