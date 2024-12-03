@@ -36,6 +36,7 @@ public class PerformService {
 
         return FacilityResponse.builder()
                 .mt10id(facility.getMt10id())
+                .fcltynm(facility.getFcltynm())
                 .telno(facility.getTelno())
                 .adres(facility.getAdres())
                 .la(facility.getLa())

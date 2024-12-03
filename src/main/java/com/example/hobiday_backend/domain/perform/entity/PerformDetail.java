@@ -42,6 +42,7 @@ public class PerformDetail {
         this.prfruntime = prfruntime;
         this.prfage = prfage;
         this.pcseguidance = pcseguidance;
+
 //        this.sty = sty;
         this.styurl = styurl;
         this.dtguidance = dtguidance;

@@ -156,6 +156,7 @@ public class PerformParsing extends KopisParsing {
             Element element = (Element) node;
             facilityRepository.save(FacilityDetail.builder()
                     .mt10id(facilityId)
+                    .fcltynm(getTextByElement(element, "fcltynm"))
                     .telno(getTextByElement(element, "telno"))
                     .adres(getTextByElement(element, "adres"))
                     .la(getTextByElement(element, "la"))

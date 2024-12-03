@@ -40,7 +40,7 @@ public class PerformController {
         return ApiResponse.success(performService.getPerformsAll());
     }
 
-    // 장르별 공연 목록 조회
+    // 장르별 공연 조회
     @Operation(summary="장르별 공연 목록 조회", description="바디에 장르명 정확히 입력")
     @GetMapping("/performs/genre")
     public ApiResponse<List<PerformResponse>> getPerformsByGenre(@RequestBody PerformRequest performRequest) {

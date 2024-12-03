@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class FacilityResponse {
     private String mt10id;          // 시설상세ID
+    private String fcltynm;         // 시설이름
     private String telno;           // 전화번호 (02-1234-5678)
     private String adres;           // 주소 (서울시 서초구 방배동)
     private String la;              // 위도

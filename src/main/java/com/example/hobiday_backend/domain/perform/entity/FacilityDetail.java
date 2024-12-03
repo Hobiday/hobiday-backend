@@ -18,6 +18,7 @@ public class FacilityDetail {
     /* ========================= 시설상세 =========================*/
     @Column(unique = true)
     private String mt10id;          // 시설상세ID
+    private String fcltynm;         // 시설명
     private String telno;           // 전화번호 (02-1234-5678)
     private String adres;           // 주소 (서울시 서초구 방배동)
     private String la;              // 위도
@@ -26,8 +27,9 @@ public class FacilityDetail {
     private Boolean parkinglot;     // 주차시설 (Y/N)
 
     @Builder
-    public FacilityDetail(String mt10id, String telno, String adres, String la, String lo, Boolean cafe, Boolean parkinglot) {
+    public FacilityDetail(String mt10id, String fcltynm,String telno, String adres, String la, String lo, Boolean cafe, Boolean parkinglot) {
         this.mt10id = mt10id;
+        this.fcltynm = fcltynm;
         this.telno = telno;
         this.adres = adres;
         this.la = la;
