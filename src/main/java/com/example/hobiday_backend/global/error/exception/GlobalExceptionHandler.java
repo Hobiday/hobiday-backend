@@ -3,6 +3,7 @@ package com.example.hobiday_backend.global.error.exception;
 import com.example.hobiday_backend.domain.comment.exception.CommentException;
 import com.example.hobiday_backend.domain.feed.exception.FeedException;
 import com.example.hobiday_backend.domain.member.exception.MemberException;
+import com.example.hobiday_backend.domain.perform.exception.PerformException;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.global.dto.ErrorRes;
 import lombok.extern.slf4j.Slf4j;
@@ -35,4 +36,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getHttpStatus()).body(ErrorRes.failure(e.getCode(), e.getMessage()));
     }
 
+    @ExceptionHandler(PerformException.class)
+    public ResponseEntity<ErrorRes<Void>> handleProfileException(PerformException e) {
+        log.info(e.getMessage(), e);
+        return ResponseEntity.status(e.getHttpStatus()).body(ErrorRes.failure(e.getCode(), e.getMessage()));
+    }
 }

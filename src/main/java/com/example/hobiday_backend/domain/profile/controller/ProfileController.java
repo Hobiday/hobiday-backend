@@ -34,8 +34,8 @@ public class ProfileController {
     private final MemberRepository memberRepository;
 
     // 프로필 등록(처음)하는 api
-    @Operation(summary = "프로필 등록(온보딩 작성) API", description = "토큰과 온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다" +
-            "\n{\"연극\", \"무용\", \"대중무용\", \"서양음악\", \"한국음악\", \"대중음악\", \"복합\", \"서커스\", \"뮤지컬\"}")
+    @Operation(summary = "프로필 등록(온보딩 작성) API", description = "토큰과 온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다 ||" +
+            "{\"연극\", \"무용\", \"대중무용\", \"서양음악\", \"한국음악\", \"대중음악\", \"복합\", \"서커스\", \"뮤지컬\"}")
     @PostMapping("/api/profiles/registration")
     public ApiResponse<ProfileResponse> join(@RequestHeader("Authorization") String token,
                                                 @RequestBody AddProfileRequest addProfileRequest) {

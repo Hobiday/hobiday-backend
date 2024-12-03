@@ -27,7 +27,7 @@ public class Profile {
     // FROM profile INNER JOIN users ON profile.user_id = users.id
     private Member member;
 
-    @Column(length=20)
+    @Column(length=20, unique = true)
     private String profileNickname;
     private String profileEmail;
 

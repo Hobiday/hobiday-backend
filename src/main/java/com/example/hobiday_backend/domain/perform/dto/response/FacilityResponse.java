@@ -1,17 +1,16 @@
-package com.example.hobiday_backend.domain.perform.entity;
+package com.example.hobiday_backend.domain.perform.dto.response;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "perform_details")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
-//@Entity
-public class PerformDetails {
-    /* ========================= 시설상세 =========================*/
+public class FacilityResponse {
+    private String mt10id;          // 시설상세ID
     private String telno;           // 전화번호 (02-1234-5678)
     private String adres;           // 주소 (서울시 서초구 방배동)
     private String la;              // 위도
