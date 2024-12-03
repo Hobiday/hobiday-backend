@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
-@Tag(name="공연 정보", description="현재의 응답하는 공연개수, 기준은 임시이고 달라질 수 있음")
+@Tag(name="Performs", description="현재의 응답하는 공연개수, 기준은 임시이고 달라질 수 있음")
 public class PerformController {
     private final PerformService performService;
 
