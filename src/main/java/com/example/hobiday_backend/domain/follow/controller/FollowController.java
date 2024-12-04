@@ -24,7 +24,7 @@ public class FollowController {
                                           @RequestParam
                                           @Parameter(description = "팔로우 할 사용자의 id", required = true) Long followingId) {
 
-        Long followerId = tokenProvider.getUserId(token);
+        Long followerId = tokenProvider.getMemberId(token);
 
         try {
             followService.follow(followingId, followerId);
@@ -34,21 +34,20 @@ public class FollowController {
         }
     }
 
-    @Operation(summary = "언팔로우 기능", description = "사용자가 로그인 후 받은 인증 토큰과 언팔로우 하고자 하는 사용자의 id를 전달하여 해당 사용자를 언팔로우 합니다.")
-    @DeleteMapping("/api/unfollow")
-    public ResponseEntity<String> unfollow(@RequestParam(value = "token")
-                                           @Parameter(description = "사용자 인증 토큰", required = true) String token,
-                                           @RequestParam
-                                           @Parameter(description = "언팔로우 할 사용자의 id", required = true) Long followingId) {
+//    @Operation(summary = "언팔로우 기능", description = "사용자가 로그인 후 받은 인증 토큰과 언팔로우 하고자 하는 사용자의 id를 전달하여 해당 사용자를 언팔로우 합니다.")
+//    @DeleteMapping("/api/unfollow")
+//    public ResponseEntity<String> unfollow(@RequestParam(value = "token")
+//                                           @Parameter(description = "사용자 인증 토큰", required = true) String token,
+//                                           @RequestParam
+//                                           @Parameter(description = "언팔로우 할 사용자의 id", required = true) Long followingId) {
+//        Long followerId = tokenProvider.getMemberId(token);
 
-        Long followerId = tokenProvider.getUserId(token);
-
-        try {
-            followService.unfollow(followingId, followerId);
-            return ResponseEntity.ok().body("success");
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body("fail");
-        }
-    }
+//        try {
+//            followService.unfollow(followingId, followerId);
+//            return ResponseEntity.ok().body("success");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(400).body("fail");
+//        }
+//    }
 
 }
