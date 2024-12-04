@@ -34,11 +34,11 @@ public class Feed extends TImeStamped {
     private Profile profile;
 
     // 피드 사진
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<FeedFile> feedFiles = new ArrayList<>();
 
     // 해시 태그
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<HashTag> hashTags = new ArrayList<>();
 
     // 좋아요 갯수 캐싱
@@ -66,5 +66,52 @@ public class Feed extends TImeStamped {
 
     public void decrementLikeCount() {
         this.likeCount--;
+    }
+
+    // 업데이트 메서드
+    public void update(String content, String topic, List<String> newFileUrls, List<String> newHashTags) {
+        // 1. 내용 및 주제 수정
+        this.content = content;
+        this.topic = topic;
+
+        // 2. FeedFiles 업데이트
+        updateFeedFiles(newFileUrls);
+
+        // 3. HashTags 업데이트
+        updateHashTags(newHashTags);
+    }
+
+    private void updateFeedFiles(List<String> newFileUrls) {
+        // 기존 파일과 비교
+        List<FeedFile> filesToKeep = this.feedFiles.stream()
+                .filter(feedFile -> newFileUrls.contains(feedFile.getFileUrl()))
+                .toList();
+
+        List<FeedFile> filesToAdd = newFileUrls.stream()
+                .filter(url -> this.feedFiles.stream().noneMatch(file -> file.getFileUrl().equals(url)))
+                .map(url -> FeedFile.builder().fileUrl(url).feed(this).build())
+                .toList();
+
+        // 기존 리스트 클리어 후 재구성
+        this.feedFiles.clear();
+        this.feedFiles.addAll(filesToKeep);
+        this.feedFiles.addAll(filesToAdd);
+    }
+
+    private void updateHashTags(List<String> newHashTags) {
+        // 기존 해시태그와 비교
+        List<HashTag> tagsToKeep = this.hashTags.stream()
+                .filter(hashTag -> newHashTags.contains(hashTag.getHashTag()))
+                .toList();
+
+        List<HashTag> tagsToAdd = newHashTags.stream()
+                .filter(tag -> this.hashTags.stream().noneMatch(hash -> hash.getHashTag().equals(tag)))
+                .map(tag -> HashTag.builder().hashTag(tag).feed(this).build())
+                .toList();
+
+        // 기존 리스트 클리어 후 재구성
+        this.hashTags.clear();
+        this.hashTags.addAll(tagsToKeep);
+        this.hashTags.addAll(tagsToAdd);
     }
 }

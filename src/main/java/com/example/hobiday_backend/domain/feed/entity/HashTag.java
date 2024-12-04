@@ -17,7 +17,7 @@ public class HashTag {
     @Column(nullable = false, length = 20)
     private String hashTag;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id", nullable = false)
     private Feed feed;
 

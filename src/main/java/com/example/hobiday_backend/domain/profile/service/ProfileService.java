@@ -70,37 +70,25 @@ public class ProfileService {
     }
 
     // 프로필 업데이트
-    public ProfileResponse updateProfile(String token, UpdateProfileRequest updateProfileRequest) {
-        Long memberId = memberService.getMemberIdByToken(token);
-        Profile profile = profileRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원 찾을 수 없습니다."));
-        // 사용자 일치 여부 확인
-        if(!profile.getMember().getId().equals(memberId)) {
-            throw new IllegalArgumentException("프로필 수정 권한이 없습니다.");
+    public ProfileResponse updateProfile(Long profileId, UpdateProfileRequest updateProfileRequest, Member member) {
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+
+        if (!profile.getMember().getId().equals(member.getId())) {
+            throw new ProfileException(ProfileErrorCode.PROFILE_UPDATE_ACCESS_DENIED);
         }
-        profile = profileRepository.save(Profile.builder()
-                .member(member)
-                .profileEmail(profile.getProfileEmail())
-                .profileNickname(profile.getProfileNickname())
-                .profileGenre(!getGenreToString(updateProfileRequest.getProfileGenre()).isEmpty() ? getGenreToString(updateProfileRequest.getProfileGenre()) : profile.getProfileGenre())
-                .profileIntroduction(updateProfileRequest.getProfileIntroduction() != null ? updateProfileRequest.getProfileIntroduction() : profile.getProfileIntroduction())
-                .profileImageUrl(updateProfileRequest.getProfileImageUrl() != null ? updateProfileRequest.getProfileImageUrl() : profile.getProfileImageUrl())
-                .build());
+        String profileGenre = updateProfileRequest.getProfileGenre() != null ?
+                getGenreToString(updateProfileRequest.getProfileGenre()) : null;
 
-        profileRepository.save(profile);
-
-        return ProfileResponse.builder()
-                .profileId(profile.getId())
-                .memberId(member.getId())
-                .profileNickname(profile.getProfileNickname())
-                .profileEmail(profile.getProfileEmail())
-                .profileGenre(getGenreToList(profile.getProfileGenre()))
-                .profileIntroduction(profile.getProfileIntroduction())
-                .profileImageUrl(profile.getProfileImageUrl())
-                .build();
-    }
+        profile.updateProfile(
+                updateProfileRequest.getProfileNickname(),
+                updateProfileRequest.getProfileEmail(),
+                profileGenre,
+                updateProfileRequest.getProfileIntroduction(),
+                updateProfileRequest.getProfileImageUrl()
+        );
+        return ProfileResponse.res(profileRepository.save(profile));
+    };
 
 // no use ============================================================================================================
 //    // 프로필ID로 프로필 정보 반환

@@ -11,7 +11,8 @@ import java.util.List;
 public class FeedRes {
     private String contents;
     private String profileName;
-    private List<HashTag> hashTag;
+    private List<String> hashTag;
+    private List<String> feedFiles;
     private int likeCount;
     private boolean isLiked;
 }
