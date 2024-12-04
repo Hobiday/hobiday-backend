@@ -1,6 +1,5 @@
-package com.example.hobiday_backend.global.s3.controller;
+/*package com.example.hobiday_backend.global.s3.controller;
 
-import com.example.hobiday_backend.global.dto.SuccessRes;
 import com.example.hobiday_backend.global.dto.file.PreSignedUrlRequest;
 import com.example.hobiday_backend.global.dto.file.PresignedUrlResponse;
 import com.example.hobiday_backend.global.s3.service.FileService;
@@ -8,8 +7,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +28,7 @@ public class FileController {
         // 성공적인 응답을 반환
         return ResponseEntity.ok(response);
     }
-}
+}*/
 
 
 
