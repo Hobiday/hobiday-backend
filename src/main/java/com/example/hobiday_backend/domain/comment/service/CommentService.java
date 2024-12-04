@@ -5,14 +5,13 @@ import com.example.hobiday_backend.domain.comment.dto.CommentRes;
 import com.example.hobiday_backend.domain.comment.entity.Comment;
 import com.example.hobiday_backend.domain.comment.exception.CommentErrorCode;
 import com.example.hobiday_backend.domain.comment.exception.CommentException;
-import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.comment.repository.CommentRepository;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
+import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;

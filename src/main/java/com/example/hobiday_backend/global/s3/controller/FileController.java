@@ -1,4 +1,4 @@
-//package com.example.hobiday_backend.global.s3.controller;
+package com.example.hobiday_backend.global.s3.controller;//package com.example.hobiday_backend.global.s3.controller;
 //
 //import com.example.hobiday_backend.global.dto.ApiResponse;
 //import com.example.hobiday_backend.global.dto.file.PreSignedUrlRequest;

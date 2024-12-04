@@ -1,6 +1,7 @@
 package com.example.hobiday_backend.domain.feed.entity;
 
 import com.example.hobiday_backend.domain.comment.entity.Comment;
+import com.example.hobiday_backend.domain.like.entity.Like;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.global.domain.TImeStamped;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class Feed extends TImeStamped {
     private Long id;
 
     // 피드 내용
-    @Column(nullable = false)
+    @Column(nullable = false,length = 2200)
     private String content;
 
     // 주제
@@ -40,6 +42,10 @@ public class Feed extends TImeStamped {
     // 해시 태그
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<HashTag> hashTags = new ArrayList<>();
+
+    // 좋아요 연간관계 맵핑
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     // 좋아요 갯수 캐싱
     @Column(nullable = false)
@@ -67,6 +73,9 @@ public class Feed extends TImeStamped {
     public void decrementLikeCount() {
         this.likeCount--;
     }
+
+    @Column(name = "write_date", nullable = false, updatable = false)
+    private Timestamp writeDate;
 
     // 업데이트 메서드
     public void update(String content, String topic, List<String> newFileUrls, List<String> newHashTags) {

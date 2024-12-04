@@ -1,6 +1,5 @@
 package com.example.hobiday_backend.domain.feed.dto;
 
-import com.example.hobiday_backend.domain.feed.entity.HashTag;
 import lombok.Builder;
 import lombok.Getter;
 

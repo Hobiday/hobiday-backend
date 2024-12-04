@@ -8,6 +8,8 @@ import com.example.hobiday_backend.domain.like.dto.LikeRes;
 import com.example.hobiday_backend.domain.like.entity.Like;
 import com.example.hobiday_backend.domain.like.repository.LikeRepository;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
+import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
+import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,12 +23,12 @@ public class LikeService {
     private final FeedRepository feedRepository;
     private final ProfileRepository profileRepository;
 
-    public LikeRes toggleLike(Long feedId, Long userId) {
+    public LikeRes toggleLike(Long feedId, Long memberId) {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
         // userid로 프로필을 찾고 하면될려나
-        Profile profile = profileRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("프로필을 찾을 수 없습니다.")); // User ID로 Profile 찾기
+        Profile profile = profileRepository.findById(memberId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND)); // User ID로 Profile 찾기
 
         Optional<Like> existingLike = likeRepository.findByFeedAndProfile(feed, profile);
         boolean isLiked;

@@ -1,6 +1,5 @@
 package com.example.hobiday_backend.domain.comment.entity;
 
-import com.example.hobiday_backend.domain.comment.dto.CommentReq;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.like.entity.Like;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
@@ -10,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +34,10 @@ public class Comment extends TImeStamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_id", nullable = false)
     private Feed feed;
+
+    // 좋아요 연간관계 맵핑
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     public Comment(String contents, Feed feed, Profile profile) {
         this.contents = contents;

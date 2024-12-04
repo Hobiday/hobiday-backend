@@ -1,5 +1,8 @@
 package com.example.hobiday_backend.domain.profile.service;
 
+import com.example.hobiday_backend.domain.member.entity.Member;
+import com.example.hobiday_backend.domain.member.repository.MemberRepository;
+import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.domain.profile.dto.request.AddProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileMessageResponse;
@@ -8,14 +11,10 @@ import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
-import com.example.hobiday_backend.domain.member.entity.Member;
-import com.example.hobiday_backend.domain.member.repository.MemberRepository;
-import com.example.hobiday_backend.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToList;
 import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToString;

@@ -1,6 +1,8 @@
 package com.example.hobiday_backend.domain.profile.controller;
 
 import com.example.hobiday_backend.domain.member.entity.Member;
+import com.example.hobiday_backend.domain.member.repository.MemberRepository;
+import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.domain.profile.dto.request.AddProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileMessageResponse;
@@ -9,14 +11,11 @@ import com.example.hobiday_backend.domain.profile.dto.response.ProfileResponse;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
-import com.example.hobiday_backend.domain.member.repository.MemberRepository;
-import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -3,13 +3,12 @@ package com.example.hobiday_backend.domain.like.controller;
 import com.example.hobiday_backend.domain.like.dto.LikeRes;
 import com.example.hobiday_backend.domain.like.service.LikeService;
 import com.example.hobiday_backend.domain.member.service.MemberService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/likes")
@@ -32,8 +31,8 @@ public class LikeController {
     public ResponseEntity<LikeRes> toggleLike(
             @PathVariable Long feedId,
             @RequestHeader String token) {
-        Long userId = memberService.getMemberIdByToken(token);
-        LikeRes likeRes = likeService.toggleLike(feedId, userId);
+        Long memberId = memberService.getMemberIdByToken(token);
+        LikeRes likeRes = likeService.toggleLike(feedId, memberId);
         return ResponseEntity.ok(likeRes);
     }
 }
