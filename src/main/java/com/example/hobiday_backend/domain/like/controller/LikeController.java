@@ -32,8 +32,8 @@ public class LikeController {
     public ResponseEntity<LikeRes> toggleLike(
             @PathVariable Long feedId,
             @RequestHeader String token) {
-        Long userId = memberService.getMemberIdByToken(token);
-        LikeRes likeRes = likeService.toggleLike(feedId, userId);
+        Long memberId = memberService.getMemberIdByToken(token);
+        LikeRes likeRes = likeService.toggleLike(feedId, memberId);
         return ResponseEntity.ok(likeRes);
     }
 }

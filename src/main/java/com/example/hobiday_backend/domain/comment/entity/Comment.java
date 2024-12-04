@@ -37,6 +37,10 @@ public class Comment extends TImeStamped {
     @JoinColumn(name = "feed_id", nullable = false)
     private Feed feed;
 
+    // 좋아요 연간관계 맵핑
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
     public Comment(String contents, Feed feed, Profile profile) {
         this.contents = contents;
         this.feed = feed;

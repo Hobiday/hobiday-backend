@@ -1,6 +1,7 @@
 package com.example.hobiday_backend.domain.profile.entity;
 
 import com.example.hobiday_backend.domain.follow.entity.Follow;
+import com.example.hobiday_backend.domain.like.entity.Like;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -46,6 +47,9 @@ public class Profile {
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followings = new ArrayList<>();
 
+    // 좋아요 연간관계 맵핑
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     @Builder
     public Profile(//Long userId, //방법1
