@@ -33,7 +33,7 @@ public class ProfileController {
     private final MemberRepository memberRepository;
 
     // 프로필 등록(처음)하는 api
-    @Operation(summary = "프로필 등록(온보딩 작성) API", description = "토큰과 온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다 ||" +
+    @Operation(summary = "프로필 등록(온보딩 작성)", description = "토큰과 온보딩 작성한 데이터(닉네임, 장르)를 요청 받아 프로필 등록하고 반환합니다 ||" +
             "{\"연극\", \"무용\", \"대중무용\", \"서양음악\", \"한국음악\", \"대중음악\", \"복합\", \"서커스\", \"뮤지컬\"}")
     @PostMapping("/api/profiles/registration")
     public ApiResponse<ProfileResponse> join(@RequestHeader("Authorization") String token,
@@ -49,7 +49,7 @@ public class ProfileController {
     }
 
     // 프로필등록 여부(O,X)
-    @Operation(summary = "프로필 등록(온보딩 작성) 여부 체크 API", description = "토큰을 요청 받아 온보딩 작성한 회원이면 true, 아니면 false 리턴합니다.")
+    @Operation(summary = "프로필 등록(온보딩 작성) 여부 체크", description = "토큰을 요청 받아 온보딩 작성한 회원이면 true, 아니면 false 리턴합니다.")
     @GetMapping("/api/profiles/registration/check")
     public ApiResponse<ProfileRegistrationResponse> checkProfileRegistration(@RequestHeader("Authorization") String token) {
         Long memberId = memberService.getMemberIdByToken(token);
@@ -73,7 +73,7 @@ public class ProfileController {
     }
 
     // 프로필 정보 반환
-    @Operation(summary = "프로필 조회(by토큰) API", description = "토큰을 요청 받아 프로필 정보를 반환합니다.")
+    @Operation(summary = "프로필 조회(by토큰)", description = "토큰을 요청 받아 프로필 정보를 반환합니다.")
     @GetMapping("/api/profiles/myprofile")
     public ApiResponse<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token){
         Long memberId = memberService.getMemberIdByToken(token);

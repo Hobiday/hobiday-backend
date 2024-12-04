@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@Tag(name = "Token", description = "댓글 API") // 컨트롤러 전체 설명
+@Tag(name = "Token") // 컨트롤러 전체 설명
 public class TokenController {
     private final TokenService tokenService;
 
