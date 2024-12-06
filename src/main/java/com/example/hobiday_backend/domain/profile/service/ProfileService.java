@@ -24,9 +24,6 @@ import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGe
 @Service
 public class ProfileService {
     private final ProfileRepository profileRepository;
-    private final MemberRepository memberRepository;
-    private final MemberService memberService;
-
 
     // 회원ID로 프로필 정보 반환
     public ProfileResponse getProfileByMemberId(Long memberId){
@@ -38,7 +35,7 @@ public class ProfileService {
                 .memberId(profile.getMember().getId()) // 방2
                 .profileNickname(profile.getProfileNickname())
                 .profileEmail(profile.getProfileEmail())
-                .profileGenre(getGenreToList(profile.getProfileGenre()))
+                .profileGenres(getGenreToList(profile.getProfileGenre()))
                 .build();
     }
 
@@ -87,7 +84,7 @@ public class ProfileService {
                 updateProfileRequest.getProfileImageUrl()
         );
         return ProfileResponse.res(profileRepository.save(profile));
-    };
+    }
 
 // no use ============================================================================================================
 //    // 프로필ID로 프로필 정보 반환

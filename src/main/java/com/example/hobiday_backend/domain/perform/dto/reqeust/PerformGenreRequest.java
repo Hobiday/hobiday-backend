@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class PerformRequest {
-    public String keyword;
+public class PerformGenreRequest {
+    public String genre;
+    public String rowStart;
+    public String rowEnd;
 }

@@ -9,7 +9,7 @@ public class KopisParsing {
     protected final static String FACILITY_URL =  "http://www.kopis.or.kr/openApi/restful/prfplc/";
     protected final static String STDATE = "20241215"; // 시작 검색기간
     protected final static String EDDATE = "20240113"; // 종료 검색기간
-    protected final static String ROWS = "30";         // 공연 개수
+    protected final static String ROWS = "50";         // 공연 개수
 
     //genre : code
     public final static HashMap<String, String> GENRE_CODES_REQUEST = new HashMap<>() {{
