@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping("/api")
 @Tag(name="Performs", description="현재의 응답하는 공연개수, 기준은 임시이고 달라질 수 있음")
 public class PerformController {
     private final PerformService performService;
