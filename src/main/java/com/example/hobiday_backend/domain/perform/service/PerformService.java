@@ -1,7 +1,10 @@
 package com.example.hobiday_backend.domain.perform.service;
 
+import com.example.hobiday_backend.domain.perform.dto.reqeust.PerformAllRequest;
+import com.example.hobiday_backend.domain.perform.dto.reqeust.PerformGenreRequest;
 import com.example.hobiday_backend.domain.perform.dto.response.FacilityResponse;
 import com.example.hobiday_backend.domain.perform.dto.response.PerformDetailResponse;
+import com.example.hobiday_backend.domain.perform.dto.response.PerformRecommendListResponse;
 import com.example.hobiday_backend.domain.perform.dto.response.PerformResponse;
 import com.example.hobiday_backend.domain.perform.entity.FacilityDetail;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
@@ -35,14 +38,14 @@ public class PerformService {
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
 
         return FacilityResponse.builder()
-                .mt10id(facility.getMt10id())
-                .fcltynm(facility.getFcltynm())
-                .telno(facility.getTelno())
-                .adres(facility.getAdres())
-                .la(facility.getLa())
-                .lo(facility.getLo())
+                .facilityId(facility.getMt10id())
+                .facilityName(facility.getFcltynm())
+                .telephone(facility.getTelno())
+                .address(facility.getAdres())
+                .latitude(facility.getLa())
+                .longitude(facility.getLo())
                 .cafe(facility.getCafe())
-                .parkinglot(facility.getParkinglot())
+                .parkingLot(facility.getParkinglot())
                 .build();
     }
 
@@ -52,16 +55,16 @@ public class PerformService {
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
 
         return PerformDetailResponse.builder()
-                .mt20id(performDetail.getMt20id())
-                .mt10id(performDetail.getMt10id())
-                .prfcast(performDetail.getPrfcast())
-                .prfruntime(performDetail.getPrfruntime())
-                .prfage(performDetail.getPrfage())
-                .pcseguidance(performDetail.getPcseguidance())
-                .styurl(performDetail.getStyurl())
-                .dtguidance(performDetail.getDtguidance())
-                .relatenm(performDetail.getRelatenm())
-                .relateurl(performDetail.getRelateurl())
+                .performId(performDetail.getMt20id())
+                .facilityId(performDetail.getMt10id())
+                .cast(performDetail.getPrfcast())
+                .runtime(performDetail.getPrfruntime())
+                .perform(performDetail.getPrfage())
+                .ticketPrice(performDetail.getPcseguidance())
+                .storyUrl(performDetail.getStyurl())
+                .showtime(performDetail.getDtguidance())
+                .reservationChannel(performDetail.getRelatenm())
+                .reservationUrl(performDetail.getRelateurl())
                 .build();
     }
 
@@ -70,13 +73,13 @@ public class PerformService {
         Perform perform = performRepository.findByMt20id(mt20id)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
         return PerformResponse.builder()
-                .mt20id(perform.getMt20id())
-                .prfnm(perform.getPrfnm())
-                .prfpdfrom(perform.getPrfpdfrom())
-                .genrenm(perform.getGenrenm())
-                .prfstate(perform.getPrfstate())
-                .fcltynm(perform.getFcltynm())
-                .openrun(perform.getOpenrun())
+                .performId(perform.getMt20id())
+                .performName(perform.getPrfnm())
+                .startDate(perform.getPrfpdfrom())
+                .endDate(perform.getGenrenm())
+                .genreName(perform.getPrfstate())
+                .performState(perform.getFcltynm())
+                .openRun(perform.getOpenrun())
                 .area(perform.getArea())
                 .poster(perform.getPoster())
                 .likeCount(perform.getLikeCount())
@@ -84,9 +87,14 @@ public class PerformService {
     }
 
     // 장르별 공연 리스트 조회
-    public List<PerformResponse> getPerformListByGenre(String genre) {
-        log.info("들어와서: " + genre);
-       List<Perform> performList = performRepository.findByGenreNm(genre)
+    public List<PerformResponse> getPerformListByGenre(PerformGenreRequest performGenreRequest) {
+       String genre = performGenreRequest.genre;
+       int rowStart = Integer.parseInt(performGenreRequest.rowStart);
+       int rowEnd = Integer.parseInt(performGenreRequest.rowEnd);
+//       int limit = rowEnd - rowStart + 1;
+//       int offset = rowStart;
+//       log.info("들어와서: " + genre);
+       List<Perform> performList = performRepository.findByGenreNm(genre, rowEnd - rowStart + 1, rowStart)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
         return performList.stream()
                 .map(PerformResponse::new)
@@ -103,33 +111,77 @@ public class PerformService {
     }
 
     // 모든 장르로 조회
-    public List<PerformResponse> getPerformsAll() {
-        // 장르별 5개씩 가져와서
-        // 우선 집합으로 랜덤
-        List<Perform> performList = new ArrayList<>();
-//        List<Perform> performGenreList;
-        for(String genre : GENRE_CODES_REQUEST.keySet()){
-            log.info("genre: " + genre);
-            assert false;
-            performList.addAll(performRepository.findAllByGenreNm(genre)
-                    .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND)));
-        }
-        assert false;
+//    public List<PerformResponse> getPerformsAll() {
+//        // 장르별 5개씩 가져와서
+//        // 우선 집합으로 랜덤
+//        List<Perform> performList = new ArrayList<>();
+////        List<Perform> performGenreList;
+//        for(String genre : GENRE_CODES_REQUEST.keySet()){
+//            log.info("genre: " + genre);
+//            assert false;
+//            performList.addAll(performRepository.findAllByGenreNm(genre)
+//                    .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND)));
+//        }
+//        assert false;
+//
+////        HashSet<Perform> performSet = new HashSet<>(List.of(performList.toArray(new Perform[0])));
+//        Set<Perform> performSet = Set.copyOf(performList);
+//        List<Perform> performListFinal = new ArrayList<>(performSet);
+//        return performListFinal.stream()
+//                .map(PerformResponse::new)
+//                .toList();
+//    }
 
-//        HashSet<Perform> performSet = new HashSet<>(List.of(performList.toArray(new Perform[0])));
-        Set<Perform> performSet = Set.copyOf(performList);
-        List<Perform> performListFinal = new ArrayList<>(performSet);
-        return performListFinal.stream()
+//    // 홈화면 추천 공연 6개 | 현재 랜덤
+//    public List<PerformResponse> getMainPerforms(/*List<String> profileGenreList*/) {
+//        List<Perform> performList = performRepository.findAllByRand().
+//            orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+//        return performList.stream()
+//                .map(PerformResponse::new)
+//                .toList();
+//    }
+
+    // 모든 장르 조회
+    public List<PerformResponse> getPerformsAll(List<String> profileGenreList, PerformAllRequest performAllRequest){
+        // 장르별로 index 어디까지 했는지 기억하고 있어야함
+
+//        String genre = performGenreRequest.genre;
+        int rowStart = Integer.parseInt(performAllRequest.rowStart);
+        int rowEnd = Integer.parseInt(performAllRequest.rowEnd);
+        List<Perform> performList = performRepository.findAllBySelect(rowEnd - rowStart + 1, rowStart)
+                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+        return performList.stream()
                 .map(PerformResponse::new)
                 .toList();
     }
 
-    // 홈화면 추천 공연 6개 | 현재 랜덤
-    public List<PerformResponse> getMainPerforms(/*List<String> profileGenreList*/) {
-        List<Perform> performList = performRepository.findAllByRand().
-            orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+
+    // 공연 추천 검색어 목록
+    public List<PerformRecommendListResponse> getPerformsByRecommends(List<String> profileGenreList) {
+
+        // 선택한 장르를 한번씩 돌아가며 리스트 10개 채워놓음
+        int i = 0;
+        int iniSize = profileGenreList.size();
+        while (profileGenreList.size() != 10){
+            profileGenreList.add(profileGenreList.get(i++));
+            if (i==iniSize) i = 0;
+        }
+
+//        log.info("프로필장르리스트: " + profileGenreList);
+
+        // 응답할 공연 10개 꺼내오기
+        int cnt = 0;
+        List<Perform> performList = new ArrayList<>();
+        List<Perform> perform;
+        while (cnt!=10){
+            perform = performRepository.findBySelectGenre(profileGenreList.get(cnt), cnt)
+                    .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+            performList.addAll(perform);
+            cnt++;
+        }
+
         return performList.stream()
-                .map(PerformResponse::new)
+                .map(PerformRecommendListResponse::new)
                 .toList();
     }
 }

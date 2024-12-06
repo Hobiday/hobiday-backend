@@ -1,0 +1,47 @@
+spring:
+#  sql: # 처음에 DB 데이터 넣기 위한 설정(data.sql파일)
+#    init:
+#      mode: always
+
+  datasource:
+#    url: jdbc:mysql://db-hobiday.clskq04mytmt.ap-northeast-2.rds.amazonaws.com:3306/hobiday
+    url: jdbc:mysql://localhost:3306/hobiday?serverTimezone=UTC
+#    username: admin
+    username: root
+    password: 95206326
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+#    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    show-sql: true
+
+  security:
+    oauth2:
+      client:
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+        registration:
+          kakao:
+            client-id: f50d9911e72a37532cae75cba2277099
+            client-secret: FxIHbsanlyYyDot1yzsoaMS1y0T7fFgi
+            client-authentication-method: client_secret_post
+#            redirect-uri: http://ec2-15-165-67-140.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/code/kakao
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            client-name: kakao
+            scope:
+              - profile_nickname
+              - account_email
+
+jwt:
+  issuer: chyun5197@gmail.com
+  secret_key: team8-project

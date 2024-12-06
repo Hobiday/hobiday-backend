@@ -24,7 +24,7 @@ import java.util.HashSet;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PerformParsing extends KopisParsing {
+public class ParsingService extends KopisParsing {
     private final PerformRepository performRepository;
     private final PerformDetailRepository performDetailRepository;
     private final FacilityRepository facilityRepository;
@@ -39,11 +39,15 @@ public class PerformParsing extends KopisParsing {
 //        urlBuilder.append("&shcate="+shcate);
 
         // 공연기본, 공연상세 정보 DB 저장
+//        int cnt = 0;
         for (String genreCode : GENRE_CODES_REQUEST.values()) {
             savePerformByGenres(genreCode);
+//            cnt++;
+//            if (cnt==2){
+//                break;
+//            }
 //            Thread.sleep(500);
         }
-
         // 시설상세 정보 DB 저장
         for (String facilityId : facilitySet){
             saveFacility(facilityId);

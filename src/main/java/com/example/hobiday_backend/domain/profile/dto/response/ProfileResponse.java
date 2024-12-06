@@ -15,7 +15,7 @@ public class ProfileResponse {
     private Long memberId;
     private String profileNickname;
     private String profileEmail;
-    private List<String> profileGenre;
+    private List<String> profileGenres;
     private String profileIntroduction;
     private String profileImageUrl;
 
@@ -27,7 +27,7 @@ public class ProfileResponse {
                 .profileId(profile.getId())
                 .profileNickname(profile.getProfileNickname())
                 .profileEmail(profile.getProfileEmail())
-                .profileGenre(genreList)
+                .profileGenres(genreList)
                 .profileIntroduction(profile.getProfileIntroduction())
                 .profileImageUrl(profile.getProfileImageUrl())
                 .build();

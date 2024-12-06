@@ -38,7 +38,7 @@ public class ProfileService {
                 .memberId(profile.getMember().getId()) // 방2
                 .profileNickname(profile.getProfileNickname())
                 .profileEmail(profile.getProfileEmail())
-                .profileGenre(getGenreToList(profile.getProfileGenre()))
+                .profileGenres(getGenreToList(profile.getProfileGenre()))
                 .build();
     }
 
