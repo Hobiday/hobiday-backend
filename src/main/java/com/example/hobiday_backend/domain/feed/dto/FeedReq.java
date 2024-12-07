@@ -21,6 +21,7 @@ public class FeedReq {
     @Schema(description = "피드 해시태그")
     private List<String> hashTags;
 
-    // 공연 정보 ex) 매직쇼 더 라이브 (춘천)
+    @Schema(description = "공연 id")
+    private String performId;
 }
 

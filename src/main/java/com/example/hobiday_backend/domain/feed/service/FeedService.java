@@ -9,6 +9,7 @@ import com.example.hobiday_backend.domain.feed.exception.*;
 import com.example.hobiday_backend.domain.feed.repository.FeedFileRepository;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
 import com.example.hobiday_backend.domain.feed.repository.HashTagRepository;
+import com.example.hobiday_backend.domain.perform.repository.PerformRepository;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
@@ -27,6 +28,7 @@ public class FeedService {
     private final ProfileRepository profileRepository;
     private final FeedFileRepository feedFileRepository;
     private final HashTagRepository hashTagRepository;
+    private final PerformRepository performRepository;
 
     //피드 작성
     public FeedRes createFeed(FeedReq feedReq, Long userId) {
@@ -77,6 +79,7 @@ public class FeedService {
         // 6. FeedRes 반환
         return FeedRes.builder()
                 .contents(savedFeed.getContent())
+                .profileId(savedFeed.getProfile().getId())
                 .profileName(savedFeed.getProfile().getProfileNickname()) // Profile 엔티티에 이름 필드가 있다고 가정
                 .hashTag(savedFeed.getHashTags().stream()
                         .map(HashTag::getHashTag)
@@ -111,6 +114,7 @@ public class FeedService {
         // 4. 응답 반환
         return FeedRes.builder()
                 .contents(feed.getContent())
+                .profileId(feed.getProfile().getId())
                 .profileName(feed.getProfile().getProfileNickname())
                 .hashTag(feed.getHashTags().stream()
                         .map(HashTag::getHashTag)
