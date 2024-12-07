@@ -2,6 +2,7 @@ package com.example.hobiday_backend.domain.feed.entity;
 
 import com.example.hobiday_backend.domain.comment.entity.Comment;
 import com.example.hobiday_backend.domain.like.entity.Like;
+import com.example.hobiday_backend.domain.perform.entity.Perform;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.global.domain.TImeStamped;
 import jakarta.persistence.*;
@@ -35,6 +36,11 @@ public class Feed extends TImeStamped {
     @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
 
+    // 공연
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "perform_id", nullable = false)
+    private Perform perform;
+
     // 피드 사진
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<FeedFile> feedFiles = new ArrayList<>();
@@ -60,10 +66,12 @@ public class Feed extends TImeStamped {
     @Builder
     public Feed(String content,
                 String topic,
-                Profile profile) {
+                Profile profile,
+                Perform perform) {
         this.content = content;
         this.profile = profile;
         this.topic = topic;
+        this.perform = perform;
     }
 
     public void incrementLikeCount() {
@@ -73,9 +81,6 @@ public class Feed extends TImeStamped {
     public void decrementLikeCount() {
         this.likeCount--;
     }
-
-    @Column(name = "write_date", nullable = false, updatable = false)
-    private Timestamp writeDate;
 
     // 업데이트 메서드
     public void update(String content, String topic, List<String> newFileUrls, List<String> newHashTags) {

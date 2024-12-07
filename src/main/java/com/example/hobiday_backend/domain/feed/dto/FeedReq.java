@@ -20,6 +20,8 @@ public class FeedReq {
     private List<String> hashTags;
 
     @Schema(description = "공연 id")
-    private String performId;
+    private Long performId;
+
+    // 프로필 사진도 받아야 함
 }
 
