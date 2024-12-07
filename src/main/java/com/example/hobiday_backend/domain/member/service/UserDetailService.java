@@ -1,8 +1,8 @@
 package com.example.hobiday_backend.domain.member.service;
 
-import com.example.hobiday_backend.global.oauth.PrincipalDetails;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
+import com.example.hobiday_backend.global.oauth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

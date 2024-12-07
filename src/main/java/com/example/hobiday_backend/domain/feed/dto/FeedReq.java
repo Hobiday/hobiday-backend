@@ -1,6 +1,4 @@
 package com.example.hobiday_backend.domain.feed.dto;
-import com.example.hobiday_backend.domain.feed.entity.FeedFile;
-import com.example.hobiday_backend.domain.feed.entity.HashTag;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

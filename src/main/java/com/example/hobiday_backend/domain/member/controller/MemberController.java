@@ -3,14 +3,13 @@ package com.example.hobiday_backend.domain.member.controller;
 import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberMessageResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberResponse;
-import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.service.MemberService;
+import com.example.hobiday_backend.global.dto.ApiResponse;
 import com.example.hobiday_backend.global.jwt.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -25,33 +24,27 @@ public class MemberController {
     @Operation(summary="로그아웃 API", description = "회원ID에 해당하는 리프레시 토큰을 DB에서 삭제하여 로그아웃 합니다." +
             "\n클라이언트 로컬 스토리지의 액세스 토큰과 쿠키에 저장된 리프레시 토큰은 프론트에서 제거해 주세요.")
     @DeleteMapping("/api/members/logout")
-    public ResponseEntity<MemberMessageResponse> deleteRefreshToken() {
+    public ApiResponse<MemberMessageResponse> deleteRefreshToken() {
         refreshTokenService.delete();
-        return ResponseEntity.ok()
-                .body(new MemberMessageResponse("logout success"));
+        return ApiResponse.success(new MemberMessageResponse("logout success"));
+//        return ResponseEntity.ok()
+//                .body(new MemberMessageResponse("logout success"));
     }
 
     // 회원(카카오) 정보 반환
     @Operation(summary="회원(카카오) 정보 반환 API", description = "헤더 액세스 토큰으로 요청 받아 회원(카카오) 정보를 반환합니다.")
     @GetMapping("/api/members")
-    public ResponseEntity<MemberResponse> findId(@RequestHeader("Authorization") String token){
-        Long memberId = memberService.getMemberIdByToken(token);
-        Member member = memberService.findById(memberId);
-        return ResponseEntity.ok()
-                .body(MemberResponse.builder()
-                .id(member.getId())
-                .email(member.getEmail())
-                .nickname(member.getNickname())
-                .build());
+    public ApiResponse<MemberResponse> findId(@RequestHeader("Authorization") String token){
+        return ApiResponse.success(memberService.getMemberInfoByToken(token));
     }
 
     @Operation(summary="(개발용)기존회원 로그인", description="미리 만들어둔 회원에 로그인, 토큰 받음")
     @GetMapping("/api/test/freepass/{nickname}")
-    public ResponseEntity<FreePassResponse> loginFreePass(@PathVariable String nickname){
+    public ApiResponse<FreePassResponse> loginFreePass(@PathVariable String nickname){
         FreePassResponse freePassResponse = memberService.loginFreePassMember(nickname);
 //        log.info("프리패스: " + freePassResponse.getNickname());
-        return ResponseEntity.ok()
-                .body(freePassResponse);
+//        return ResponseEntity.ok().body(freePassResponse);
+        return ApiResponse.success(freePassResponse);
     }
 
 

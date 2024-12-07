@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -22,6 +24,22 @@ public class FeedController {
     private final FeedService feedService;
     private final MemberService memberService;
     private final FileService fileService;
+
+    // 추천순 피드 조회
+    @Operation(summary = "추천순 피드 조회 기능", description = "피드를 추천순으로 조회합니다.")
+    @GetMapping("/recommendation")
+    public ResponseEntity<List<FeedRes>> getFeedsByLikeCount() {
+        List<FeedRes> feedResList = feedService.getFeedsByLikeCount();
+        return ResponseEntity.ok(feedResList);
+    }
+
+    // 최신순 피드 조회
+    @Operation(summary = "최신순 피드 조회 기능", description = "피드를 최신순으로 조회합니다.")
+    @GetMapping("/latest")
+    public ResponseEntity<List<FeedRes>> getFeedsByLatest() {
+        List<FeedRes> feedResList = feedService.getFeedsByLatest();
+        return ResponseEntity.ok(feedResList);
+    }
 
     //파일등록 API
     @Operation(summary = "Presigned URL 요청", description = "파일 업로드를 위한 presigned URL을 생성하는 API" +

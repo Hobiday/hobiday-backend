@@ -1,6 +1,5 @@
 package com.example.hobiday_backend.domain.profile.exception;
 
-import com.example.hobiday_backend.domain.feed.exception.FeedErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -12,6 +11,6 @@ public class ProfileException extends RuntimeException {
     public ProfileException(ProfileErrorCode profileErrorCode) {
         super(profileErrorCode.getMessage());
         this.httpStatus = profileErrorCode.getHttpStatus();
-        this.code= profileErrorCode.getCode();
+        this.code = profileErrorCode.getCode();
     }
 }

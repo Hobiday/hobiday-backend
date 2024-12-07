@@ -1,6 +1,5 @@
 package com.example.hobiday_backend.domain.comment.entity;
 
-import com.example.hobiday_backend.domain.comment.dto.CommentReq;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.like.entity.Like;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
@@ -10,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

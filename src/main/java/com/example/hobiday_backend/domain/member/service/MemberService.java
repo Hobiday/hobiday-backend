@@ -1,13 +1,15 @@
 package com.example.hobiday_backend.domain.member.service;
 
-import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
-import com.example.hobiday_backend.global.oauth.PrincipalDetails;
+import com.example.hobiday_backend.domain.member.dto.MemberResponse;
 import com.example.hobiday_backend.domain.member.entity.Member;
+import com.example.hobiday_backend.domain.member.exception.MemberErrorCode;
+import com.example.hobiday_backend.domain.member.exception.MemberException;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
 import com.example.hobiday_backend.global.jwt.RefreshToken;
 import com.example.hobiday_backend.global.jwt.RefreshTokenRepository;
 import com.example.hobiday_backend.global.jwt.TokenProvider;
+import com.example.hobiday_backend.global.oauth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,21 +28,31 @@ public class MemberService implements UserDetailsService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    // 토큰 기반으로 카카오 회원 ID를 가져오는 메서드
+    // 토큰으로 카카오 회원ID 반환
     public Long getMemberIdByToken(String token) {
         //token: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJhc2R 에서 Bearer 뒤에만 사용해서 탐색
         String accessToken = token.split(" ")[1];
         return tokenProvider.getMemberId(accessToken);
     }
 
+    // 토큰으로 회원 정보 반환
+    public MemberResponse getMemberInfoByToken(String token) {
+        Member member = findById(getMemberIdByToken(token));
+        return MemberResponse.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .build();
+    }
+
     public Member findById(Long memberId){
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER__NOT_FOUND));
     }
 
     public Member findByEmail(String email){ // OAuth2에서 제공하는 정보는 유일 값이므로 해당 메서드로 회원 찾을 수 있음
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER__NOT_FOUND));
     }
 
     @Override
@@ -52,7 +64,7 @@ public class MemberService implements UserDetailsService {
 // 개발 테스트용도 ==============================================================================================================
     public FreePassResponse loginFreePassMember(String nickname) {
         Member member = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER__NOT_FOUND));
         new PrincipalDetails(member); // 회원을 현재의 UserDetails에 저장
 
         String refreshToken = tokenProvider.generateToken(member, REFRESH_TOKEN_DURATION);
@@ -77,6 +89,7 @@ public class MemberService implements UserDetailsService {
         refreshTokenRepository.save(refreshToken);
 //        log.info("saveRefreshToken() 완료");
     }
+
 
     // no use ===============================================================================================
     // (개발환경용)자동으로 회원 생성하고 토큰 발급하는 메서드

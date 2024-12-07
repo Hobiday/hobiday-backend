@@ -1,6 +1,5 @@
 package com.example.hobiday_backend.domain.follow.service;
 
-import com.example.hobiday_backend.domain.follow.dto.response.FollowResponse;
 import com.example.hobiday_backend.domain.follow.entity.Follow;
 import com.example.hobiday_backend.domain.follow.repository.FollowRepository;
 import com.example.hobiday_backend.domain.profile.entity.Profile;

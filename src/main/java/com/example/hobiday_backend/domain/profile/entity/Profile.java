@@ -28,7 +28,7 @@ public class Profile {
     // FROM profile INNER JOIN users ON profile.user_id = users.id
     private Member member;
 
-    @Column(length=20)
+    @Column(length=20, unique = true)
     private String profileNickname;
     private String profileEmail;
 
@@ -63,5 +63,23 @@ public class Profile {
         this.profileGenre = profileGenre;
         this.profileIntroduction = profileIntroduction;
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updateProfile(String profileNickname, String profileEmail, String profileGenre, String profileIntroduction, String profileImageUrl) {
+        if (profileNickname != null && !profileNickname.isEmpty()) {
+            this.profileNickname = profileNickname;
+        }
+        if (profileEmail != null && !profileEmail.isEmpty()) {
+            this.profileEmail = profileEmail;
+        }
+        if (profileGenre != null && !profileGenre.isEmpty()) {
+            this.profileGenre = profileGenre;
+        }
+        if (profileIntroduction != null && !profileIntroduction.isEmpty()) {
+            this.profileIntroduction = profileIntroduction;
+        }
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            this.profileImageUrl = profileImageUrl;
+        }
     }
 }
