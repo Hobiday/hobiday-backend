@@ -40,6 +40,7 @@ public class ParsingService extends KopisParsing {
 
         // 공연기본, 공연상세 정보 DB 저장
 //        int cnt = 0;
+        log.info("장르별 {}개 가져오기", ROWS);
         for (String genreCode : GENRE_CODES_REQUEST.values()) {
             savePerformByGenres(genreCode);
 //            cnt++;
@@ -47,11 +48,12 @@ public class ParsingService extends KopisParsing {
 //                break;
 //            }
 //            Thread.sleep(500);
+            break;
         }
         // 시설상세 정보 DB 저장
-        for (String facilityId : facilitySet){
-            saveFacility(facilityId);
-        }
+//        for (String facilityId : facilitySet){
+//            saveFacility(facilityId);
+//        }
 
         log.info("파싱 종료");
     }
@@ -83,38 +85,38 @@ public class ParsingService extends KopisParsing {
     public void savePerformByGenres(String genre) {
         NodeList nodeList = getNodeListByGenre(genre);
         int n = nodeList.getLength();
-//        log.info("n:" + n);
+        log.info("{} 가져온 개수: {}", genre, n);
 
-        for (int i = 0; i < n; i++) {
-            Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) node;
-                String performDetailId = element.getElementsByTagName("mt20id").item(0).getTextContent();
-//                log.info("performDetailId: " + performDetailId);
-
-                // 이미 있는 공연 정보이면 패스
-                if (performRepository.findByMt20id(performDetailId).isPresent()){
-                    continue;
-                }
-
-                // 공연 기본정보 저장
-                Perform perform = Perform.builder()
-//                        .mt20id(element.getElementsByTagName("mt20id").item(0).getTextContent())
-                        .mt20id(performDetailId)
-                        .prfnm(getTextByElement(element, "prfnm"))
-                        .prfpdfrom(getTextByElement(element, "prfpdfrom"))
-                        .prfpdto(getTextByElement(element, "prfpdto"))
-                        .genrenm(getTextByElement(element, "genrenm"))
-                        .fcltynm(getTextByElement(element, "fcltynm"))
-                        .area(getTextByElement(element, "area"))
-                        .poster(getTextByElement(element, "poster"))
-                        .prfstate(getTextByElement(element, "prfstate"))
-                        .openrun(getTextByElement(element, "openrun").charAt(0) == 'Y')
-                        .build();
-                performRepository.save(perform);
-                savePerformDetail(performDetailId, perform);
-            }
-        }
+//        for (int i = 0; i < n; i++) {
+//            Node node = nodeList.item(i);
+//            if (node.getNodeType() == Node.ELEMENT_NODE) {
+//                Element element = (Element) node;
+//                String performDetailId = element.getElementsByTagName("mt20id").item(0).getTextContent();
+////                log.info("performDetailId: " + performDetailId);
+//
+//                // 이미 있는 공연 정보이면 패스
+//                if (performRepository.findByMt20id(performDetailId).isPresent()){
+//                    continue;
+//                }
+//
+//                // 공연 기본정보 저장
+//                Perform perform = Perform.builder()
+////                        .mt20id(element.getElementsByTagName("mt20id").item(0).getTextContent())
+//                        .mt20id(performDetailId)
+//                        .prfnm(getTextByElement(element, "prfnm"))
+//                        .prfpdfrom(getTextByElement(element, "prfpdfrom"))
+//                        .prfpdto(getTextByElement(element, "prfpdto"))
+//                        .genrenm(getTextByElement(element, "genrenm"))
+//                        .fcltynm(getTextByElement(element, "fcltynm"))
+//                        .area(getTextByElement(element, "area"))
+//                        .poster(getTextByElement(element, "poster"))
+//                        .prfstate(getTextByElement(element, "prfstate"))
+//                        .openrun(getTextByElement(element, "openrun").charAt(0) == 'Y')
+//                        .build();
+//                performRepository.save(perform);
+//                savePerformDetail(performDetailId, perform);
+//            }
+//        }
     }
 
     // 공연상세 저장
@@ -197,15 +199,26 @@ public class ParsingService extends KopisParsing {
     // (공연상세, 시설상세) 단일 db 태그 리스트 반환
     private static NodeList getNodeList(StringBuilder urlBuilder)  {
 //        log.info("후url: "+urlBuilder.toString());
+        String url = urlBuilder.toString();
         Document doc = null;
         try {
             doc = DocumentBuilderFactory
-                    .newInstance().newDocumentBuilder().parse(String.valueOf(urlBuilder));
+                    .newInstance().newDocumentBuilder().parse(url); // String.valueOf(urlBuilder)
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
         } catch (SAXException | IOException | ParserConfigurationException e) {
             throw new RuntimeException(e);
         }
+        log.info(String.valueOf(doc));
         doc.getDocumentElement().normalize();//root tag
+        log.info(String.valueOf(doc));
         NodeList nodeList = doc.getElementsByTagName("db"); // 파싱할 tag는 <db>
+        log.info(nodeList.toString());
+
         return nodeList;
     }
 
