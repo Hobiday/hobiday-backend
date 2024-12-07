@@ -8,7 +8,7 @@ public class KopisParsing {
     protected final static String DETAIL_URL =  BASE_URL + "/";
     protected final static String FACILITY_URL =  "http://www.kopis.or.kr/openApi/restful/prfplc/";
     protected final static String STDATE = "20241215"; // 시작 검색기간
-    protected final static String EDDATE = "20240113"; // 종료 검색기간
+    protected final static String EDDATE = "20250113"; // 종료 검색기간
     protected final static String ROWS = "70";         // 공연 개수
 
     //genre : code
