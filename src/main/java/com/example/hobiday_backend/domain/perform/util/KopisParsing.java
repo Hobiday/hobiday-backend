@@ -9,19 +9,19 @@ public class KopisParsing {
     protected final static String FACILITY_URL =  "http://www.kopis.or.kr/openApi/restful/prfplc/";
     protected final static String STDATE = "20241215"; // 시작 검색기간
     protected final static String EDDATE = "20250113"; // 종료 검색기간
-    protected final static String ROWS = "70";         // 공연 개수
+    protected final static String ROWS = "50";         // 공연 개수
 
     //genre : code
     public final static HashMap<String, String> GENRE_CODES_REQUEST = new HashMap<>() {{
-            put("연극", "AAAA");
-            put("무용", "BBBC");
-            put("대중무용", "BBBE");
-            put("서양음악", "CCCA");
-            put("한국음악", "CCCC");
-            put("대중음악", "CCCD");
-            put("복합", "EEEA");
-            put("서커스", "EEEB");
-            put("뮤지컬", "GGGA");
+            put("AAAA", "연극");
+            put("BBBC", "무용");
+            put("BBBE", "대중무용");
+            put("CCCA", "서양음악");
+            put("CCCC", "한국음악");
+            put("CCCD", "대중음악");
+            put("EEEA", "복합");
+            put("EEEB", "서커스");
+            put("GGGA", "뮤지컬");
     }};
 
 // =====================================no use =====================================

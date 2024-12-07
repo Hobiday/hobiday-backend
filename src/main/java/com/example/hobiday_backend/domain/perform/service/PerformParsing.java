@@ -39,7 +39,7 @@ public class PerformParsing extends KopisParsing {
 //        urlBuilder.append("&shcate="+shcate);
 
         // 공연기본, 공연상세 정보 DB 저장
-        for (String genreCode : GENRE_CODES_REQUEST.values()) {
+        for (String genreCode : GENRE_CODES_REQUEST.keySet()) {
             savePerformByGenres(genreCode);
 //            Thread.sleep(500);
         }
