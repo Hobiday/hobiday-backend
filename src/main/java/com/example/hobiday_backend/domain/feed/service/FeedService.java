@@ -77,16 +77,42 @@ public class FeedService {
                 .build();
     }
 
-    public List<FeedRes> getFeedsByLatest() {
-        List<Feed> feeds = feedRepository.findAllByOrderByWriteDateDesc();
+    public List<FeedRes> getAllFeedsByLatest() {
+        List<Feed> feeds = feedRepository.findAllByOrderByCreatedTimeDesc();
 
         return feeds.stream()
+                .peek(Feed::updateCommentCount)
                 .map(feed -> FeedRes.builder()
+                        .id(feed.getId())
                         .contents(feed.getContent())
                         .profileName(feed.getProfile().getProfileNickname())
+                        .profileImageUrl(feed.getProfile().getProfileImageUrl())
+                        .hashTag(feed.getHashTags())
+                        .likeCount(feed.getLikeCount())
+                        .commentCount(feed.getCommentCount())
+                        .isLiked(false)
+                        .createdTime(feed.getCreatedTime())
+                        .modifiedTime(feed.getModifiedTime())
+                        .build())
+                .toList();
+    }
+
+    public List<FeedRes> getFeedsByLatest(Long profileId) {
+     //   List<Feed> feeds = feedRepository.findByMemberIdOrderByCreatedTimeDesc(memberId);
+        List<Feed> feeds = feedRepository.findAllByProfileIdOrderByCreatedTimeDesc(profileId);
+        return feeds.stream()
+                .peek(Feed::updateCommentCount)
+                .map(feed -> FeedRes.builder()
+                        .id(feed.getId())
+                        .contents(feed.getContent())
+                        .profileName(feed.getProfile().getProfileNickname())
+                        .profileImageUrl(feed.getProfile().getProfileImageUrl())
+                        .commentCount(feed.getCommentCount())
                         .hashTag(feed.getHashTags())
                         .likeCount(feed.getLikeCount())
                         .isLiked(false)
+                        .createdTime(feed.getCreatedTime())
+                        .modifiedTime(feed.getModifiedTime())
                         .build())
                 .toList();
     }
@@ -95,12 +121,18 @@ public class FeedService {
         List<Feed> feeds = feedRepository.findAllByOrderByLikeCountDesc();
 
         return feeds.stream()
+                .peek(Feed::updateCommentCount)
                 .map(feed -> FeedRes.builder()
+                        .id(feed.getId())
                         .contents(feed.getContent())
                         .profileName(feed.getProfile().getProfileNickname())
+                        .profileImageUrl(feed.getProfile().getProfileImageUrl())
+                        .commentCount(feed.getCommentCount())
                         .hashTag(feed.getHashTags())
                         .likeCount(feed.getLikeCount())
                         .isLiked(false)
+                        .createdTime(feed.getCreatedTime())
+                        .modifiedTime(feed.getModifiedTime())
                         .build())
                 .toList();
     }

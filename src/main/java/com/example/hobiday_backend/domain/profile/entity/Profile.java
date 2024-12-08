@@ -60,4 +60,12 @@ public class Profile {
         this.profileIntroduction = profileIntroduction;
         this.profileImageUrl = profileImageUrl;
     }
+
+    public void updateProfile(String profileNickname, String profileEmail, String profileGenre, String profileIntroduction, String profileImageUrl) {
+        this.profileNickname = profileNickname;
+        this.profileEmail = profileEmail;
+        this.profileGenre = profileGenre;
+        this.profileIntroduction = profileIntroduction;
+        this.profileImageUrl = profileImageUrl;
+    }
 }

@@ -47,7 +47,7 @@ public class MemberController {
 
     @Operation(summary="(개발용)기존회원 로그인", description="미리 만들어둔 회원에 로그인, 토큰 받음")
     @GetMapping("/api/test/freepass/{nickname}")
-    public ResponseEntity<FreePassResponse> loginFreePass(@PathVariable String nickname){
+    public ResponseEntity<FreePassResponse> loginFreePass(@PathVariable(value="nickname") String nickname){
         FreePassResponse freePassResponse = memberService.loginFreePassMember(nickname);
 //        log.info("프리패스: " + freePassResponse.getNickname());
         return ResponseEntity.ok()

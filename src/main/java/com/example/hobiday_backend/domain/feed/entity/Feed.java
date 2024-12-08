@@ -30,7 +30,7 @@ public class Feed extends TImeStamped {
 
     // 프로필
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id", nullable = false)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id", nullable = false)
     private Profile profile;
 
     // 피드 사진
@@ -49,6 +49,9 @@ public class Feed extends TImeStamped {
     @OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
+    // 댓글 개수
+    @Transient
+    private int commentCount;
 
     // dto의 값을 엔티티로 바꿔서 저장하기 위한 빌더
     @Builder
@@ -58,6 +61,20 @@ public class Feed extends TImeStamped {
         this.content = content;
         this.profile = profile;
         this.topic = topic;
+    }
+
+    public void updateCommentCount() {
+        this.commentCount = commentList.size();
+    }
+
+    public void addComment(Comment comment) {
+        this.commentList.add(comment);
+        updateCommentCount();
+    }
+
+    public void removeComment(Comment comment) {
+        this.commentList.remove(comment);
+        updateCommentCount();
     }
 
     public void incrementLikeCount() {

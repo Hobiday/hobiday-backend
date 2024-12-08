@@ -32,14 +32,19 @@ public class FeedController {
     }
 
     // 전체 피드 조회
- /*   @GetMapping
-    public ResponseEntity<SuccessRes<List<FeedRes>>>*/
+    @Operation(summary = "전체 피드 조회 기능", description = "전체 피드를 최신순으로 조회합니다.")
+    @GetMapping("/latest/all")
+    public ResponseEntity<List<FeedRes>> getAllFeedsByLatest() {
+        List<FeedRes> feedResList = feedService.getAllFeedsByLatest();
+        return ResponseEntity.ok(feedResList);
+    }
 
     // 최신순 피드 조회
-    @Operation(summary = "최신순 피드 조회 기능", description = "피드를 최신순으로 조회합니다.")
-    @GetMapping("/latest")
-    public ResponseEntity<List<FeedRes>> getFeedsByLatest() {
-        List<FeedRes> feedResList = feedService.getFeedsByLatest();
+    @Operation(summary = "나의 피드 조회 기능", description = "나의 피드를 최신순으로 조회합니다.")
+    @GetMapping("/api/latest/{profileId}")
+    public ResponseEntity<List<FeedRes>> getFeedsByLatest(@PathVariable(value="profileId") Long profileId) {
+       // Long memberId = memberService.getMemberIdByToken(token);
+        List<FeedRes> feedResList = feedService.getFeedsByLatest(profileId);
         return ResponseEntity.ok(feedResList);
     }
 
