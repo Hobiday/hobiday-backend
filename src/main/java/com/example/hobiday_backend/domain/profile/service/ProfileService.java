@@ -29,15 +29,7 @@ public class ProfileService {
     public ProfileResponse getProfileByMemberId(Long memberId){
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
-        return ProfileResponse.builder()
-                .profileId(profile.getId())
-//                .userId(profile.getUserId()) // 방1
-                .memberId(profile.getMember().getId()) // 방2
-                .profileNickname(profile.getProfileNickname())
-                .profileEmail(profile.getProfileEmail())
-                .profileIntroduction(profile.getProfileIntroduction())
-                .profileGenres(getGenreToList(profile.getProfileGenre()))
-                .build();
+        return ProfileResponse.from(profile);
     }
 
     // 닉네임 중복 여부
@@ -56,14 +48,14 @@ public class ProfileService {
 //        String email = userRepository.findById(userId).get().getEmail(); //방1
         String email = member.getEmail(); //방2
 //        log.info("dto 장르: " + addProfileRequest.profileGenre);
-        profileRepository.save(Profile.builder()
+        Profile profile = profileRepository.save(Profile.builder()
 //                .userId(userId) //방1
                 .member(member) //방2
                 .profileEmail(email)
                 .profileNickname(addProfileRequest.profileNickname)
                 .profileGenre(getGenreToString(addProfileRequest.profileGenre)) // 문자열 <- 리스트 변환해서 저장
                 .build());
-        return getProfileByMemberId(member.getId());
+        return ProfileResponse.from(profile);
     }
 
     // 프로필 업데이트
@@ -72,7 +64,7 @@ public class ProfileService {
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
         profile.updateProfile(updateProfileRequest);
-        return getProfileByMemberId(memberId);
+        return ProfileResponse.from(profile);
     }
 
 // no use ============================================================================================================
