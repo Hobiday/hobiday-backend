@@ -1,14 +1,14 @@
 package com.example.hobiday_backend.domain.profile.entity;
 
 import com.example.hobiday_backend.domain.member.entity.Member;
+import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToString;
 
 
 @Table(name = "profiles")
@@ -54,21 +54,15 @@ public class Profile {
         this.profileImageUrl = profileImageUrl;
     }
 
-    public void updateProfile(String profileNickname, String profileEmail, String profileGenre, String profileIntroduction, String profileImageUrl) {
-        if (profileNickname != null && !profileNickname.isEmpty()) {
-            this.profileNickname = profileNickname;
+    public void updateProfile(UpdateProfileRequest updateProfileRequest) {
+        if(updateProfileRequest.getProfileGenre()!=null){
+            this.profileGenre = getGenreToString(updateProfileRequest.getProfileGenre());
         }
-        if (profileEmail != null && !profileEmail.isEmpty()) {
-            this.profileEmail = profileEmail;
+        if(updateProfileRequest.getProfileNickname()!=null){
+            this.profileNickname = updateProfileRequest.getProfileNickname();
         }
-        if (profileGenre != null && !profileGenre.isEmpty()) {
-            this.profileGenre = profileGenre;
-        }
-        if (profileIntroduction != null && !profileIntroduction.isEmpty()) {
-            this.profileIntroduction = profileIntroduction;
-        }
-        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-            this.profileImageUrl = profileImageUrl;
+        if(updateProfileRequest.getProfileIntroduction()!=null){
+            this.profileIntroduction = updateProfileRequest.getProfileIntroduction();
         }
     }
 }

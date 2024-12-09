@@ -28,13 +28,14 @@ public class ProfileService {
     // 회원ID로 프로필 정보 반환
     public ProfileResponse getProfileByMemberId(Long memberId){
         Profile profile = profileRepository.findByMemberId(memberId)
-                .orElseThrow(() ->new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
         return ProfileResponse.builder()
                 .profileId(profile.getId())
 //                .userId(profile.getUserId()) // 방1
                 .memberId(profile.getMember().getId()) // 방2
                 .profileNickname(profile.getProfileNickname())
                 .profileEmail(profile.getProfileEmail())
+                .profileIntroduction(profile.getProfileIntroduction())
                 .profileGenres(getGenreToList(profile.getProfileGenre()))
                 .build();
     }
@@ -66,24 +67,12 @@ public class ProfileService {
     }
 
     // 프로필 업데이트
-    public ProfileResponse updateProfile(Long profileId, UpdateProfileRequest updateProfileRequest, Member member) {
-        Profile profile = profileRepository.findById(profileId)
+    @Transactional
+    public ProfileResponse updateProfile(Long memberId, UpdateProfileRequest updateProfileRequest) {
+        Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
-
-        if (!profile.getMember().getId().equals(member.getId())) {
-            throw new ProfileException(ProfileErrorCode.PROFILE_UPDATE_ACCESS_DENIED);
-        }
-        String profileGenre = updateProfileRequest.getProfileGenre() != null ?
-                getGenreToString(updateProfileRequest.getProfileGenre()) : null;
-
-        profile.updateProfile(
-                updateProfileRequest.getProfileNickname(),
-                updateProfileRequest.getProfileEmail(),
-                profileGenre,
-                updateProfileRequest.getProfileIntroduction(),
-                updateProfileRequest.getProfileImageUrl()
-        );
-        return ProfileResponse.res(profileRepository.save(profile));
+        profile.updateProfile(updateProfileRequest);
+        return getProfileByMemberId(memberId);
     }
 
 // no use ============================================================================================================

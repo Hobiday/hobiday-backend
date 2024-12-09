@@ -1,7 +1,7 @@
 spring:
-#  sql: # 처음에 DB 데이터 넣기 위한 설정(data.sql파일)
-#    init:
-#      mode: always
+  sql: # 처음에 DB 데이터 넣기 위한 설정(data.sql파일)
+    init:
+      mode: always
 
   datasource:
 #    url: jdbc:mysql://db-hobiday.clskq04mytmt.ap-northeast-2.rds.amazonaws.com:3306/hobiday
@@ -11,9 +11,9 @@ spring:
     password: 95206326
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-#    defer-datasource-initialization: true
+    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect

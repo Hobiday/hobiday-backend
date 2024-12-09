@@ -83,19 +83,16 @@ public class ProfileController {
 
 
     // 프로필 수정
-    @Operation(summary = "프로필 수정", description = "프로필을 수정합니다.")
-    @PutMapping("/api/profiles/{profileId}")
-    public ResponseEntity<ApiResponse<ProfileResponse>> updateProfile(
-            @PathVariable Long profileId,
+    @Operation(summary = "프로필 수정", description = "닉네임, 장르, 자기소개 수정 | 안 바꿀값은 null로 보내면 됨 | 이미지는 아직 미포함")
+    @PutMapping("/api/profiles/update")
+    public ApiResponse<ProfileResponse> updateProfile(
             @RequestHeader("Authorization") String token,
             @RequestBody UpdateProfileRequest updateProfileRequest) {
 
         Long memberId = memberService.getMemberIdByToken(token);
-        Member member = memberService.findById(memberId);
+        ProfileResponse profileResponses = profileService.updateProfile(memberId, updateProfileRequest);
 
-        ProfileResponse profileResponses = profileService.updateProfile(profileId, updateProfileRequest, member);
-
-        return ResponseEntity.ok(ApiResponse.success(profileResponses));
+        return ApiResponse.success(profileResponses);
 
     }
 
