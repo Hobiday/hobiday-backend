@@ -3,7 +3,6 @@ package com.example.hobiday_backend.domain.perform.repository;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;

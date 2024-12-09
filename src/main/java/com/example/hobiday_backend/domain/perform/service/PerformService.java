@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import static com.example.hobiday_backend.domain.perform.util.KopisParsing.GENRE_CODES_REQUEST;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -88,13 +86,13 @@ public class PerformService {
 
     // 장르별 공연 리스트 조회
     public List<PerformResponse> getPerformListByGenre(PerformGenreRequest performGenreRequest) {
-       String genre = performGenreRequest.genre;
-       int rowStart = Integer.parseInt(performGenreRequest.rowStart);
-       int rowEnd = Integer.parseInt(performGenreRequest.rowEnd);
+        String genre = performGenreRequest.genre;
+        int rowStart = Integer.parseInt(performGenreRequest.rowStart);
+        int rowEnd = Integer.parseInt(performGenreRequest.rowEnd);
 //       int limit = rowEnd - rowStart + 1;
 //       int offset = rowStart;
 //       log.info("들어와서: " + genre);
-       List<Perform> performList = performRepository.findByGenreNm(genre, rowEnd - rowStart + 1, rowStart)
+        List<Perform> performList = performRepository.findByGenreNm(genre, rowEnd - rowStart + 1, rowStart)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
         return performList.stream()
                 .map(PerformResponse::new)

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Random;
+
 @Table(name = "Performs")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -44,7 +46,9 @@ public class Perform {
         this.fcltynm = fcltynm;
         this.area = area;
         this.poster = poster;
-        this.likeCount = 0; // 파라미터에 선언X
+
+        Random rd = new Random();
+        this.likeCount = rd.nextInt(11); // 임시로 랜덤값. 파라미터에 선언X
     }
 }
 

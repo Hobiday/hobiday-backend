@@ -24,9 +24,6 @@ import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGe
 @Service
 public class ProfileService {
     private final ProfileRepository profileRepository;
-    private final MemberRepository memberRepository;
-    private final MemberService memberService;
-
 
     // 회원ID로 프로필 정보 반환
     public ProfileResponse getProfileByMemberId(Long memberId){
@@ -87,7 +84,7 @@ public class ProfileService {
                 updateProfileRequest.getProfileImageUrl()
         );
         return ProfileResponse.res(profileRepository.save(profile));
-    };
+    }
 
 // no use ============================================================================================================
 //    // 프로필ID로 프로필 정보 반환
