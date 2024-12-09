@@ -83,7 +83,7 @@ public class ProfileController {
 
 
     // 프로필 수정
-    @Operation(summary = "프로필 수정", description = "닉네임, 장르, 자기소개 수정 | 안 바꿀값은 null로 보내면 됨 | 이미지는 아직 미포함")
+    @Operation(summary = "프로필 수정(by토큰)", description = "닉네임, 장르, 자기소개 수정 | 안 바꿀값은 null로 보내면 됨 | 이미지는 아직 미포함")
     @PutMapping("/api/profiles/update")
     public ApiResponse<ProfileResponse> updateProfile(
             @RequestHeader("Authorization") String token,
