@@ -13,8 +13,14 @@ public class FeedRes {
     private Long profileId;
     private List<String> hashTag;
     private List<String> feedFiles;
-    private int likeCount;
-    private boolean isLiked;
+    private Integer likeCount;
+    private boolean isLiked; //좋아요 여부
+
+    // 댓글 갯수
+    private Integer commentCount;
+    // 프로필 사진 url들
+    private String profileImageUrl;
+
     // 공연 정보
     private String performId;          // 공연상세ID
     private String performName;           // 공연명

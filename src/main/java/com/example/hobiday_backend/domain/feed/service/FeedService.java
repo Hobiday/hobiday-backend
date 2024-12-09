@@ -88,6 +88,7 @@ public class FeedService {
                 .contents(savedFeed.getContent())
                 .profileName(savedFeed.getProfile().getProfileNickname()) // Profile 엔티티에 이름 필드가 있다고 가정
                 .profileId(savedFeed.getProfile().getId())
+                .profileImageUrl(savedFeed.getProfile().getProfileImageUrl())
                 .hashTag(savedFeed.getHashTags().stream()
                         .map(HashTag::getHashTag)
                         .toList()) // 저장된 HashTag 리스트
@@ -96,6 +97,7 @@ public class FeedService {
                         .map(FeedFile::getFileUrl)
                         .toList())
                 .likeCount(savedFeed.getLikeCount())
+                .commentCount(savedFeed.getCommentList().size())
                 .isLiked(false) // 기본값 설정
                 // 공연 정보
                 .performId(perform.getMt20id())
@@ -135,6 +137,7 @@ public class FeedService {
                 .contents(feed.getContent())
                 .profileName(feed.getProfile().getProfileNickname())
                 .profileId(feed.getProfile().getId())
+                .profileImageUrl(feed.getProfile().getProfileImageUrl())
                 .hashTag(feed.getHashTags().stream()
                         .map(HashTag::getHashTag)
                         .toList())
@@ -142,6 +145,7 @@ public class FeedService {
                         .map(FeedFile::getFileUrl)
                         .toList())
                 .likeCount(feed.getLikeCount())
+                .commentCount(feed.getCommentList().size())
                 .isLiked(false)
                 .performId(perform.getMt20id())
                 .performName(perform.getPrfnm())
