@@ -54,10 +54,14 @@ jobs:
 
       # Docker Build & Push
       - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/hyun .
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/hyun .
+          docker image build -t springboot-nginx:0.1 -f nginx_Dockerfile .
 
       - name: Push to DockerHub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/hyun
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/hyun
+          docker push springboot-nginx:0.1 
 
       # EC2 배포
       - name: Docker Image Pull & Deploy to EC2
@@ -69,6 +73,7 @@ jobs:
           script: |
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{secrets.DOCKER_USERNAME}}/hyun:latest
+            sudo docker pull springboot-nginx:0.1 
             sudo docker-compose up -d
             sudo docker image prune -f
 #            sudo docker stop $(sudo docker ps -a -q)
