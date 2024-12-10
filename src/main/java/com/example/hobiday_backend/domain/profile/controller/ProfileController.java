@@ -83,7 +83,7 @@ public class ProfileController {
 
 
     // 프로필 수정
-    @Operation(summary = "프로필 수정", description = "프로필을 수")
+    @Operation(summary = "프로필 수정", description = "프")
     @PutMapping("/api/profiles/{profileId}")
     public ResponseEntity<ApiResponse<ProfileResponse>> updateProfile(
             @PathVariable Long profileId,
