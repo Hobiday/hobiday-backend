@@ -12,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("https://hobiday.site", "https://www.hobiday.site","https://hobiday-swyp.vercel.app","http://localhost:3000")
                 .allowCredentials(true)
                 .allowedHeaders("*");
     }
