@@ -1,11 +1,6 @@
 package com.example.hobiday_backend.domain.profile.service;
 
-import com.amazonaws.HttpMethod;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.example.hobiday_backend.domain.member.entity.Member;
-import com.example.hobiday_backend.domain.member.repository.MemberRepository;
-import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.domain.profile.dto.request.AddProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileMessageResponse;
@@ -16,14 +11,12 @@ import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.global.dto.file.PreSignedUrlRequest;
 import com.example.hobiday_backend.global.dto.file.PresignedUrlResponse;
+import com.example.hobiday_backend.global.s3.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URL;
-
-import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToList;
 import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToString;
 
 @Slf4j
@@ -31,8 +24,7 @@ import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGe
 @Service
 public class ProfileService {
     private final ProfileRepository profileRepository;
-    private final FeedService feedService;
-    private final AmazonS3 amazonS3;
+    private final FileService fileService;
 
     // 회원ID로 프로필 정보 반환
     public ProfileResponse getProfileByMemberId(Long memberId){
@@ -76,19 +68,18 @@ public class ProfileService {
         return ProfileResponse.from(profile);
     }
 
-    // 프로필 수정
+    // 프로필 이미지 등록
     @Transactional
     public PresignedUrlResponse updateImage(Long memberId, PreSignedUrlRequest presignedUrlRequest) {
-        String filePath = feedService.createPath(presignedUrlRequest.getPrefix(), presignedUrlRequest.getFileName());
-        GeneratePresignedUrlRequest generatePresignedUrlRequest = feedService.getGeneratePresignedUrlRequest(bucket, filePath, HttpMethod.PUT);
-        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+        PresignedUrlResponse presignedUrlResponse = fileService.getUploadPresignedUrl(presignedUrlRequest.getPrefix(),
+                presignedUrlRequest.getFileName());
 
-        String saveUrl = url.toString().split("\\?")[0];
+        String saveUrl = presignedUrlResponse.getUrl().split("\\?")[0];
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
         profile.updateImage(saveUrl);
 
-        return new PresignedUrlResponse(url.toString(), filePath);
+        return presignedUrlResponse;
     }
 
 // no use ============================================================================================================
