@@ -12,11 +12,12 @@ import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
+import com.example.hobiday_backend.global.dto.file.PreSignedUrlRequest;
+import com.example.hobiday_backend.global.dto.file.PresignedUrlResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -82,21 +83,25 @@ public class ProfileController {
     }
 
 
+    // 프로필 이미지 등록(수정)
+    @Operation(summary = "프로필 이미지 등록(수정 포함)", description = "저장할 폴더명(prefix), 파일명(fileName) 요청해서 프로필 이미지 등록할 url을 응답 " +
+            "| 동시에 프로필DB에는 이미지url 저장해놓음")
+    @PostMapping("/api/profiles/image")
+    public ApiResponse<PresignedUrlResponse> updateImage(@RequestHeader("Authorization") String token,
+                                                         @RequestBody PreSignedUrlRequest presignedUrlRequest){
+        Long memberId = memberService.getMemberIdByToken(token);
+        return ApiResponse.success(profileService.updateImage(memberId, presignedUrlRequest));
+    }
+
     // 프로필 수정
-    @Operation(summary = "프로필 수정", description = "프")
-    @PutMapping("/api/profiles/{profileId}")
-    public ResponseEntity<ApiResponse<ProfileResponse>> updateProfile(
-            @PathVariable Long profileId,
+    @Operation(summary = "프로필 수정", description = "닉네임, 장르, 자기소개 수정 | 안 바꿀값은 null로 보내면 됨 | 이미지는 따로")
+    @PutMapping("/api/profiles/update")
+    public ApiResponse<ProfileResponse> updateProfile(
             @RequestHeader("Authorization") String token,
             @RequestBody UpdateProfileRequest updateProfileRequest) {
 
         Long memberId = memberService.getMemberIdByToken(token);
-        Member member = memberService.findById(memberId);
-
-        ProfileResponse profileResponses = profileService.updateProfile(profileId, updateProfileRequest, member);
-
-        return ResponseEntity.ok(ApiResponse.success(profileResponses));
-
+        return ApiResponse.success(profileService.updateProfile(memberId, updateProfileRequest));
     }
 
 //    //    ============================= 백엔드 테스트용: 1.토큰으로 유저 확인 2.로그인->프로필 등록 =============================
