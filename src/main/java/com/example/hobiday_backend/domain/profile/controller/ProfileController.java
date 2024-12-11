@@ -94,7 +94,7 @@ public class ProfileController {
     }
 
     // 프로필 수정
-    @Operation(summary = "프로필 수정", description = "닉네임, 장르, 자기소개 수정 | 안 바꿀값은 null로 보내면 됨 | 이미지는 따로")
+    @Operation(summary = "프로필 수정", description = "닉네임, 장르, 자기소개 수정 | 바꿀값만 key:value로 전송 | 이미지는 따로")
     @PutMapping("/api/profiles/update")
     public ApiResponse<ProfileResponse> updateProfile(
             @RequestHeader("Authorization") String token,
