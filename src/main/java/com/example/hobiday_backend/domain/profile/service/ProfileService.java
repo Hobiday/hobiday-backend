@@ -1,5 +1,8 @@
 package com.example.hobiday_backend.domain.profile.service;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
 import com.example.hobiday_backend.domain.member.service.MemberService;
@@ -11,10 +14,14 @@ import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
+import com.example.hobiday_backend.global.dto.file.PreSignedUrlRequest;
+import com.example.hobiday_backend.global.dto.file.PresignedUrlResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.net.URL;
 
 import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToList;
 import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToString;
@@ -24,6 +31,8 @@ import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGe
 @Service
 public class ProfileService {
     private final ProfileRepository profileRepository;
+    private final FeedService feedService;
+    private final AmazonS3 amazonS3;
 
     // 회원ID로 프로필 정보 반환
     public ProfileResponse getProfileByMemberId(Long memberId){
@@ -65,6 +74,21 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
         profile.updateProfile(updateProfileRequest);
         return ProfileResponse.from(profile);
+    }
+
+    // 프로필 수정
+    @Transactional
+    public PresignedUrlResponse updateImage(Long memberId, PreSignedUrlRequest presignedUrlRequest) {
+        String filePath = feedService.createPath(presignedUrlRequest.getPrefix(), presignedUrlRequest.getFileName());
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = feedService.getGeneratePresignedUrlRequest(bucket, filePath, HttpMethod.PUT);
+        URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
+
+        String saveUrl = url.toString().split("\\?")[0];
+        Profile profile = profileRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        profile.updateImage(saveUrl);
+
+        return new PresignedUrlResponse(url.toString(), filePath);
     }
 
 // no use ============================================================================================================

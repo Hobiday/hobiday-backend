@@ -12,6 +12,8 @@ import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
+import com.example.hobiday_backend.global.dto.file.PreSignedUrlRequest;
+import com.example.hobiday_backend.global.dto.file.PresignedUrlResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -81,6 +83,14 @@ public class ProfileController {
         return ApiResponse.success(profileResponse);
     }
 
+    // 프로필 이미지 등록(수정)
+    @Operation(summary = "프로필 이미지 등록(수정)", description = "저장할 폴더명(prefix), 파일명(fileName) 요청해서 프로필 이미지 등록할 url을 응답")
+    @PostMapping("/api/profiles/image")
+    public ApiResponse<PresignedUrlResponse> updateImage(@RequestHeader("Authorization") String token,
+                                                         @RequestBody PreSignedUrlRequest presignedUrlRequest){
+        Long memberId = memberService.getMemberIdByToken(token);
+        return ApiResponse.success(profileService.updateImage(memberId, presignedUrlRequest));
+    }
 
     // 프로필 수정
     @Operation(summary = "프로필 수정(by토큰)", description = "닉네임, 장르, 자기소개 수정 | 안 바꿀값은 null로 보내면 됨 | 이미지는 아직 미포함")
@@ -90,10 +100,7 @@ public class ProfileController {
             @RequestBody UpdateProfileRequest updateProfileRequest) {
 
         Long memberId = memberService.getMemberIdByToken(token);
-        ProfileResponse profileResponses = profileService.updateProfile(memberId, updateProfileRequest);
-
-        return ApiResponse.success(profileResponses);
-
+        return ApiResponse.success(profileService.updateProfile(memberId, updateProfileRequest));
     }
 
 //    //    ============================= 백엔드 테스트용: 1.토큰으로 유저 확인 2.로그인->프로필 등록 =============================

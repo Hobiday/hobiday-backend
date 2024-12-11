@@ -54,6 +54,11 @@ public class Profile {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public void updateImage(String imageUrl) {
+        this.profileImageUrl = imageUrl;
+    }
+
+
     public void updateProfile(UpdateProfileRequest updateProfileRequest) {
         if(updateProfileRequest.getProfileGenre()!=null){
             this.profileGenre = getGenreToString(updateProfileRequest.getProfileGenre());
