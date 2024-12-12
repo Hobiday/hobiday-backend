@@ -88,6 +88,7 @@ public class FeedService {
 
         // 6. FeedRes 반환 (상대 시간 추가)
         return FeedRes.builder()
+                .feedId(savedFeed.getId())
                 .contents(savedFeed.getContent())
                 .profileName(savedFeed.getProfile().getProfileNickname())
                 .profileId(savedFeed.getProfile().getId())
@@ -137,6 +138,7 @@ public class FeedService {
 
         // FeedRes 반환 (상대 시간 추가)
         return FeedRes.builder()
+                .feedId(feed.getId())
                 .contents(feed.getContent())
                 .profileName(feed.getProfile().getProfileNickname())
                 .profileId(feed.getProfile().getId())
@@ -201,6 +203,7 @@ public class FeedService {
     private List<FeedRes> convertToFeedResList(List<Feed> feeds) {
         return feeds.stream()
                 .map(feed -> FeedRes.builder()
+                        .feedId(feed.getId())
                         .contents(feed.getContent())
                         .profileName(feed.getProfile().getProfileNickname())
                         .profileId(feed.getProfile().getId())

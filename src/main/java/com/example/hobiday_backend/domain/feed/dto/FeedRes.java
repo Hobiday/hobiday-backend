@@ -8,6 +8,7 @@ import java.util.List;
 @Builder
 @Getter
 public class FeedRes {
+    private Long feedId;
     private String contents;
     private String profileName;
     private Long profileId;
