@@ -9,6 +9,10 @@ import com.example.hobiday_backend.domain.feed.exception.*;
 import com.example.hobiday_backend.domain.feed.repository.FeedFileRepository;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
 import com.example.hobiday_backend.domain.feed.repository.HashTagRepository;
+import com.example.hobiday_backend.domain.perform.entity.Perform;
+import com.example.hobiday_backend.domain.perform.exception.PerformErrorCode;
+import com.example.hobiday_backend.domain.perform.exception.PerformException;
+import com.example.hobiday_backend.domain.perform.repository.PerformRepository;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
@@ -27,17 +31,22 @@ public class FeedService {
     private final ProfileRepository profileRepository;
     private final FeedFileRepository feedFileRepository;
     private final HashTagRepository hashTagRepository;
+    private final PerformRepository performRepository;
 
     //피드 작성
     public FeedRes createFeed(FeedReq feedReq, Long userId) {
         Profile profile = profileRepository.findByMemberId(userId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
 
+        Perform perform = performRepository.findById(feedReq.getPerformId())
+                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+
         // 2. Feed 생성
         Feed feed = Feed.builder()
                 .content(feedReq.getContent())
                 .topic(feedReq.getTopic())
                 .profile(profile)
+                .perform(perform)
                 .build();
 
         Feed savedFeed = feedRepository.save(feed);
@@ -78,6 +87,8 @@ public class FeedService {
         return FeedRes.builder()
                 .contents(savedFeed.getContent())
                 .profileName(savedFeed.getProfile().getProfileNickname()) // Profile 엔티티에 이름 필드가 있다고 가정
+                .profileId(savedFeed.getProfile().getId())
+                .profileImageUrl(savedFeed.getProfile().getProfileImageUrl())
                 .hashTag(savedFeed.getHashTags().stream()
                         .map(HashTag::getHashTag)
                         .toList()) // 저장된 HashTag 리스트
@@ -86,7 +97,19 @@ public class FeedService {
                         .map(FeedFile::getFileUrl)
                         .toList())
                 .likeCount(savedFeed.getLikeCount())
+                .commentCount(savedFeed.getCommentList().size())
                 .isLiked(false) // 기본값 설정
+                // 공연 정보
+                .performId(perform.getMt20id())
+                .performName(perform.getPrfnm())
+                .startDate(perform.getPrfpdfrom())
+                .endDate(perform.getGenrenm())
+                .genreName(perform.getPrfstate())
+                .performState(perform.getFcltynm())
+                .openRun(perform.getOpenrun())
+                .area(perform.getArea())
+                .poster(perform.getPoster())
+                .likeCount(perform.getLikeCount())
                 .build();
     }
 
@@ -95,8 +118,9 @@ public class FeedService {
         // 멤버 id로 프로필 찾기
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
-        // 이 멤버가 쓴 피드가 맞는지 확인하기
-
+        //
+        Perform perform = performRepository.findById(feedReq.getPerformId())
+                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
         // 2. 피드 조회 및 작성자 확인
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
@@ -112,6 +136,8 @@ public class FeedService {
         return FeedRes.builder()
                 .contents(feed.getContent())
                 .profileName(feed.getProfile().getProfileNickname())
+                .profileId(feed.getProfile().getId())
+                .profileImageUrl(feed.getProfile().getProfileImageUrl())
                 .hashTag(feed.getHashTags().stream()
                         .map(HashTag::getHashTag)
                         .toList())
@@ -119,9 +145,19 @@ public class FeedService {
                         .map(FeedFile::getFileUrl)
                         .toList())
                 .likeCount(feed.getLikeCount())
+                .commentCount(feed.getCommentList().size())
                 .isLiked(false)
+                .performId(perform.getMt20id())
+                .performName(perform.getPrfnm())
+                .startDate(perform.getPrfpdfrom())
+                .endDate(perform.getGenrenm())
+                .genreName(perform.getPrfstate())
+                .performState(perform.getFcltynm())
+                .openRun(perform.getOpenrun())
+                .area(perform.getArea())
+                .poster(perform.getPoster())
+                .likeCount(perform.getLikeCount())
                 .build();
-
     }
 
     public void deleteFeed(Long memberId, Long feedId) {
@@ -138,7 +174,7 @@ public class FeedService {
         feedRepository.delete(feed);
     }
 
-    public List<FeedRes> getFeedsByLatest() {
+/*    public List<FeedRes> getFeedsByLatest() {
         List<Feed> feeds = feedRepository.findAllByOrderByWriteDateDesc();
 
         return feeds.stream()
@@ -164,5 +200,5 @@ public class FeedService {
                         .isLiked(false)
                         .build())
                 .toList();
-    }
+    }*/
 }

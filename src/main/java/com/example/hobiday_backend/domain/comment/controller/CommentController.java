@@ -24,43 +24,43 @@ public class CommentController {
     //
     @Operation(summary = "댓글 작성", description = "새로운 댓글을 작성합니다.") // 메서드 설명
     @PostMapping("/{feedId}")
-    public ResponseEntity<ApiResponse<CommentRes>> createComment(
+    public ApiResponse<CommentRes> createComment(
             @PathVariable Long feedId,
             @RequestBody CommentReq commentReq,
             @RequestHeader("Authorization") String token) {
         Long userId = memberService.getMemberIdByToken(token);
         Member member = memberService.findById(userId);
         CommentRes comment = commentService.createComment(feedId, commentReq, member);
-        return ResponseEntity.ok(ApiResponse.success(comment));
+        return ApiResponse.success(comment);
     }
 
     @Operation(summary = "댓글 조회", description = "피드 ID를 기반으로 댓글 목록을 조회합니다.")
     @GetMapping("/{feedId}")
-    public ResponseEntity<ApiResponse<List<CommentRes>>> getCommentsByFeedId(@PathVariable Long feedId) {
+    public ApiResponse<List<CommentRes>> getCommentsByFeedId(@PathVariable Long feedId) {
         List<CommentRes> comments = commentService.getCommentsByFeedId(feedId);
-        return ResponseEntity.ok(ApiResponse.success(comments));
+        return ApiResponse.success(comments);
     }
 
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
     @PutMapping("/{commentId}")
-    public ResponseEntity<ApiResponse<CommentRes>> updateComment(
+    public ApiResponse<CommentRes> updateComment(
             @PathVariable Long commentId,
             @RequestBody CommentReq commentReq,
             @RequestHeader("Authorization") String token) {
         Long userId = memberService.getMemberIdByToken(token);
         Member member = memberService.findById(userId);
         CommentRes updatedComment = commentService.updateComment(commentId, commentReq, member);
-        return ResponseEntity.ok(ApiResponse.success(updatedComment));
+        return ApiResponse.success(updatedComment);
     }
 
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<ApiResponse<Void>> deleteComment(
+    public ApiResponse<Void> deleteComment(
             @PathVariable Long commentId,
             @RequestHeader("Authorization") String token) {
         Long userId = memberService.getMemberIdByToken(token);
         Member member = memberService.findById(userId);
         commentService.deleteComment(commentId, member);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ApiResponse.success(null);
     }
 }

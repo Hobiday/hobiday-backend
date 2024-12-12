@@ -1,11 +1,14 @@
 package com.example.hobiday_backend.domain.perform.entity;
 
+import com.example.hobiday_backend.domain.feed.entity.Feed;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Table(name = "Performs")
@@ -16,6 +19,9 @@ public class Perform {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "perform", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Feed> feeds = new ArrayList<>();
 
     /* ========================= 공연 기본정보 =========================*/
     @Column(unique = true)

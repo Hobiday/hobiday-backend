@@ -25,7 +25,7 @@ public class FeedController {
     private final MemberService memberService;
     private final FileService fileService;
 
-    // 추천순 피드 조회
+/*    // 추천순 피드 조회
     @Operation(summary = "추천순 피드 조회 기능", description = "피드를 추천순으로 조회합니다.")
     @GetMapping("/recommendation")
     public ResponseEntity<List<FeedRes>> getFeedsByLikeCount() {
@@ -39,7 +39,7 @@ public class FeedController {
     public ResponseEntity<List<FeedRes>> getFeedsByLatest() {
         List<FeedRes> feedResList = feedService.getFeedsByLatest();
         return ResponseEntity.ok(feedResList);
-    }
+    }*/
 
     //파일등록 API
     @Operation(summary = "Presigned URL 요청", description = "파일 업로드를 위한 presigned URL을 생성하는 API" +
@@ -59,13 +59,13 @@ public class FeedController {
     //피드 작성
     @Operation(summary = "피드 작성", description = "요청헤더에는 토큰 // 요청바디에는 내용,주제,파일url,해시태그를 받습니다")
     @PostMapping("/feeds")
-    public ResponseEntity<ApiResponse<FeedRes>> createFeed(@RequestBody FeedReq feedReq,
-                                                           @RequestHeader("Authorization") String token) {
+    public ApiResponse<FeedRes> createFeed(@RequestBody FeedReq feedReq,
+                                           @RequestHeader("Authorization") String token) {
         // 1. 토큰을 사용해 사용자 ID 가져오기
         Long userId = memberService.getMemberIdByToken(token);
         // 2. 피드 생성
         FeedRes feedRes = feedService.createFeed(feedReq, userId);
-        return ResponseEntity.ok(ApiResponse.success(feedRes));
+        return ApiResponse.success(feedRes);
     }
 
     //피드 수정

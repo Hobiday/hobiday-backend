@@ -2,8 +2,9 @@ package com.example.hobiday_backend.domain.feed.entity;
 
 import com.example.hobiday_backend.domain.comment.entity.Comment;
 import com.example.hobiday_backend.domain.like.entity.Like;
+import com.example.hobiday_backend.domain.perform.entity.Perform;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
-import com.example.hobiday_backend.global.domain.TImeStamped;
+import com.example.hobiday_backend.global.domain.TimeStamped;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,7 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Feed extends TImeStamped {
+public class Feed extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,6 +35,11 @@ public class Feed extends TImeStamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", nullable = false)
     private Profile profile;
+
+    // 공연
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "perform_id", nullable = false)
+    private Perform perform;
 
     // 피드 사진
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -60,10 +66,12 @@ public class Feed extends TImeStamped {
     @Builder
     public Feed(String content,
                 String topic,
-                Profile profile) {
+                Profile profile,
+                Perform perform) {
         this.content = content;
         this.profile = profile;
         this.topic = topic;
+        this.perform = perform;
     }
 
     public void incrementLikeCount() {
