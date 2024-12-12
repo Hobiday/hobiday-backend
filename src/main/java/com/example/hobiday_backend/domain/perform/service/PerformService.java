@@ -1,7 +1,5 @@
 package com.example.hobiday_backend.domain.perform.service;
 
-import com.example.hobiday_backend.domain.perform.dto.reqeust.PerformAllRequest;
-import com.example.hobiday_backend.domain.perform.dto.reqeust.PerformGenreRequest;
 import com.example.hobiday_backend.domain.perform.dto.response.FacilityResponse;
 import com.example.hobiday_backend.domain.perform.dto.response.PerformDetailResponse;
 import com.example.hobiday_backend.domain.perform.dto.response.PerformRecommendListResponse;
@@ -85,14 +83,13 @@ public class PerformService {
     }
 
     // 장르별 공연 리스트 조회
-    public List<PerformResponse> getPerformListByGenre(PerformGenreRequest performGenreRequest) {
-        String genre = performGenreRequest.genre;
-        int rowStart = Integer.parseInt(performGenreRequest.rowStart);
-        int rowEnd = Integer.parseInt(performGenreRequest.rowEnd);
+    public List<PerformResponse> getPerformListByGenre(String genre, String rowStart, String rowEnd) {
+        int start = Integer.parseInt(rowStart);
+        int end = Integer.parseInt(rowEnd);
 //       int limit = rowEnd - rowStart + 1;
 //       int offset = rowStart;
 //       log.info("들어와서: " + genre);
-        List<Perform> performList = performRepository.findByGenreNm(genre, rowEnd - rowStart + 1, rowStart)
+        List<Perform> performList = performRepository.findByGenreNm(genre, end - start + 1, start)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
         return performList.stream()
                 .map(PerformResponse::new)
@@ -140,13 +137,13 @@ public class PerformService {
 //    }
 
     // 모든 장르 조회
-    public List<PerformResponse> getPerformsAll(List<String> profileGenreList, PerformAllRequest performAllRequest){
+    public List<PerformResponse> getPerformsAll(List<String> profileGenreList, String rowStart, String rowEnd){
         // 장르별로 index 어디까지 했는지 기억하고 있어야함
 
 //        String genre = performGenreRequest.genre;
-        int rowStart = Integer.parseInt(performAllRequest.rowStart);
-        int rowEnd = Integer.parseInt(performAllRequest.rowEnd);
-        List<Perform> performList = performRepository.findAllBySelect(rowEnd - rowStart + 1, rowStart)
+        int start = Integer.parseInt(rowStart);
+        int end = Integer.parseInt(rowEnd);
+        List<Perform> performList = performRepository.findAllBySelect(end - start + 1, start)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
         return performList.stream()
                 .map(PerformResponse::new)

@@ -124,19 +124,19 @@ public class PerformParsing extends KopisParsing {
             String facilityId = element.getElementsByTagName("mt10id").item(0).getTextContent();
             facilitySet.add(facilityId); // 시설상세ID를 집합에 추가
             performDetailRepository.save(PerformDetail.builder()
-                            .perform(perform)
-                            .mt20id(performDetailId)
-                            .mt10id(facilityId)
-                            .prfcast(getTextByElement(element, "prfcast"))
-                            .prfruntime(getTextByElement(element, "prfruntime"))
-                            .prfage(getTextByElement(element, "prfage"))
-                            .pcseguidance(getTextByElement(element, "pcseguidance"))
+                    .perform(perform)
+                    .mt20id(performDetailId)
+                    .mt10id(facilityId)
+                    .prfcast(getTextByElement(element, "prfcast"))
+                    .prfruntime(getTextByElement(element, "prfruntime"))
+                    .prfage(getTextByElement(element, "prfage"))
+                    .pcseguidance(getTextByElement(element, "pcseguidance"))
 ////                                .sty(element.getElementsByTagName("sty").item(0).getTextContent())
-                            .styurl(getTextByElement(element, "styurl"))
-                            .dtguidance(getTextByElement(element, "dtguidance"))
-                            .relatenm(getTextByElement(element, "relatenm"))
-                            .relateurl(getTextByElement(element, "relateurl"))
-                            .build());
+                    .styurl(getTextByElement(element, "styurl"))
+                    .dtguidance(getTextByElement(element, "dtguidance"))
+                    .relatenm(getTextByElement(element, "relatenm"))
+                    .relateurl(getTextByElement(element, "relateurl"))
+                    .build());
         }
     }
 
