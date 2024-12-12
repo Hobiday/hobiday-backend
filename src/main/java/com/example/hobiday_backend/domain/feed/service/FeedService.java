@@ -9,6 +9,7 @@ import com.example.hobiday_backend.domain.feed.exception.*;
 import com.example.hobiday_backend.domain.feed.repository.FeedFileRepository;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
 import com.example.hobiday_backend.domain.feed.repository.HashTagRepository;
+import com.example.hobiday_backend.domain.like.repository.LikeRepository;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
 import com.example.hobiday_backend.domain.perform.exception.PerformErrorCode;
 import com.example.hobiday_backend.domain.perform.exception.PerformException;
@@ -35,6 +36,7 @@ public class FeedService {
     private final FeedFileRepository feedFileRepository;
     private final HashTagRepository hashTagRepository;
     private final PerformRepository performRepository;
+    private final LikeRepository likeRepository;
 
     //피드 작성
     public FeedRes createFeed(FeedReq feedReq, Long userId) {
@@ -187,7 +189,7 @@ public class FeedService {
         if (feeds.isEmpty()) {
             throw new FeedException(FeedErrorCode.FEED_LIST_EMPTY); // 피드가 없을 경우 예외 발생
         }
-        return convertToFeedResList(feeds);
+        return convertToFeedResList(feeds,userId);
     }
 
     // 좋아요 순 조회
@@ -196,11 +198,14 @@ public class FeedService {
         if (feeds.isEmpty()) {
             throw new FeedException(FeedErrorCode.FEED_LIST_EMPTY); // 피드가 없을 경우 예외 발생
         }
-        return convertToFeedResList(feeds);
+        return convertToFeedResList(feeds,userId);
     }
 
     // Feed 엔티티를 FeedRes DTO로 변환
-    private List<FeedRes> convertToFeedResList(List<Feed> feeds) {
+    private List<FeedRes> convertToFeedResList(List<Feed> feeds, Long userId) {
+        Profile profile = profileRepository.findByMemberId(userId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+
         return feeds.stream()
                 .map(feed -> FeedRes.builder()
                         .feedId(feed.getId())
@@ -216,7 +221,7 @@ public class FeedService {
                                 .collect(Collectors.toList()))
                         .likeCount(feed.getLikeCount())
                         .commentCount(feed.getCommentList().size())
-                        .isLiked(false) // 기본값 설정
+                        .isLiked(likeRepository.existsByFeedAndProfile(feed,profile))
                         .relativeTime(getRelativeTime(feed.getCreatedTime())) // 상대 시간 추가
                         // 공연 정보 추가
                         .performId(feed.getPerform() != null ? feed.getPerform().getMt20id() : null)
