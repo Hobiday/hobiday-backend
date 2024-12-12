@@ -1,8 +1,6 @@
 package com.example.hobiday_backend.domain.profile.service;
 
 import com.example.hobiday_backend.domain.member.entity.Member;
-import com.example.hobiday_backend.domain.member.repository.MemberRepository;
-import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.domain.profile.dto.request.AddProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
 import com.example.hobiday_backend.domain.profile.dto.response.ProfileMessageResponse;
@@ -11,12 +9,14 @@ import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
+import com.example.hobiday_backend.global.dto.file.PreSignedUrlRequest;
+import com.example.hobiday_backend.global.dto.file.PresignedUrlResponse;
+import com.example.hobiday_backend.global.s3.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToList;
 import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGenreToString;
 
 @Slf4j
@@ -24,19 +24,13 @@ import static com.example.hobiday_backend.domain.perform.util.GenreCasting.getGe
 @Service
 public class ProfileService {
     private final ProfileRepository profileRepository;
+    private final FileService fileService;
 
     // 회원ID로 프로필 정보 반환
     public ProfileResponse getProfileByMemberId(Long memberId){
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() ->new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
-        return ProfileResponse.builder()
-                .profileId(profile.getId())
-//                .userId(profile.getUserId()) // 방1
-                .memberId(profile.getMember().getId()) // 방2
-                .profileNickname(profile.getProfileNickname())
-                .profileEmail(profile.getProfileEmail())
-                .profileGenres(getGenreToList(profile.getProfileGenre()))
-                .build();
+        return ProfileResponse.from(profile);
     }
 
     // 닉네임 중복 여부
@@ -50,40 +44,42 @@ public class ProfileService {
     // 프로필 등록(온보딩 작성)
     @Transactional
     public ProfileResponse saveFirst(//Long userId, //방1
-                             Member member, //방2
-                             AddProfileRequest addProfileRequest){
+                                     Member member, //방2
+                                     AddProfileRequest addProfileRequest){
 //        String email = userRepository.findById(userId).get().getEmail(); //방1
         String email = member.getEmail(); //방2
 //        log.info("dto 장르: " + addProfileRequest.profileGenre);
-        profileRepository.save(Profile.builder()
+        Profile profile = profileRepository.save(Profile.builder()
 //                .userId(userId) //방1
                 .member(member) //방2
                 .profileEmail(email)
                 .profileNickname(addProfileRequest.profileNickname)
                 .profileGenre(getGenreToString(addProfileRequest.profileGenre)) // 문자열 <- 리스트 변환해서 저장
                 .build());
-        return getProfileByMemberId(member.getId());
+        return ProfileResponse.from(profile);
     }
 
     // 프로필 업데이트
-    public ProfileResponse updateProfile(Long profileId, UpdateProfileRequest updateProfileRequest, Member member) {
-        Profile profile = profileRepository.findById(profileId)
+    @Transactional
+    public ProfileResponse updateProfile(Long memberId, UpdateProfileRequest updateProfileRequest) {
+        Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        profile.updateProfile(updateProfileRequest);
+        return ProfileResponse.from(profile);
+    }
 
-        if (!profile.getMember().getId().equals(member.getId())) {
-            throw new ProfileException(ProfileErrorCode.PROFILE_UPDATE_ACCESS_DENIED);
-        }
-        String profileGenre = updateProfileRequest.getProfileGenre() != null ?
-                getGenreToString(updateProfileRequest.getProfileGenre()) : null;
+    // 프로필 수정
+    @Transactional
+    public PresignedUrlResponse updateImage(Long memberId, PreSignedUrlRequest presignedUrlRequest) {
+        PresignedUrlResponse presignedUrlResponse = fileService.getUploadPresignedUrl(presignedUrlRequest.getPrefix(),
+                presignedUrlRequest.getFileName());
 
-        profile.updateProfile(
-                updateProfileRequest.getProfileNickname(),
-                updateProfileRequest.getProfileEmail(),
-                profileGenre,
-                updateProfileRequest.getProfileIntroduction(),
-                updateProfileRequest.getProfileImageUrl()
-        );
-        return ProfileResponse.res(profileRepository.save(profile));
+        String saveUrl = presignedUrlResponse.getUrl().split("\\?")[0];
+        Profile profile = profileRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        profile.updateImage(saveUrl);
+
+        return presignedUrlResponse;
     }
 
 // no use ============================================================================================================

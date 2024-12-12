@@ -12,11 +12,12 @@ import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
+import com.example.hobiday_backend.global.dto.file.PreSignedUrlRequest;
+import com.example.hobiday_backend.global.dto.file.PresignedUrlResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class ProfileController {
             "{\"연극\", \"무용\", \"대중무용\", \"서양음악\", \"한국음악\", \"대중음악\", \"복합\", \"서커스\", \"뮤지컬\"}")
     @PostMapping("/api/profiles/registration")
     public ApiResponse<ProfileResponse> join(@RequestHeader("Authorization") String token,
-                                                @RequestBody AddProfileRequest addProfileRequest) {
+                                             @RequestBody AddProfileRequest addProfileRequest) {
         // 기존 프로필 없을 경우
 //        Profile newProfile = profileService.saveFirst(userId, addProfileRequest); //방법1
         Long memberId = memberService.getMemberIdByToken(token);
@@ -49,7 +50,7 @@ public class ProfileController {
     }
 
     // 프로필등록 여부(O,X)
-    @Operation(summary = "프로필 등록(온보딩 작성) 여부 체크", description = "토큰을 요청 받아 온보딩 작성한 회원이면 true, 아니면 false 리턴합니다.")
+    @Operation(summary = "프로필 등록 여부 체크", description = "토큰을 요청 받아 온보딩 작성한 회원이면 true, 아니면 false 리턴합니다.")
     @GetMapping("/api/profiles/registration/check")
     public ApiResponse<ProfileRegistrationResponse> checkProfileRegistration(@RequestHeader("Authorization") String token) {
         Long memberId = memberService.getMemberIdByToken(token);
@@ -82,21 +83,25 @@ public class ProfileController {
     }
 
 
+    // 프로필 이미지 등록(수정)
+    @Operation(summary = "프로필 이미지 등록(수정 포함)", description = "저장할 폴더명(prefix), 파일명(fileName) 요청해서 프로필 이미지 등록할 url을 응답 " +
+            "| 동시에 프로필DB에는 이미지url 저장해놓음")
+    @PostMapping("/api/profiles/image")
+    public ApiResponse<PresignedUrlResponse> updateImage(@RequestHeader("Authorization") String token,
+                                                         @RequestBody PreSignedUrlRequest presignedUrlRequest){
+        Long memberId = memberService.getMemberIdByToken(token);
+        return ApiResponse.success(profileService.updateImage(memberId, presignedUrlRequest));
+    }
+
     // 프로필 수정
-    @Operation(summary = "프로필 수정", description = "프로필을 수정합니다.")
-    @PutMapping("/api/profiles/{profileId}")
-    public ResponseEntity<ApiResponse<ProfileResponse>> updateProfile(
-            @PathVariable Long profileId,
+    @Operation(summary = "프로필 수정", description = "닉네임, 장르, 자기소개 수정 | 바꿀값만 key:value로 전송 | 이미지는 따로")
+    @PutMapping("/api/profiles/update")
+    public ApiResponse<ProfileResponse> updateProfile(
             @RequestHeader("Authorization") String token,
             @RequestBody UpdateProfileRequest updateProfileRequest) {
 
         Long memberId = memberService.getMemberIdByToken(token);
-        Member member = memberService.findById(memberId);
-
-        ProfileResponse profileResponses = profileService.updateProfile(profileId, updateProfileRequest, member);
-
-        return ResponseEntity.ok(ApiResponse.success(profileResponses));
-
+        return ApiResponse.success(profileService.updateProfile(memberId, updateProfileRequest));
     }
 
 //    //    ============================= 백엔드 테스트용: 1.토큰으로 유저 확인 2.로그인->프로필 등록 =============================
