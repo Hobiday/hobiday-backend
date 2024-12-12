@@ -8,18 +8,16 @@ import java.util.List;
 @Builder
 @Getter
 public class FeedRes {
+    private Long feedId;
     private String contents;
     private String profileName;
     private Long profileId;
+    private String profileImageUrl;
     private List<String> hashTag;
     private List<String> feedFiles;
     private Integer likeCount;
-    private boolean isLiked; //좋아요 여부
-
-    // 댓글 갯수
+    private boolean isLiked;
     private Integer commentCount;
-    // 프로필 사진 url들
-    private String profileImageUrl;
 
     // 공연 정보
     private String performId;          // 공연상세ID
@@ -33,4 +31,7 @@ public class FeedRes {
     private String area;            // 지역명 (서울)
     private String poster;          // 공연포스터 경로 (url)
     private Integer performLikeCount;      // 좋아요 개수
+
+    // 상대 시간
+    private String relativeTime;
 }

@@ -8,5 +8,8 @@ import java.util.List;
 
 @Repository
 public interface FeedRepository extends JpaRepository<Feed, Long> {
-
+    // 최신순 조회
+    List<Feed> findAllByOrderByCreatedTimeDesc();
+    // 좋아요 순 조회
+    List<Feed> findAllByOrderByLikeCountDesc();
 }

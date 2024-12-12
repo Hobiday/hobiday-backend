@@ -11,7 +11,7 @@ public class KopisParsing {
     protected final static String EDDATE = "20250113"; // 종료 검색기간
     protected final static String ROWS = "50";         // 공연 개수
 
-    //genre : code ㅇ
+    //genre : code
     public final static HashMap<String, String> GENRE_CODES_REQUEST = new HashMap<>() {{
             put("AAAA", "연극");
             put("BBBC", "무용");
