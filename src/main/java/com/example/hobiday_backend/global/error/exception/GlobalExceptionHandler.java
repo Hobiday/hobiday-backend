@@ -2,6 +2,8 @@ package com.example.hobiday_backend.global.error.exception;
 
 import com.example.hobiday_backend.domain.comment.exception.CommentException;
 import com.example.hobiday_backend.domain.feed.exception.FeedException;
+import com.example.hobiday_backend.domain.feed.exception.FileUrlException;
+import com.example.hobiday_backend.domain.feed.exception.HashTagException;
 import com.example.hobiday_backend.domain.member.exception.MemberException;
 import com.example.hobiday_backend.domain.perform.exception.PerformException;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
@@ -40,5 +42,26 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorRes<Void>> handleProfileException(PerformException e) {
         log.info(e.getMessage(), e);
         return ResponseEntity.status(e.getHttpStatus()).body(ErrorRes.failure(e.getCode(), e.getMessage()));
+    }
+
+    // 신규: 파일 URL 예외 처리
+    @ExceptionHandler(FileUrlException.class)
+    public ResponseEntity<ErrorRes<Void>> handleFileUrlException(FileUrlException e) {
+        log.info("FileUrlException: {}", e.getMessage(), e);
+        return ResponseEntity.status(e.getHttpStatus()).body(ErrorRes.failure(e.getCode(), e.getMessage()));
+    }
+
+    // 신규: 해시태그 예외 처리
+    @ExceptionHandler(HashTagException.class)
+    public ResponseEntity<ErrorRes<Void>> handleHashTagException(HashTagException e) {
+        log.info("HashTagException: {}", e.getMessage(), e);
+        return ResponseEntity.status(e.getHttpStatus()).body(ErrorRes.failure(e.getCode(), e.getMessage()));
+    }
+
+    // 기타 예외 처리
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorRes<Void>> handleGeneralException(Exception e) {
+        log.error("Unexpected Exception: {}", e.getMessage(), e);
+        return ResponseEntity.status(500).body(ErrorRes.failure("UNEXPECTED_ERROR", "An unexpected error occurred."));
     }
 }
