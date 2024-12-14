@@ -1,9 +1,13 @@
 package com.example.hobiday_backend.domain.perform.util;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.HashMap;
 
 public class KopisParsing {
-    protected final static String SERVICE_KEY = "ecb03304355244159098962ad6c4a1eb"; // => secret으로 빼기
+    @Value("${property.my.service-key}")
+    protected String SERVICE_KEY;
+
     protected final static String BASE_URL =  "http://www.kopis.or.kr/openApi/restful/pblprfr";
     protected final static String DETAIL_URL =  BASE_URL + "/";
     protected final static String FACILITY_URL =  "http://www.kopis.or.kr/openApi/restful/prfplc/";
