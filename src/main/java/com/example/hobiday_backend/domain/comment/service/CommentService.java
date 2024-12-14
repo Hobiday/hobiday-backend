@@ -30,6 +30,9 @@ public class CommentService {
     private final ProfileRepository profileRepository;
 
     public CommentRes createComment(Long feedId, CommentReq commentReq, Long userId) {
+        if (commentReq.getContents() == null || commentReq.getContents().trim().isEmpty()) {
+            throw new CommentException(CommentErrorCode.COMMENT_EMPTY_CONTENT);
+        }
         // 피드 프로필 예외 추가 시켜줘야 함
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
