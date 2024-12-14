@@ -29,8 +29,7 @@ public class CommentController {
             @RequestBody CommentReq commentReq,
             @RequestHeader("Authorization") String token) {
         Long userId = memberService.getMemberIdByToken(token);
-        Member member = memberService.findById(userId);
-        CommentRes comment = commentService.createComment(feedId, commentReq, member);
+        CommentRes comment = commentService.createComment(feedId,commentReq,userId);
         return ApiResponse.success(comment);
     }
 
@@ -48,8 +47,7 @@ public class CommentController {
             @RequestBody CommentReq commentReq,
             @RequestHeader("Authorization") String token) {
         Long userId = memberService.getMemberIdByToken(token);
-        Member member = memberService.findById(userId);
-        CommentRes updatedComment = commentService.updateComment(commentId, commentReq, member);
+        CommentRes updatedComment = commentService.updateComment(commentId, commentReq, userId);
         return ApiResponse.success(updatedComment);
     }
 
@@ -59,8 +57,7 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestHeader("Authorization") String token) {
         Long userId = memberService.getMemberIdByToken(token);
-        Member member = memberService.findById(userId);
-        commentService.deleteComment(commentId, member);
+        commentService.deleteComment(commentId, userId);
         return ApiResponse.success(null);
     }
 }
