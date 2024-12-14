@@ -78,7 +78,9 @@ public class Feed extends TimeStamped {
     }
 
     public void decrementLikeCount() {
-        this.likeCount--;
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
     }
 
     // 업데이트 메서드

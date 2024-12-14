@@ -31,9 +31,9 @@ public class LikeController {
     @PostMapping("/{feedId}")
     public ApiResponse<LikeRes> toggleLike(
             @PathVariable Long feedId,
-            @RequestHeader String token) {
-        Long memberId = memberService.getMemberIdByToken(token);
-        LikeRes likeRes = likeService.toggleLike(feedId, memberId);
+            @RequestHeader("Authorization") String token) {
+        Long userId = memberService.getMemberIdByToken(token);
+        LikeRes likeRes = likeService.toggleLike(feedId, userId);
         return ApiResponse.success(likeRes);
     }
 }

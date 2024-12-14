@@ -13,22 +13,24 @@ import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LikeService {
     private final LikeRepository likeRepository;
     private final FeedRepository feedRepository;
     private final ProfileRepository profileRepository;
 
-    public LikeRes toggleLike(Long feedId, Long memberId) {
+    public LikeRes toggleLike(Long feedId, Long userId) {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
-        // userid로 프로필을 찾고 하면될려나
-        Profile profile = profileRepository.findById(memberId)
-                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND)); // User ID로 Profile 찾기
+
+        Profile profile = profileRepository.findByMemberId(userId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
 
         Optional<Like> existingLike = likeRepository.findByFeedAndProfile(feed, profile);
         boolean isLiked;
