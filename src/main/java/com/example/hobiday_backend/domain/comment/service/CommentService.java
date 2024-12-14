@@ -10,19 +10,20 @@ import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.feed.exception.FeedErrorCode;
 import com.example.hobiday_backend.domain.feed.exception.FeedException;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
-import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
     private final FeedRepository feedRepository;
@@ -46,6 +47,7 @@ public class CommentService {
         return CommentRes.from(savedComment);
     }
 
+    @Transactional(readOnly = true)
     public List<CommentRes> getCommentsByFeedId(Long feedId) {
         List<Comment> comments = commentRepository.findAllByFeedIdOrderByCreatedTimeAsc(feedId);
         return comments.stream()

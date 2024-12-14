@@ -12,4 +12,6 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     List<Feed> findAllByOrderByCreatedTimeDesc();
     // 좋아요 순 조회
     List<Feed> findAllByOrderByLikeCountDesc();
+    // 프로필 전체 피드 조회
+    List<Feed> findAllByProfileIdOrderByCreatedTimeDesc(Long profileId);
 }

@@ -2,6 +2,7 @@ package com.example.hobiday_backend.domain.feed.controller;
 
 import com.example.hobiday_backend.domain.feed.dto.FeedReq;
 import com.example.hobiday_backend.domain.feed.dto.FeedRes;
+import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.feed.service.FeedService;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
@@ -90,5 +91,25 @@ public class FeedController {
         Long memberId = memberService.getMemberIdByToken(token);
         feedService.deleteFeed(memberId, feedId);
         return ApiResponse.success(null);
+    }
+
+    // 프로필 단일 피드 조회
+    @Operation(summary = "프로필에서 단일 피드 조회", description = "피드의 id를 path명으로 받습니다" +
+            "프로필에서 단일 피드 조회를 하는 API")
+    @GetMapping("/profile/feeds/{feedId}")
+    public ApiResponse<FeedRes> getFeedById(@RequestHeader("Authorization") String token,
+                                            @PathVariable Long feedId) {
+        Long userId = memberService.getMemberIdByToken(token);
+        FeedRes feedRes = feedService.getFeedById(userId,feedId);
+        return ApiResponse.success(feedRes);
+    }
+
+    // 프로필 하위 전체 피드 조회
+    @Operation(summary = "프로필 하위의 전체 피드 조회", description = "프로필 하위에 전체 피드를 조회하는 API")
+    @GetMapping("/profile/feeds")
+    public ApiResponse<List<FeedRes>> getProfileFeeds(@RequestHeader("Authorization") String token) {
+        Long userId = memberService.getMemberIdByToken(token);
+        List<FeedRes> profileFeeds = feedService.getProfileFeeds(userId);
+        return ApiResponse.success(profileFeeds);
     }
 }
