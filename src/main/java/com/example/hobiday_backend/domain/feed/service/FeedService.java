@@ -184,21 +184,83 @@ public class FeedService {
     }
 
     // 최신순 조회
+    @Transactional(readOnly = true)
     public List<FeedRes> getFeedsByLatest(Long userId) {
         List<Feed> feeds = feedRepository.findAllByOrderByCreatedTimeDesc();
-        if (feeds.isEmpty()) {
-            throw new FeedException(FeedErrorCode.FEED_LIST_EMPTY); // 피드가 없을 경우 예외 발생
-        }
+//        if (feeds.isEmpty()) {
+//            throw new FeedException(FeedErrorCode.FEED_LIST_EMPTY); // 피드가 없을 경우 예외 발생
+//        }
+        // 초기화면에는 피드가 없을 수도 있기 때문에
         return convertToFeedResList(feeds,userId);
     }
 
     // 좋아요 순 조회
+    @Transactional(readOnly = true)
     public List<FeedRes> getFeedsByLikes(Long userId) {
         List<Feed> feeds = feedRepository.findAllByOrderByLikeCountDesc();
-        if (feeds.isEmpty()) {
-            throw new FeedException(FeedErrorCode.FEED_LIST_EMPTY); // 피드가 없을 경우 예외 발생
-        }
+//        if (feeds.isEmpty()) {
+//            throw new FeedException(FeedErrorCode.FEED_LIST_EMPTY); // 피드가 없을 경우 예외 발생
+//        }
         return convertToFeedResList(feeds,userId);
+    }
+
+    // 단일 피드 조회
+    @Transactional(readOnly = true)
+    public FeedRes getFeedById(Long userId, Long feedId) {
+        Feed feed = feedRepository.findById(feedId)
+                .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
+        Profile profile = profileRepository.findByMemberId(userId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        // 피드 작성 후 저장된 피드 공연 정보를 가져오기
+        Perform findPerform=feed.getPerform();
+        if (findPerform == null) {
+            throw new PerformException(PerformErrorCode.PERFORM_NOT_FOUND);
+        }
+        String performId = findPerform.getMt20id();
+
+        Perform perform = performRepository.findByMt20id(performId)
+                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+
+        return FeedRes.builder()
+                .feedId(feed.getId())
+                .contents(feed.getContent())
+                .profileName(feed.getProfile().getProfileNickname())
+                .profileId(feed.getProfile().getId())
+                .profileImageUrl(feed.getProfile().getProfileImageUrl())
+                .hashTag(feed.getHashTags().stream()
+                        .map(HashTag::getHashTag)
+                        .toList())
+                .feedFiles(feed.getFeedFiles().stream()
+                        .map(FeedFile::getFileUrl)
+                        .toList())
+                .likeCount(feed.getLikeCount())
+                .commentCount(feed.getCommentList().size())
+                .isLiked(likeRepository.existsByFeedAndProfile(feed,profile))
+                .relativeTime(getRelativeTime(feed.getCreatedTime()))
+                .performId(perform.getMt20id())
+                .performName(perform.getPrfnm())
+                .startDate(perform.getPrfpdfrom())
+                .endDate(perform.getPrfpdto())
+                .genreName(perform.getGenrenm())
+                .performState(perform.getPrfstate())
+                .placeName(perform.getFcltynm())
+                .openRun(perform.getOpenrun())
+                .area(perform.getArea())
+                .poster(perform.getPoster())
+                .likeCount(perform.getLikeCount())
+                .build();
+    }
+
+    // 프로필 하위 전체 피드 조회
+    @Transactional(readOnly = true)
+    public List<FeedRes> getProfileFeeds(Long userId) {
+        Profile profile = profileRepository.findByMemberId(userId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        Long profileId = profile.getId();
+
+        List<Feed> feeds = feedRepository.findAllByProfileIdOrderByCreatedTimeDesc(profileId);
+
+        return convertToFeedResList(feeds, userId);
     }
 
     // Feed 엔티티를 FeedRes DTO로 변환

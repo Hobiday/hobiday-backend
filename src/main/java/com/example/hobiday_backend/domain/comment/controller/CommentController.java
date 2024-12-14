@@ -3,13 +3,12 @@ package com.example.hobiday_backend.domain.comment.controller;
 import com.example.hobiday_backend.domain.comment.dto.CommentReq;
 import com.example.hobiday_backend.domain.comment.dto.CommentRes;
 import com.example.hobiday_backend.domain.comment.service.CommentService;
-import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public class CommentController {
     @PostMapping("/{feedId}")
     public ApiResponse<CommentRes> createComment(
             @PathVariable Long feedId,
-            @RequestBody CommentReq commentReq,
+            @Valid  @RequestBody CommentReq commentReq,
             @RequestHeader("Authorization") String token) {
         Long userId = memberService.getMemberIdByToken(token);
         CommentRes comment = commentService.createComment(feedId,commentReq,userId);

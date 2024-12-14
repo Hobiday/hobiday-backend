@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,7 +21,7 @@ public class LikeController {
 
     @Operation(
             summary = "좋아요 추가/취소",
-            description = "피드 ID를 기반으로 좋아요를 추가하거나 취소합니다.",
+            description = "좋아요 상태를 토글한 뒤, 좋아요 상태와 갯수를 반환하는 API",
             parameters = {
                     @Parameter(name = "feedId", description = "좋아요를 추가/취소할 피드의 ID", required = true),
                     @Parameter(name = "token", description = "사용자 인증 토큰 (헤더)", required = true)
