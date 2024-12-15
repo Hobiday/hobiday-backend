@@ -73,14 +73,14 @@ public class PerformController {
 
     // 공연 상세정보 조회
     @Operation(summary="공연 상세정보 조회", description="Kopis의 공연상세ID로 조회")
-    @GetMapping("/performs/detail/{performId}")
-    public ApiResponse<PerformDetailResponse> getPerformDetail(@PathVariable String performId){
+    @GetMapping("/performs/perform/{performId}")
+    public ApiResponse<PerformDetailResponse> getPerformDetail(@PathVariable("performId") String performId){
         return ApiResponse.success(performService.getPerformDetailResponse(performId));
     }
 
     // 시설 정보 조회
     @Operation(summary="시설 정보 조회", description="Kopis의 시설상세ID로 조회")
-    @GetMapping("/performs/detail/{facilityId}")
+    @GetMapping("/performs/facility/{facilityId}")
     public ApiResponse<FacilityResponse> getFacility(@PathVariable("facilityId") String placeId){
         return ApiResponse.success(performService.getFacilityResponse(placeId));
     }
