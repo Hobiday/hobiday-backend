@@ -19,8 +19,12 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -32,12 +36,26 @@ public class PerformParsing extends KopisParsing {
     private final PerformDetailRepository performDetailRepository;
     private final FacilityRepository facilityRepository;
     private static HashSet<String> facilitySet = new HashSet<>(); //시설상세ID 모음
-    private String stDate;
-    private String eddDate;
+    private static String stDate = "20241215";
+    private static String eddDate = "20250113";
 
-    // 파싱 기간 갱신(오늘날짜부터 28일)
+    // 파싱 기간 갱신(오늘~28일후) - 아직 적용X
     public void setParsingPeriod(){
+        stDate = String.valueOf(getTodayDate());
 
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        Calendar calendar = Calendar.getInstance();
+        Date date = null;
+        try {
+            date = formatter.parse(stDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 28);
+        eddDate = formatter.format(calendar.getTime());
+        log.info("시작 날짜: " + stDate);
+        log.info("종료 날짜: " + eddDate);
     }
 
     // 오늘날짜 리턴(20241012)
@@ -74,8 +92,6 @@ public class PerformParsing extends KopisParsing {
         for (String facilityId : facilitySet){
             saveFacility(facilityId);
         }
-
-        log.info("파싱 종료");
     }
 
     // 단일DB 요청 테스트용
@@ -199,8 +215,12 @@ public class PerformParsing extends KopisParsing {
 
         StringBuilder urlBuilder = new StringBuilder(BASE_URL);
         urlBuilder.append("?service="+SERVICE_KEY);
-        urlBuilder.append("&stdate="+STDATE);
-        urlBuilder.append("&eddate="+EDDATE);
+
+//        urlBuilder.append("&stdate="+STDATE);
+//        urlBuilder.append("&eddate="+EDDATE);
+        urlBuilder.append("&stdate="+stDate);
+        urlBuilder.append("&eddate="+eddDate);
+
         urlBuilder.append("&rows="+ROWS);
         urlBuilder.append("&cpage="+cpage);
 //        urlBuilder.append("&signgucode="+signgucode);
