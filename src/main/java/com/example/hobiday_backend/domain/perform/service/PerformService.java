@@ -69,9 +69,10 @@ public class PerformService {
                 .performId(perform.getMt20id())
                 .performName(perform.getPrfnm())
                 .startDate(perform.getPrfpdfrom())
-                .endDate(perform.getGenrenm())
-                .genreName(perform.getPrfstate())
-                .performState(perform.getFcltynm())
+                .endDate(perform.getPrfpdto())
+                .genreName(perform.getGenrenm())
+                .performState(perform.getPrfstate())
+                .placeName(perform.getFcltynm())
                 .openRun(perform.getOpenrun())
                 .area(perform.getArea())
                 .poster(perform.getPoster())
@@ -113,9 +114,10 @@ public class PerformService {
                 .performId(perform.getMt20id())
                 .performName(perform.getPrfnm())
                 .startDate(perform.getPrfpdfrom())
-                .endDate(perform.getGenrenm())
-                .genreName(perform.getPrfstate())
-                .performState(perform.getFcltynm())
+                .endDate(perform.getPrfpdto())
+                .genreName(perform.getGenrenm())
+                .performState(perform.getPrfstate())
+                .placeName(perform.getFcltynm())
                 .openRun(perform.getOpenrun())
                 .area(perform.getArea())
                 .poster(perform.getPoster())
@@ -132,7 +134,6 @@ public class PerformService {
                 .reservationUrl(performDetail.getRelateurl())
                 .build();
     }
-
 
     // 모든 장르로 조회
 //    public List<PerformResponse> getPerformsAll() {
@@ -156,14 +157,7 @@ public class PerformService {
 //                .toList();
 //    }
 
-//    // 홈화면 추천 공연 6개 | 현재 랜덤
-//    public List<PerformResponse> getMainPerforms(/*List<String> profileGenreList*/) {
-//        List<Perform> performList = performRepository.findAllByRand().
-//            orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
-//        return performList.stream()
-//                .map(PerformResponse::new)
-//                .toList();
-//    }
+
 
     // 모든 장르 조회
     public List<PerformResponse> getPerformsAll(List<String> profileGenreList, String rowStart, String rowEnd){
