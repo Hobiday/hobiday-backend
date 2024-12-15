@@ -10,4 +10,5 @@ import java.util.List;
 public interface FeedRepository extends JpaRepository<Feed, Long> {
     List<Feed> findAllByOrderByWriteDateDesc();
     List<Feed> findAllByOrderByLikeCountDesc();
+
 }

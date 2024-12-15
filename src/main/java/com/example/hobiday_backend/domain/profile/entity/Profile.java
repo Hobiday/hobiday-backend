@@ -2,6 +2,7 @@ package com.example.hobiday_backend.domain.profile.entity;
 
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.profile.dto.request.UpdateProfileRequest;
+import com.example.hobiday_backend.domain.wishlist.entity.Wishlist;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
