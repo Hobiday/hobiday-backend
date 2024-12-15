@@ -1,9 +1,6 @@
 package com.example.hobiday_backend.domain.perform.service;
 
-import com.example.hobiday_backend.domain.perform.dto.response.FacilityResponse;
-import com.example.hobiday_backend.domain.perform.dto.response.PerformDetailResponse;
-import com.example.hobiday_backend.domain.perform.dto.response.PerformRecommendListResponse;
-import com.example.hobiday_backend.domain.perform.dto.response.PerformResponse;
+import com.example.hobiday_backend.domain.perform.dto.response.*;
 import com.example.hobiday_backend.domain.perform.entity.FacilityDetail;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
 import com.example.hobiday_backend.domain.perform.entity.PerformDetail;
@@ -104,6 +101,38 @@ public class PerformService {
                 .map(PerformResponse::new)
                 .toList();
     }
+
+    public PerformAllResponse getPerformAll(String mt20id) {
+        Perform perform = performRepository.findByMt20id(mt20id)
+                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+
+        PerformDetail performDetail = performDetailRepository.findByMt20id(mt20id)
+                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+
+        return PerformAllResponse.builder()
+                .performId(perform.getMt20id())
+                .performName(perform.getPrfnm())
+                .startDate(perform.getPrfpdfrom())
+                .endDate(perform.getGenrenm())
+                .genreName(perform.getPrfstate())
+                .performState(perform.getFcltynm())
+                .openRun(perform.getOpenrun())
+                .area(perform.getArea())
+                .poster(perform.getPoster())
+                .likeCount(perform.getLikeCount())
+                .performId(performDetail.getMt20id())
+                .facilityId(performDetail.getMt10id())
+                .cast(performDetail.getPrfcast())
+                .runtime(performDetail.getPrfruntime())
+                .perform(performDetail.getPrfage())
+                .ticketPrice(performDetail.getPcseguidance())
+                .storyUrl(performDetail.getStyurl())
+                .showtime(performDetail.getDtguidance())
+                .reservationChannel(performDetail.getRelatenm())
+                .reservationUrl(performDetail.getRelateurl())
+                .build();
+    }
+
 
     // 모든 장르로 조회
 //    public List<PerformResponse> getPerformsAll() {

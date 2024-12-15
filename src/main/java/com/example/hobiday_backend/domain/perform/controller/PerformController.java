@@ -1,10 +1,7 @@
 package com.example.hobiday_backend.domain.perform.controller;
 
 import com.example.hobiday_backend.domain.member.service.MemberService;
-import com.example.hobiday_backend.domain.perform.dto.response.FacilityResponse;
-import com.example.hobiday_backend.domain.perform.dto.response.PerformDetailResponse;
-import com.example.hobiday_backend.domain.perform.dto.response.PerformRecommendListResponse;
-import com.example.hobiday_backend.domain.perform.dto.response.PerformResponse;
+import com.example.hobiday_backend.domain.perform.dto.response.*;
 import com.example.hobiday_backend.domain.perform.service.PerformService;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
@@ -83,5 +80,12 @@ public class PerformController {
     @GetMapping("/performs/facility/{facilityId}")
     public ApiResponse<FacilityResponse> getFacility(@PathVariable("facilityId") String placeId){
         return ApiResponse.success(performService.getFacilityResponse(placeId));
+    }
+
+    // 공연 기본&상세정보 조회
+    @Operation(summary="공연 기본&상세정보 조회", description="Kopis의 공연상세ID로 조회")
+    @GetMapping("/performs/all/{performId}")
+    public ApiResponse<PerformAllResponse> getPerformAll(@PathVariable String performId){
+        return ApiResponse.success(performService.getPerformAll(performId));
     }
 }
