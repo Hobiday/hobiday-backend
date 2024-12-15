@@ -3,7 +3,7 @@ package com.example.hobiday_backend.domain.comment.entity;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.like.entity.Like;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
-import com.example.hobiday_backend.global.domain.TImeStamped;
+import com.example.hobiday_backend.global.domain.TimeStamped;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "comment")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment extends TImeStamped {
+public class Comment extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

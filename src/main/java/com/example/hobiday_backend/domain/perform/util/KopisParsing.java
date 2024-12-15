@@ -28,6 +28,7 @@ public class KopisParsing {
             put("GGGA", "뮤지컬");
     }};
 
+
 // =====================================no use =====================================
 //    public static HashMap<String, String> performBaseRequest = new HashMap<>(){{
 //        put("baseUrl", "http://www.kopis.or.kr/openApi/restful/pblprfr");

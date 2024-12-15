@@ -19,7 +19,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,9 +31,32 @@ public class PerformParsing extends KopisParsing {
     private final PerformRepository performRepository;
     private final PerformDetailRepository performDetailRepository;
     private final FacilityRepository facilityRepository;
+    private static HashSet<String> facilitySet = new HashSet<>(); //시설상세ID 모음
+    private String stDate;
+    private String eddDate;
 
-    //시설상세ID 모음
-    private static HashSet<String> facilitySet = new HashSet<>();
+    // 파싱 기간 갱신(오늘날짜부터 28일)
+    public void setParsingPeriod(){
+
+    }
+
+    // 오늘날짜 리턴(20241012)
+    public int getTodayDate(){
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = now.format(formatter);
+        return Integer.parseInt(formattedDate.replace("-", "")); // 오늘날짜 '-'없애고 정수 리턴
+    }
+
+    // 모든 공연 데이터에서 공연날짜 지났으면 '공연완료'로 변경
+    public void statusCheck(){
+        int todayDate = getTodayDate();
+        List<Perform> performs = performRepository.findAll();
+        for(Perform perform : performs){
+            int performEndDate = Integer.parseInt(perform.getPrfpdto().replace(".", "")); // 공연종료날짜 '.'없애고 정수 리턴
+            if (todayDate > performEndDate) perform.updateStatus();
+        }
+    }
 
     public void saveAll() {
 //        log.info("파싱 작업 시행");
@@ -131,7 +157,6 @@ public class PerformParsing extends KopisParsing {
                             .prfruntime(getTextByElement(element, "prfruntime"))
                             .prfage(getTextByElement(element, "prfage"))
                             .pcseguidance(getTextByElement(element, "pcseguidance"))
-////                                .sty(element.getElementsByTagName("sty").item(0).getTextContent())
                             .styurl(getTextByElement(element, "styurl"))
                             .dtguidance(getTextByElement(element, "dtguidance"))
                             .relatenm(getTextByElement(element, "relatenm"))
@@ -169,13 +194,8 @@ public class PerformParsing extends KopisParsing {
 
     // (공연기본) 장르 선택하여 여러개의 db 태그 리스트 반환
     public NodeList getNodeListByGenre(String shcate) { // shcate: 장르 코드
-//        log.info("장르->노드리스트");
-//        String stdate = "20241215"; // 시작 검색기간
-//        String eddate = "20240113"; // 종료 검색기간
-//        String rows = "5";         // 페이지당 공연 개수
         String cpage = "1";
 //        String signgucode = "11";   // 지역 코드
-//        String shcate = "AAAA";     // 장르 코드
 
         StringBuilder urlBuilder = new StringBuilder(BASE_URL);
         urlBuilder.append("?service="+SERVICE_KEY);
@@ -209,4 +229,5 @@ public class PerformParsing extends KopisParsing {
     public static String getTextByElement(Element element, String tag){
         return element.getElementsByTagName(tag).item(0).getTextContent();
     }
+
 }

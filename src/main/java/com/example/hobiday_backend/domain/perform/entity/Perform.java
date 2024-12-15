@@ -50,5 +50,9 @@ public class Perform {
         Random rd = new Random();
         this.likeCount = rd.nextInt(11); // 임시로 랜덤값. 파라미터에 선언X
     }
+
+    public void updateStatus() {
+        this.prfstate = "공연완료";
+    }
 }
 
