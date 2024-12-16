@@ -32,7 +32,7 @@ public class WishlistService {
                 orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
         String genre = perform.getGenrenm();
         wishlistRepository.save(Wishlist.builder()
-                .profile_id(profileId)
+                .profileId(profileId)
                 .mt20id(performId)
                 .genre(genre)
                 .build());

@@ -13,7 +13,7 @@ public class WishResponse {
 
     public WishResponse(Wishlist wishlist){
         this.wishId = wishlist.getId();
-        this.profileId = wishlist.getProfile().getId();
+        this.profileId = wishlist.getProfileId();
         this.mt20id = wishlist.getMt20id();
         this.genre = wishlist.getGenre();
     }

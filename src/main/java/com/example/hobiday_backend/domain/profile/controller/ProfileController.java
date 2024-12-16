@@ -59,6 +59,7 @@ public class ProfileController {
         Optional<Profile> profileOptional = profileRepository.findByMemberId(memberId);
 //        log.info("프로필여부:" + profileOptional.isPresent());
 
+        log.info("프로필 컨트롤러");
         // 있을때
         if (profileOptional.isPresent()) {
             return ApiResponse.success(new ProfileRegistrationResponse(true));

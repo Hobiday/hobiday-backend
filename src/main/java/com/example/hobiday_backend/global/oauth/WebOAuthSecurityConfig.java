@@ -58,7 +58,7 @@ public class WebOAuthSecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated() // 나머지 API URL은 인증 필요
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login") // 미인증자일 경우 해당 페이지 호출
+//                        .loginPage("/login") // 미인증자일 경우 해당 페이지 호출
                         // Authorization 요청과 관련된 상태 저장
                         .authorizationEndpoint(authorizationEndpoint ->
                                 authorizationEndpoint.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
