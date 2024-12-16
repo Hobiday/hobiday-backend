@@ -29,8 +29,10 @@ public class PerformController {
     public ApiResponse<List<PerformResponse>> getPerformsAll(@RequestHeader("Authorization") String token,
                                                              @RequestParam String rowStart,
                                                              @RequestParam String rowEnd){
+        log.info("전체 공연 조회 진입");
         Long memberId = memberService.getMemberIdByToken(token);
         List<String> profileGenreList = profileService.getProfileByMemberId(memberId).getProfileGenres();
+        log.info("전체 공연 조회 완료");
         return ApiResponse.success(performService.getPerformsAll(profileGenreList, rowStart, rowEnd));
     }
 

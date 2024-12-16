@@ -84,7 +84,7 @@ public class ProfileController {
 
 
     // 프로필 이미지 등록(수정)
-    @Operation(summary = "프로필 이미지 등록(수정 포함)", description = "저장할 폴더명(prefix), 파일명(fileName) 요청해서 프로필 이미지 등록할 url을 응답 " +
+    @Operation(summary = "프로필 이미지 등록(수정 포함)할 url 응답", description = "저장할 폴더명(prefix), 파일명(fileName) 요청해서 프로필 이미지 등록할 url을 응답 " +
             "| 동시에 프로필DB에는 이미지url 저장해놓음")
     @PostMapping("/api/profiles/image")
     public ApiResponse<PresignedUrlResponse> updateImage(@RequestHeader("Authorization") String token,

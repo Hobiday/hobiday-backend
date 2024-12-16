@@ -53,6 +53,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String accessToken = tokenProvider.generateToken(member, ACCESS_TOKEN_DURATION);
 //        String targetUrl = getTargetUrl(accessToken);
         String targetUrl = getTargetUrl(accessToken, refreshToken); // 액세스, 리프레시 모두 전달
+        log.info("OA2S accessToken: {}", accessToken);
+        log.info("OA2S refreshToken: {}", refreshToken);
 
         // 인증 관련 설정값과 쿠키 제거
         clearAuthenticationAttributes(request, response);
