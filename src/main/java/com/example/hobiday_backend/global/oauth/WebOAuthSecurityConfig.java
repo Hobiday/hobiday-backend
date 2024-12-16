@@ -53,11 +53,11 @@ public class WebOAuthSecurityConfig {
                 // 헤더를 확인할 커스텀 필터 추가
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests(auth -> auth
-                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/api/token")).permitAll() // 토큰 재발급 URL은 인증 없이 접근 가능하도록 설정.
-//                        .requestMatchers(new AntPathRequestMatcher("/api/members/guest")).permitAll() // 토큰 재발급 URL은 인증 없이 접근 가능하도록 설정.
-//                        .requestMatchers(new AntPathRequestMatcher("/api/test/**")).permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated() // 나머지 API URL은 인증 필요
+//                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/token")).permitAll() // 토큰 재발급 URL은 인증 없이 접근 가능하도록 설정.
+                        .requestMatchers(new AntPathRequestMatcher("/api/members/guest")).permitAll() // 토큰 재발급 URL은 인증 없이 접근 가능하도록 설정.
+                        .requestMatchers(new AntPathRequestMatcher("/api/test/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated() // 나머지 API URL은 인증 필요
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
 //                        .loginPage("/login") // 미인증자일 경우 해당 페이지 호출
