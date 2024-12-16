@@ -1,26 +1,26 @@
-// // 프로필 등록 기능(초기화면)
-// const createButton = document.getElementById("create-btn");
-//
-// if (createButton){
-//     createButton.addEventListener("click", (event) => {
-//         body = JSON.stringify({
-//             profileNickname: document.getElementById('profile-name').value,
-//             profileGenre: ["연극", "서커스"]
-//
-//             // profileGenre: document.getElementById('profile-genre').value
-//         });
-//         function success(){
-//             alert('등록 완료되었습니다.');
-//             location.replace("/home");
-//         }
-//         function fail(){
-//             alert('등록 실패했습니다.');
-//             location.replace("/home");
-//         }
-//         httpRequest("POST", "/api/profile", body, success, fail);
-//     })
-// }
-//
+// // // 프로필 등록 기능(초기화면)
+// // const createButton = document.getElementById("create-btn");
+// //
+// // if (createButton){
+// //     createButton.addEventListener("click", (event) => {
+// //         body = JSON.stringify({
+// //             profileNickname: document.getElementById('profile-name').value,
+// //             profileGenre: ["연극", "서커스"]
+// //
+// //             // profileGenre: document.getElementById('profile-genre').value
+// //         });
+// //         function success(){
+// //             alert('등록 완료되었습니다.');
+// //             location.replace("/home");
+// //         }
+// //         function fail(){
+// //             alert('등록 실패했습니다.');
+// //             location.replace("/home");
+// //         }
+// //         httpRequest("POST", "/api/profile", body, success, fail);
+// //     })
+// // }
+// //
 // // 쿠키를 가져오는 함수
 // function getCookie(key){
 //     var result = null;

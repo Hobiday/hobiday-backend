@@ -83,5 +83,8 @@ public class Profile {
         if(updateProfileRequest.getProfileIntroduction()!=null){
             this.profileIntroduction = updateProfileRequest.getProfileIntroduction();
         }
+        if(updateProfileRequest.getProfileImageUrl()!=null){
+            this.profileIntroduction = updateProfileRequest.getProfileImageUrl();
+        }
     }
 }
