@@ -19,7 +19,6 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        log.info("access url: {} {} {}", rootUrl, subUrl, developUrl);
         registry.addMapping("/**")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedOrigins(rootUrl, subUrl, developUrl, "https://api.hobiday.site", "http://api.hobiday.site")
