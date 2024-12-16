@@ -3,6 +3,7 @@ package com.example.hobiday_backend.domain.perform.controller;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.domain.perform.dto.response.*;
 import com.example.hobiday_backend.domain.perform.service.PerformService;
+import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +23,7 @@ public class PerformController {
     private final PerformService performService;
     private final MemberService memberService;
     private final ProfileService profileService;
+    private final ProfileRepository profileRepository;
 
     // 전체 공연 조회
     @Operation(summary="전체 공연 조회(아직 프로필 선택장르 반영X)", description="전체에서 공연중을 우선 조회 |rowStart = DB시작값(0부터 시작), rowEnd = DB끝값\"")
@@ -29,9 +31,17 @@ public class PerformController {
     public ApiResponse<List<PerformResponse>> getPerformsAll(@RequestHeader("Authorization") String token,
                                                              @RequestParam String rowStart,
                                                              @RequestParam String rowEnd){
+        log.info("공연 전체 컨트롤러 진입");
         Long memberId = memberService.getMemberIdByToken(token);
         List<String> profileGenreList = profileService.getProfileByMemberId(memberId).getProfileGenres();
-        return ApiResponse.success(performService.getPerformsAll(profileGenreList, rowStart, rowEnd));
+        log.info("장르 확인 성공");
+
+        List<PerformResponse> performResponseList = performService.getPerformsAll(profileGenreList, rowStart, rowEnd);
+        String nickname = profileRepository.findByMemberId(memberId).get().getProfileNickname();
+        log.info("공연 전체조회 서비스 (nickname: {}), (응답값 있음?: {})", nickname, !performResponseList.isEmpty());
+        return ApiResponse.success(performResponseList);
+
+        //        return ApiResponse.success(performService.getPerformsAll(profileGenreList, rowStart, rowEnd));
     }
 
     // 장르별 공연 조회
