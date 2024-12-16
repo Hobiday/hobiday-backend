@@ -42,7 +42,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Map attributesKakaoAcount = (Map) attributes.get("kakao_account");
         String email = (String) attributesKakaoAcount.get("email");
         Member member = memberService.findByEmail(email);
-//        log.info("OAuth2SuccessHandler에서 email: {}", email);
+//        log.info("OAuth2SuccessHandler에서 로그인한 email: {}", email);
 
         // 리프레시 토큰 생성 -> DB에 저장 -> 쿠키에 저장
         String refreshToken = tokenProvider.generateToken(member, REFRESH_TOKEN_DURATION);
