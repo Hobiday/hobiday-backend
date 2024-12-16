@@ -84,7 +84,7 @@ public class Profile {
             this.profileIntroduction = updateProfileRequest.getProfileIntroduction();
         }
         if(updateProfileRequest.getProfileImageUrl()!=null){
-            this.profileIntroduction = updateProfileRequest.getProfileImageUrl();
+            this.profileImageUrl = updateProfileRequest.getProfileImageUrl();
         }
     }
 }
