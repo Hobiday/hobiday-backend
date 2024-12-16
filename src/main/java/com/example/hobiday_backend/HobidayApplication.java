@@ -6,10 +6,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
 @SpringBootApplication
-public class HobidayApplication { //323423
-    //하비
+public class HobidayApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(HobidayApplication.class, args);
     }
-
 }

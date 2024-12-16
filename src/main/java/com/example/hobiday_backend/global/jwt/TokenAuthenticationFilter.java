@@ -36,9 +36,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-        log.info("access url: {} {} {}", rootUrl, subUrl, developUrl);
-        log.info("request: {}", request.getRequestURL());
-        log.info("response: {}", response.getStatus());
+//        log.info("access url: {} {} {}", rootUrl, subUrl, developUrl);
+//        log.info("request: {}", request.getRequestURL());
+//        log.info("response: {}", response.getStatus());
         // 요청 헤더의 Authorization 키의 값 조회
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
 
@@ -52,9 +52,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication); // contextHolder에 유저 정보 넣어줌
             log.info("토큰 유효함");
         }
-        log.info("TokenAuthenticationFilter doFilterInternal 완료");
+//        log.info("TokenAuthenticationFilter doFilterInternal 완료");
         filterChain.doFilter(request, response);
-        log.info("FilterChain doFilter 완료");
+//        log.info("FilterChain doFilter 완료");
     }
 
 
