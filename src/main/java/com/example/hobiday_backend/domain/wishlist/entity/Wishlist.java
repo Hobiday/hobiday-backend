@@ -5,6 +5,7 @@ import com.example.hobiday_backend.domain.profile.entity.Profile;
 import com.example.hobiday_backend.global.domain.TimeStamped;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,9 +24,14 @@ public class Wishlist extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private Profile profile;
-
+    private Long profileId;
     private String mt20id;          // 공연상세ID
+    private String genre;
+
+    @Builder
+    public Wishlist(Long profileId, String mt20id, String genre) {
+        this.profileId = profileId;
+        this.mt20id = mt20id;
+        this.genre = genre;
+    }
 }

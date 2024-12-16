@@ -5,6 +5,7 @@ import com.example.hobiday_backend.domain.feed.exception.FeedException;
 import com.example.hobiday_backend.domain.member.exception.MemberException;
 import com.example.hobiday_backend.domain.perform.exception.PerformException;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
+import com.example.hobiday_backend.domain.wishlist.exception.WishlistException;
 import com.example.hobiday_backend.global.dto.ErrorRes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PerformException.class)
     public ResponseEntity<ErrorRes<Void>> handleProfileException(PerformException e) {
+        log.info(e.getMessage(), e);
+        return ResponseEntity.status(e.getHttpStatus()).body(ErrorRes.failure(e.getCode(), e.getMessage()));
+    }
+
+    @ExceptionHandler(WishlistException.class)
+    public ResponseEntity<ErrorRes<Void>> handleProfileException(WishlistException e) {
         log.info(e.getMessage(), e);
         return ResponseEntity.status(e.getHttpStatus()).body(ErrorRes.failure(e.getCode(), e.getMessage()));
     }

@@ -30,7 +30,7 @@ public class Perform {
     private String area;            // 지역명 (서울)
     private String poster;          // 공연포스터 경로 (url)
 
-    private Integer likeCount;      // 좋아요 개수
+    private int likeCount;      // 좋아요 개수
 
     @Builder
     public Perform(String mt20id, String prfnm, String prfpdfrom, String prfpdto,
@@ -46,9 +46,16 @@ public class Perform {
         this.fcltynm = fcltynm;
         this.area = area;
         this.poster = poster;
+        this.likeCount = 0;
+    }
 
-        Random rd = new Random();
-        this.likeCount = rd.nextInt(11); // 임시로 랜덤값. 파라미터에 선언X
+    public void likeUp() {
+        this.likeCount++;
+    }
+    public void likeDown(){
+        if(this.likeCount > 0){
+            this.likeCount--;
+        }
     }
 
     public void updateStatus() {
