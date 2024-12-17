@@ -11,9 +11,9 @@ public class KopisParsing {
     protected final static String BASE_URL =  "http://www.kopis.or.kr/openApi/restful/pblprfr";
     protected final static String DETAIL_URL =  BASE_URL + "/";
     protected final static String FACILITY_URL =  "http://www.kopis.or.kr/openApi/restful/prfplc/";
-    protected final static String STDATE = "20241215"; // 시작 검색기간
-    protected final static String EDDATE = "20250113"; // 종료 검색기간
-    protected final static String ROWS = "50";         // 공연 개수
+//    protected final static String STDATE = "20241215"; // 시작 검색기간
+//    protected final static String EDDATE = "20250113"; // 종료 검색기간
+    protected final static String ROWS = "80";         // 공연 개수
 
     //genre : code
     public final static HashMap<String, String> GENRE_CODES_REQUEST = new HashMap<>() {{
