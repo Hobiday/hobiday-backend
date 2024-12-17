@@ -67,7 +67,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }} # pem key
           script: |
-            sudo docker rm -f $(docker ps -qa)
+            sudo docker rm -f $(sudo docker ps -qa)
             sudo docker pull ${{secrets.DOCKER_USERNAME}}/hyun:latest
             sudo docker-compose up -d
             sudo docker image prune -f

@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface PerformRepository extends JpaRepository<Perform, Long> {
     Optional<Perform> findByMt20id(String mt20id);
+    List<Perform> findAllByPrfstateNot(String prfstate);
 
     // 장르별 공연 선택, 공연완료 제외
     @Query("select p " +

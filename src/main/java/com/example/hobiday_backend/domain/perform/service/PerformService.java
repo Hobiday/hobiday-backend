@@ -76,7 +76,7 @@ public class PerformService {
                 .openRun(perform.getOpenrun())
                 .area(perform.getArea())
                 .poster(perform.getPoster())
-                .likeCount(perform.getLikeCount())
+                .wishCount(perform.getWishCount())
                 .build();
     }
 
@@ -121,7 +121,7 @@ public class PerformService {
                 .openRun(perform.getOpenrun())
                 .area(perform.getArea())
                 .poster(perform.getPoster())
-                .likeCount(perform.getLikeCount())
+                .wishCount(perform.getWishCount())
                 .performId(performDetail.getMt20id())
                 .facilityId(performDetail.getMt10id())
                 .cast(performDetail.getPrfcast())
@@ -156,7 +156,6 @@ public class PerformService {
 //                .map(PerformResponse::new)
 //                .toList();
 //    }
-
 
 
     // 모든 장르 조회

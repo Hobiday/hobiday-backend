@@ -88,7 +88,6 @@ public class WebOAuthSecurityConfig {
 
     @Bean
     public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
-        log.info("oAuth2AuthorizationRequestBasedOnCookieRepository를 매번 지나가는지");
         return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
 
