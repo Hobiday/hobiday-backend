@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Random;
-
 @Table(name = "Performs")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -30,7 +28,7 @@ public class Perform {
     private String area;            // 지역명 (서울)
     private String poster;          // 공연포스터 경로 (url)
 
-    private int likeCount;      // 좋아요 개수
+    private int wishCount;      // 등록된 위시 개수
 
     @Builder
     public Perform(String mt20id, String prfnm, String prfpdfrom, String prfpdto,
@@ -46,15 +44,15 @@ public class Perform {
         this.fcltynm = fcltynm;
         this.area = area;
         this.poster = poster;
-        this.likeCount = 0;
+        this.wishCount = 0;
     }
 
-    public void likeUp() {
-        this.likeCount++;
+    public void wishUp() {
+        this.wishCount++;
     }
-    public void likeDown(){
-        if(this.likeCount > 0){
-            this.likeCount--;
+    public void wishDown(){
+        if(this.wishCount > 0){
+            this.wishCount--;
         }
     }
 

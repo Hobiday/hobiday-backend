@@ -46,9 +46,10 @@ public class ProfileService {
     public ProfileResponse saveFirst(//Long userId, //방1
                              Member member, //방2
                              AddProfileRequest addProfileRequest){
-//        String email = userRepository.findById(userId).get().getEmail(); //방1
         String email = member.getEmail(); //방2
-//        log.info("dto 장르: " + addProfileRequest.profileGenre);
+        if(profileRepository.findByMemberId(member.getId()).isPresent()){
+            throw new ProfileException(ProfileErrorCode.PROFILE_CONFLICT);
+        }
         Profile profile = profileRepository.save(Profile.builder()
 //                .userId(userId) //방1
                 .member(member) //방2

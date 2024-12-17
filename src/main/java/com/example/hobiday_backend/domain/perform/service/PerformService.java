@@ -80,7 +80,7 @@ public class PerformService {
                 .openRun(perform.getOpenrun())
                 .area(perform.getArea())
                 .poster(perform.getPoster())
-                .likeCount(perform.getLikeCount())
+                .wishCount(perform.getWishCount())
                 .build();
     }
 

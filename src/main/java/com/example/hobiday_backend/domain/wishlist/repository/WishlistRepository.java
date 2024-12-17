@@ -19,8 +19,7 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     @Query("select w " +
             "from Wishlist w " +
-            "where w.profileId = :profileId and w.genre = :genre " +
-            "order by w.modifiedTime desc " +
-            "limit :limit offset :offset")
-    Optional<List<Wishlist>> findWishListByGenre(Long profileId, int limit, int offset, String genre);
+            "where w.profileId = :profileId and w.genre like concat('%', :genre, '%') " +
+            "order by w.modifiedTime desc ")
+    Optional<List<Wishlist>> findWishListByGenre(Long profileId, String genre);
 }

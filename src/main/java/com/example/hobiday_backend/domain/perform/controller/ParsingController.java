@@ -22,21 +22,21 @@ public class ParsingController {
     public void runParsing(@PathVariable String password) throws InterruptedException {
         if (password.equals(pw)){
 //            performParsing.saveAll();
-            autoStatusCheck();
+            autoStatusUpdate();
             Thread.sleep(60000); // 60초
             autoPerformParsing();
         }
     }
 
-    // 매일 04시 20분마다 공연상태 체크 작업 자동 수행
-//    @Scheduled(cron = "0 20 4 * * *")
-    public void autoStatusCheck(){
-        performParsing.statusCheck();
+    // 매일 04시 30분마다 공연상태 체크 작업 자동 수행
+//    @Scheduled(cron = "0 30 4 * * *")
+    public void autoStatusUpdate(){
+        performParsing.statusUpdate();
         log.info("자동 공연상태 체크 완료");
     }
 
-    // 매일 04시 30분마다 파싱 자동 수행
-//    @Scheduled(cron = "0 30 4 * * *")
+    // 매일 04시 40분마다 파싱 자동 수행
+//    @Scheduled(cron = "0 40 4 * * *")
     public void autoPerformParsing(){
         performParsing.setParsingPeriod();
         performParsing.saveAll();

@@ -23,10 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -66,15 +63,24 @@ public class PerformParsing extends KopisParsing {
         return Integer.parseInt(formattedDate.replace("-", "")); // 오늘날짜 '-'없애고 정수 리턴
     }
 
-    // 모든 공연 데이터에서 공연날짜 지났으면 '공연완료'로 변경
-    public void statusCheck(){
+    // 모든 공연 데이터에서 공연날짜 지났을때
+    // 위시가 없는 공연이라면 DB에서 삭제
+    // 위시가 있는 공연이라면 공연상태를 '공연완료'로 변경
+    public void statusUpdate(){
         int todayDate = getTodayDate();
-        List<Perform> performs = performRepository.findAll();
+        List<Perform> performs = performRepository.findAllByPrfstateNot("공연완료");
         for(Perform perform : performs){
             int performEndDate = Integer.parseInt(perform.getPrfpdto().replace(".", "")); // 공연종료날짜 '.'없애고 정수 리턴
-            if (todayDate > performEndDate) perform.updateStatus();
+            if (todayDate > performEndDate){
+                if (perform.getWishCount() == 0){
+                    performRepository.delete(perform);
+                }else{
+                    perform.updateStatus();
+                }
+            }
         }
     }
+
 
     public void saveAll() {
 //        log.info("파싱 작업 시행");
