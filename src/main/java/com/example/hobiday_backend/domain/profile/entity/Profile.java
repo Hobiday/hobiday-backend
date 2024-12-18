@@ -84,7 +84,14 @@ public class Profile {
             this.profileIntroduction = updateProfileRequest.getProfileIntroduction();
         }
         if(updateProfileRequest.getProfileImageUrl()!=null){
-            this.profileImageUrl = updateProfileRequest.getProfileImageUrl();
+            String[] urls = updateProfileRequest.getProfileImageUrl().split("/");
+            urls[2] = "cdn.hobiday.site";
+            String cdnUrl = "https://";
+            for (int i = 2; i < urls.length; i++) {
+                cdnUrl += urls[i] + "/";
+            }
+            this.profileImageUrl = cdnUrl.substring(0, cdnUrl.length() - 1);
+//            this.profileImageUrl = updateProfileRequest.getProfileImageUrl();
         }
     }
 }

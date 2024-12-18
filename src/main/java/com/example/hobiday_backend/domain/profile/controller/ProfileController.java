@@ -84,8 +84,7 @@ public class ProfileController {
 
 
     // 프로필 이미지 등록(수정)
-    @Operation(summary = "프로필 이미지 등록(수정 포함)할 url 응답", description = "저장할 폴더명(prefix), 파일명(fileName) 요청해서 프로필 이미지 등록할 url을 응답 " +
-            "| 동시에 프로필DB에는 이미지url 저장해놓음")
+    @Operation(summary = "프로필 이미지 등록(수정 포함)할 url 응답", description = "저장할 폴더명(prefix), 파일명(fileName) 요청해서 프로필 이미지 등록할 url 및 filepath 응답 ")
     @PostMapping("/api/profiles/image")
     public ApiResponse<PresignedUrlResponse> updateImage(@RequestHeader("Authorization") String token,
                                                          @RequestBody PreSignedUrlRequest presignedUrlRequest){
@@ -94,7 +93,7 @@ public class ProfileController {
     }
 
     // 프로필 수정
-    @Operation(summary = "프로필 수정", description = "닉네임, 장르, 자기소개 수정 | 바꿀값만 key:value로 전송 | 이미지는 따로")
+    @Operation(summary = "프로필 수정", description = "닉네임, 장르, 자기소개 수정 | 바꿀값만 key:value로 전송 | 이미지url도 여기서 저장")
     @PutMapping("/api/profiles/update")
     public ApiResponse<ProfileResponse> updateProfile(
             @RequestHeader("Authorization") String token,
