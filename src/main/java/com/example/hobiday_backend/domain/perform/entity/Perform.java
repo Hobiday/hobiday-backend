@@ -63,8 +63,12 @@ public class Perform {
         }
     }
 
-    public void updateStatus() {
+    public void updateStatusEnd() {
         this.prfstate = "공연완료";
+    }
+
+    public void updateStatusOpen() {
+        this.prfstate = "공연중";
     }
 }
 

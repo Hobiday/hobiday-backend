@@ -3,6 +3,8 @@ package com.example.hobiday_backend.domain.perform.service;
 import com.example.hobiday_backend.domain.perform.entity.FacilityDetail;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
 import com.example.hobiday_backend.domain.perform.entity.PerformDetail;
+import com.example.hobiday_backend.domain.perform.exception.PerformErrorCode;
+import com.example.hobiday_backend.domain.perform.exception.PerformException;
 import com.example.hobiday_backend.domain.perform.repository.FacilityRepository;
 import com.example.hobiday_backend.domain.perform.repository.PerformDetailRepository;
 import com.example.hobiday_backend.domain.perform.repository.PerformRepository;
@@ -63,20 +65,27 @@ public class PerformParsing extends KopisParsing {
         return Integer.parseInt(formattedDate.replace("-", "")); // 오늘날짜 '-'없애고 정수 리턴
     }
 
-    // 모든 공연 데이터에서 공연날짜 지났을때
+    // 1. 공연날짜 지난 공연은
     // 위시가 없는 공연이라면 DB에서 삭제
     // 위시가 있는 공연이라면 공연상태를 '공연완료'로 변경
+    // 2. 공연기간에 들어온 공연은 공연상태를 '공연중'으로 변경
     public void statusUpdate(){
         int todayDate = getTodayDate();
         List<Perform> performs = performRepository.findAllByPrfstateNot("공연완료");
+
         for(Perform perform : performs){
             int performEndDate = Integer.parseInt(perform.getPrfpdto().replace(".", "")); // 공연종료날짜 '.'없애고 정수 리턴
+            int performStartDate = Integer.parseInt(perform.getPrfpdfrom().replace(".", "")); // 공연종료날짜 '.'없애고 정수 리턴
             if (todayDate > performEndDate){
                 if (perform.getWishCount() == 0){
+                    performDetailRepository.delete(performDetailRepository.findByMt20id(perform.getMt20id())
+                            .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND)));
                     performRepository.delete(perform);
                 }else{
-                    perform.updateStatus();
+                    perform.updateStatusEnd();
                 }
+            } else if (performStartDate <= todayDate){ // 시작일 <= 오늘 <= 종료일
+                perform.updateStatusOpen();
             }
         }
     }

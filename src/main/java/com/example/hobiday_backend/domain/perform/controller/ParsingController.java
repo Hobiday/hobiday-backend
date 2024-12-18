@@ -19,13 +19,17 @@ public class ParsingController {
     private final PerformParsing performParsing;
 
     // 수동 파싱
-    @GetMapping("/parsing/{password}")
-    public void runParsing(@PathVariable String password) throws InterruptedException {
+    @GetMapping("/perform/parsing/{password}")
+    public void runPerformParsing(@PathVariable String password) {
         if (password.equals(pw)){
-//            performParsing.saveAll();
-            autoStatusUpdate();
-            Thread.sleep(60000); // 60초
             autoPerformParsing();
+        }
+    }
+    // 수동 상태 업데이트
+    @GetMapping("/perform/update/{password}")
+    public void runStatusUpdate(@PathVariable String password)  {
+        if (password.equals(pw)){
+            autoStatusUpdate();
         }
     }
 
