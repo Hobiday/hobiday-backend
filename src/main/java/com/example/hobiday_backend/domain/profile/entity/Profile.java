@@ -92,7 +92,7 @@ public class Profile {
 //            }
 //            this.profileImageUrl = cdnUrl.substring(0, cdnUrl.length() - 1);
 //            this.profileImageUrl = updateProfileRequest.getProfileImageUrl();
-            this.profileImageUrl = "https://cdn.hobiday.site/" + getProfileImageUrl();
+            this.profileImageUrl = "https://cdn.hobiday.site/" + updateProfileRequest.getProfileImageFilePath();
         }
     }
 }
