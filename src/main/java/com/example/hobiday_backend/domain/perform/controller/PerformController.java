@@ -24,9 +24,20 @@ public class PerformController {
     private final ProfileService profileService;
 
     // 전체 공연 조회
-    @Operation(summary="전체 공연 조회(아직 프로필 선택장르 반영X)", description="전체에서 공연중을 우선 조회 |rowStart = DB시작값(0부터 시작), rowEnd = DB끝값\"")
+    @Operation(summary="전체 공연 조회(공연시작일 빠를수록)", description="전체에서 공연중을 우선 조회 |rowStart = DB시작값(0부터 시작), rowEnd = DB끝값\"")
     @GetMapping("/performs")
     public ApiResponse<List<PerformResponse>> getPerformsAll(@RequestHeader("Authorization") String token,
+                                                             @RequestParam String rowStart,
+                                                             @RequestParam String rowEnd){
+        Long memberId = memberService.getMemberIdByToken(token);
+        List<String> profileGenreList = profileService.getProfileByMemberId(memberId).getProfileGenres();
+        return ApiResponse.success(performService.getPerformsAll(profileGenreList, rowStart, rowEnd));
+    }
+
+    // 전체 공연 조회2
+    @Operation(summary="전체 공연 조회(공연종료 임박할수록)", description="rowStart = DB시작값(0부터 시작), rowEnd = DB끝값\"")
+    @GetMapping("/performs/deadline")
+    public ApiResponse<List<PerformResponse>> getPerformsAllDeadline(@RequestHeader("Authorization") String token,
                                                              @RequestParam String rowStart,
                                                              @RequestParam String rowEnd){
         Long memberId = memberService.getMemberIdByToken(token);
