@@ -83,7 +83,7 @@ public class Profile {
         if(updateProfileRequest.getProfileIntroduction()!=null){
             this.profileIntroduction = updateProfileRequest.getProfileIntroduction();
         }
-        if(updateProfileRequest.getProfileImageUrl()!=null && !updateProfileRequest.getProfileImageUrl().equals("")){
+        if(updateProfileRequest.getProfileImageFilePath()!=null && !updateProfileRequest.getProfileImageFilePath().equals("")){
 //            String[] urls = updateProfileRequest.getProfileImageUrl().split("/");
 //            urls[2] = "cdn.hobiday.site";
 //            String cdnUrl = "https://";
