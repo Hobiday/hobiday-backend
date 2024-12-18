@@ -83,15 +83,16 @@ public class Profile {
         if(updateProfileRequest.getProfileIntroduction()!=null){
             this.profileIntroduction = updateProfileRequest.getProfileIntroduction();
         }
-        if(updateProfileRequest.getProfileImageUrl()!=null){
-            String[] urls = updateProfileRequest.getProfileImageUrl().split("/");
-            urls[2] = "cdn.hobiday.site";
-            String cdnUrl = "https://";
-            for (int i = 2; i < urls.length; i++) {
-                cdnUrl += urls[i] + "/";
-            }
-            this.profileImageUrl = cdnUrl.substring(0, cdnUrl.length() - 1);
+        if(updateProfileRequest.getProfileImageUrl()!=null && !updateProfileRequest.getProfileImageUrl().equals("")){
+//            String[] urls = updateProfileRequest.getProfileImageUrl().split("/");
+//            urls[2] = "cdn.hobiday.site";
+//            String cdnUrl = "https://";
+//            for (int i = 2; i < urls.length; i++) {
+//                cdnUrl += urls[i] + "/";
+//            }
+//            this.profileImageUrl = cdnUrl.substring(0, cdnUrl.length() - 1);
 //            this.profileImageUrl = updateProfileRequest.getProfileImageUrl();
+            this.profileImageUrl = "https://cdn.hobiday.site/" + getProfileImageUrl();
         }
     }
 }
