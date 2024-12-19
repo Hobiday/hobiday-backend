@@ -42,7 +42,7 @@ public class PerformController {
                                                              @RequestParam String rowEnd){
         Long memberId = memberService.getMemberIdByToken(token);
         List<String> profileGenreList = profileService.getProfileByMemberId(memberId).getProfileGenres();
-        return ApiResponse.success(performService.getPerformsAll(profileGenreList, rowStart, rowEnd));
+        return ApiResponse.success(performService.getPerformsAllDeadline(profileGenreList, rowStart, rowEnd));
     }
 
     // 장르별 공연 조회
