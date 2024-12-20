@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Table(name = "Performs")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,12 +35,12 @@ public class Perform {
     private String area;            // 지역명 (서울)
     private String poster;          // 공연포스터 경로 (url)
 
-    private Integer likeCount;      // 좋아요 개수
+    private int wishCount;      // 좋아요 개수
 
     @Builder
     public Perform(String mt20id, String prfnm, String prfpdfrom, String prfpdto,
                    String genrenm, String fcltynm, String area, String poster,
-                    String prfstate, Boolean openrun) {
+                   String prfstate, Boolean openrun) {
         this.mt20id = mt20id;
         this.openrun = openrun;
         this.prfstate = prfstate;
@@ -52,9 +51,24 @@ public class Perform {
         this.fcltynm = fcltynm;
         this.area = area;
         this.poster = poster;
+        this.wishCount = 0;
+    }
 
-        Random rd = new Random();
-        this.likeCount = rd.nextInt(11); // 임시로 랜덤값. 파라미터에 선언X
+    public void wishUp() {
+        this.wishCount++;
+    }
+    public void wishDown(){
+        if(this.wishCount > 0){
+            this.wishCount--;
+        }
+    }
+
+    public void updateStatusEnd() {
+        this.prfstate = "공연완료";
+    }
+
+    public void updateStatusOpen() {
+        this.prfstate = "공연중";
     }
 }
 

@@ -3,6 +3,8 @@ package com.example.hobiday_backend.domain.perform.service;
 import com.example.hobiday_backend.domain.perform.entity.FacilityDetail;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
 import com.example.hobiday_backend.domain.perform.entity.PerformDetail;
+import com.example.hobiday_backend.domain.perform.exception.PerformErrorCode;
+import com.example.hobiday_backend.domain.perform.exception.PerformException;
 import com.example.hobiday_backend.domain.perform.repository.FacilityRepository;
 import com.example.hobiday_backend.domain.perform.repository.PerformDetailRepository;
 import com.example.hobiday_backend.domain.perform.repository.PerformRepository;
@@ -19,7 +21,11 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.HashSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,9 +34,62 @@ public class PerformParsing extends KopisParsing {
     private final PerformRepository performRepository;
     private final PerformDetailRepository performDetailRepository;
     private final FacilityRepository facilityRepository;
+    private static HashSet<String> facilitySet = new HashSet<>(); //시설상세ID 모음
+    private static String stDate = "20241215";
+    private static String eddDate = "20250113";
 
-    //시설상세ID 모음
-    private static HashSet<String> facilitySet = new HashSet<>();
+    // 파싱 기간 갱신(오늘~28일후) - 아직 적용X
+    public void setParsingPeriod(){
+        stDate = String.valueOf(getTodayDate());
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        Calendar calendar = Calendar.getInstance();
+        Date date = null;
+        try {
+            date = formatter.parse(stDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 28);
+        eddDate = formatter.format(calendar.getTime());
+        log.info("시작 날짜: " + stDate);
+        log.info("종료 날짜: " + eddDate);
+    }
+
+    // 오늘날짜 리턴(20241012)
+    public int getTodayDate(){
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = now.format(formatter);
+        return Integer.parseInt(formattedDate.replace("-", "")); // 오늘날짜 '-'없애고 정수 리턴
+    }
+
+    // 1. 공연날짜 지난 공연은
+    // 위시가 없는 공연이라면 DB에서 삭제
+    // 위시가 있는 공연이라면 공연상태를 '공연완료'로 변경
+    // 2. 공연기간에 들어온 공연은 공연상태를 '공연중'으로 변경
+    public void statusUpdate(){
+        int todayDate = getTodayDate();
+        List<Perform> performs = performRepository.findAllByPrfstateNot("공연완료");
+
+        for(Perform perform : performs){
+            int performEndDate = Integer.parseInt(perform.getPrfpdto().replace(".", "")); // 공연종료날짜 '.'없애고 정수 리턴
+            int performStartDate = Integer.parseInt(perform.getPrfpdfrom().replace(".", "")); // 공연종료날짜 '.'없애고 정수 리턴
+            if (todayDate > performEndDate){
+                if (perform.getWishCount() == 0){
+                    performDetailRepository.delete(performDetailRepository.findByMt20id(perform.getMt20id())
+                            .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND)));
+                    performRepository.delete(perform);
+                }else{
+                    perform.updateStatusEnd();
+                }
+            } else if (performStartDate <= todayDate){ // 시작일 <= 오늘 <= 종료일
+                perform.updateStatusOpen();
+            }
+        }
+    }
+
 
     public void saveAll() {
 //        log.info("파싱 작업 시행");
@@ -39,7 +98,7 @@ public class PerformParsing extends KopisParsing {
 //        urlBuilder.append("&shcate="+shcate);
 
         // 공연기본, 공연상세 정보 DB 저장
-        for (String genreCode : GENRE_CODES_REQUEST.values()) {
+        for (String genreCode : GENRE_CODES_REQUEST.keySet()) {
             savePerformByGenres(genreCode);
 //            Thread.sleep(500);
         }
@@ -48,8 +107,6 @@ public class PerformParsing extends KopisParsing {
         for (String facilityId : facilitySet){
             saveFacility(facilityId);
         }
-
-        log.info("파싱 종료");
     }
 
     // 단일DB 요청 테스트용
@@ -124,19 +181,18 @@ public class PerformParsing extends KopisParsing {
             String facilityId = element.getElementsByTagName("mt10id").item(0).getTextContent();
             facilitySet.add(facilityId); // 시설상세ID를 집합에 추가
             performDetailRepository.save(PerformDetail.builder()
-                            .perform(perform)
-                            .mt20id(performDetailId)
-                            .mt10id(facilityId)
-                            .prfcast(getTextByElement(element, "prfcast"))
-                            .prfruntime(getTextByElement(element, "prfruntime"))
-                            .prfage(getTextByElement(element, "prfage"))
-                            .pcseguidance(getTextByElement(element, "pcseguidance"))
-////                                .sty(element.getElementsByTagName("sty").item(0).getTextContent())
-                            .styurl(getTextByElement(element, "styurl"))
-                            .dtguidance(getTextByElement(element, "dtguidance"))
-                            .relatenm(getTextByElement(element, "relatenm"))
-                            .relateurl(getTextByElement(element, "relateurl"))
-                            .build());
+                    .perform(perform)
+                    .mt20id(performDetailId)
+                    .mt10id(facilityId)
+                    .prfcast(getTextByElement(element, "prfcast"))
+                    .prfruntime(getTextByElement(element, "prfruntime"))
+                    .prfage(getTextByElement(element, "prfage"))
+                    .pcseguidance(getTextByElement(element, "pcseguidance"))
+                    .styurl(getTextByElement(element, "styurl"))
+                    .dtguidance(getTextByElement(element, "dtguidance"))
+                    .relatenm(getTextByElement(element, "relatenm"))
+                    .relateurl(getTextByElement(element, "relateurl"))
+                    .build());
         }
     }
 
@@ -169,18 +225,17 @@ public class PerformParsing extends KopisParsing {
 
     // (공연기본) 장르 선택하여 여러개의 db 태그 리스트 반환
     public NodeList getNodeListByGenre(String shcate) { // shcate: 장르 코드
-//        log.info("장르->노드리스트");
-//        String stdate = "20241215"; // 시작 검색기간
-//        String eddate = "20240113"; // 종료 검색기간
-//        String rows = "5";         // 페이지당 공연 개수
         String cpage = "1";
 //        String signgucode = "11";   // 지역 코드
-//        String shcate = "AAAA";     // 장르 코드
 
         StringBuilder urlBuilder = new StringBuilder(BASE_URL);
         urlBuilder.append("?service="+SERVICE_KEY);
-        urlBuilder.append("&stdate="+STDATE);
-        urlBuilder.append("&eddate="+EDDATE);
+
+//        urlBuilder.append("&stdate="+STDATE);
+//        urlBuilder.append("&eddate="+EDDATE);
+        urlBuilder.append("&stdate="+stDate);
+        urlBuilder.append("&eddate="+eddDate);
+
         urlBuilder.append("&rows="+ROWS);
         urlBuilder.append("&cpage="+cpage);
 //        urlBuilder.append("&signgucode="+signgucode);
@@ -209,4 +264,5 @@ public class PerformParsing extends KopisParsing {
     public static String getTextByElement(Element element, String tag){
         return element.getElementsByTagName(tag).item(0).getTextContent();
     }
+
 }

@@ -26,9 +26,9 @@ import java.util.Map;
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(5); // 리프레시 토큰 기간 설정 5일
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2); // 액세스 토큰 기간 설정 2일
-    public static final String REDIRECT_PATH = "http://localhost:3000/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
-//    public static final String REDIRECT_PATH = "/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2); // 액세스 토큰 기간 설정 2시간
+    public static final String REDIRECT_PATH = "https://hobiday.site/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
+//    public static final String REDIRECT_PATH = "http://localhost:3000/registration-form"; // 로그인 프로세스 모두 성공 후 리다이렉트할 페이지
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -42,18 +42,19 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Map attributesKakaoAcount = (Map) attributes.get("kakao_account");
         String email = (String) attributesKakaoAcount.get("email");
         Member member = memberService.findByEmail(email);
-//        log.info("OAuth2SuccessHandler에서 email: {}", email);
+//        log.info("OAuth2SuccessHandler에서 로그인한 email: {}", email);
 
         // 리프레시 토큰 생성 -> DB에 저장 -> 쿠키에 저장
         String refreshToken = tokenProvider.generateToken(member, REFRESH_TOKEN_DURATION);
         saveRefreshToken(member.getId(), refreshToken);
-        addRefreshTokenToCookie(request, response, refreshToken);
+//        addRefreshTokenToCookie(request, response, refreshToken); // 쿠키에 토큰 저장 제외
 
         // 액세스 토큰 생성 -> 패스에 엑세스 토큰 추가
         String accessToken = tokenProvider.generateToken(member, ACCESS_TOKEN_DURATION);
-        String targetUrl = getTargetUrl(accessToken, refreshToken);
-
 //        String targetUrl = getTargetUrl(accessToken);
+        String targetUrl = getTargetUrl(accessToken, refreshToken); // 액세스, 리프레시 모두 전달
+//        log.info("OA2S accessToken: {}", accessToken);
+//        log.info("OA2S refreshToken: {}", refreshToken);
 
         // 인증 관련 설정값과 쿠키 제거
         clearAuthenticationAttributes(request, response);

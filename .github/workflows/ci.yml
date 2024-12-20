@@ -23,7 +23,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Setting application.yml
+      # Setting application.yml ..
       - name: Git Checkout
         uses: actions/checkout@v4
 
@@ -59,7 +59,7 @@ jobs:
       - name: Push to DockerHub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/hyun
 
-      # EC2 배포
+      # EC2 접속 및 도커 컴포즈로 실행
       - name: Docker Image Pull & Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -67,10 +67,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }} # pem key
           script: |
-            sudo docker rm -f $(docker ps -qa)
+            sudo docker rm -f $(sudo docker ps -qa)
             sudo docker pull ${{secrets.DOCKER_USERNAME}}/hyun:latest
             sudo docker-compose up -d
             sudo docker image prune -f
-#            sudo docker stop $(sudo docker ps -a -q)
-#            sudo docker run -d --log-driver=syslog -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/hyun:latest
-#            sudo docker rm $(sudo docker ps --filter 'status=exited' -a -q)

@@ -20,7 +20,7 @@ public class PerformAllResponse {
     private Boolean openRun;        // 오픈런 (Y/N)
     private String area;            // 지역명 (서울)
     private String poster;          // 공연포스터 경로 (url)
-    private Integer likeCount;      // 좋아요 개수
+    private int wishCount;      // 좋아요 개수
 
     private String facilityId;          // 시설상세ID
     private String cast;                // 공연 출연진

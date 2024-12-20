@@ -10,6 +10,6 @@ public class UpdateProfileRequest {
     private String profileEmail;
     private List<String> profileGenre;
     private String profileIntroduction;
-    private String profileImageUrl;
+    private String profileImageFilePath;
 
 }

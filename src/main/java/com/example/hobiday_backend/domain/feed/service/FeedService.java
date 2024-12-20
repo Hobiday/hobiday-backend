@@ -115,7 +115,7 @@ public class FeedService {
                 .openRun(perform.getOpenrun())
                 .area(perform.getArea())
                 .poster(perform.getPoster())
-                .likeCount(perform.getLikeCount())
+                .performLikeCount(perform.getWishCount())
                 .build();
     }
 
@@ -165,7 +165,7 @@ public class FeedService {
                 .openRun(perform.getOpenrun())
                 .area(perform.getArea())
                 .poster(perform.getPoster())
-                .likeCount(perform.getLikeCount())
+                .performLikeCount(perform.getWishCount())
                 .build();
     }
 
@@ -247,7 +247,7 @@ public class FeedService {
                 .openRun(perform.getOpenrun())
                 .area(perform.getArea())
                 .poster(perform.getPoster())
-                .likeCount(perform.getLikeCount())
+                .performLikeCount(perform.getWishCount())
                 .build();
     }
 
@@ -296,7 +296,7 @@ public class FeedService {
                         .openRun(feed.getPerform() != null ? feed.getPerform().getOpenrun() : null)
                         .area(feed.getPerform() != null ? feed.getPerform().getArea() : null)
                         .poster(feed.getPerform() != null ? feed.getPerform().getPoster() : null)
-                        .performLikeCount(feed.getPerform() != null ? feed.getPerform().getLikeCount() : null)
+                        .performLikeCount(feed.getPerform() != null ? feed.getPerform().getWishCount() : null)
                         .build())
                 .collect(Collectors.toList());
     }

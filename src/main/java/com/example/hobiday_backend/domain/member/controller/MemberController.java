@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Random;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +40,16 @@ public class MemberController {
         return ApiResponse.success(memberService.getMemberInfoByToken(token));
     }
 
+    // 게스트 로그인
+    @Operation(summary="게스트 로그인", description="준비된 10개 계정 중 랜덤 로그인 | 프론트에서 Read Only로 만들어주세요")
+    @GetMapping("/api/members/guest")
+    public ApiResponse<FreePassResponse> loginGuest(){
+        Random rd = new Random();
+        String nickname = "guest" + (rd.nextInt(10)+1);
+        return ApiResponse.success(memberService.loginFreePassMember(nickname));
+    }
+
+    // 개발용 기존회원 로그인
     @Operation(summary="(개발용)기존회원 로그인", description="미리 만들어둔 회원에 로그인, 토큰 받음")
     @GetMapping("/api/test/freepass/{nickname}")
     public ApiResponse<FreePassResponse> loginFreePass(@PathVariable String nickname){
@@ -46,6 +58,7 @@ public class MemberController {
 //        return ResponseEntity.ok().body(freePassResponse);
         return ApiResponse.success(freePassResponse);
     }
+
 
 
     // (개발용)자동으로 회원 생성하고 토큰 발급 -> 포스트맨으로만 검증함

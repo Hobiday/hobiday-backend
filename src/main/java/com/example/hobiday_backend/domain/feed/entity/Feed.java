@@ -4,21 +4,20 @@ import com.example.hobiday_backend.domain.comment.entity.Comment;
 import com.example.hobiday_backend.domain.like.entity.Like;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
-import com.example.hobiday_backend.global.domain.TImeStamped;
+import com.example.hobiday_backend.global.domain.TimeStamped;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Feed extends TImeStamped {
+public class Feed extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

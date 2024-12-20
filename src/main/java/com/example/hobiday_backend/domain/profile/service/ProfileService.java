@@ -44,11 +44,13 @@ public class ProfileService {
     // 프로필 등록(온보딩 작성)
     @Transactional
     public ProfileResponse saveFirst(//Long userId, //방1
-                                     Member member, //방2
-                                     AddProfileRequest addProfileRequest){
+                             Member member, //방2
+                             AddProfileRequest addProfileRequest){
 //        String email = userRepository.findById(userId).get().getEmail(); //방1
         String email = member.getEmail(); //방2
-//        log.info("dto 장르: " + addProfileRequest.profileGenre);
+        if(profileRepository.findByMemberId(member.getId()).isPresent()){
+            throw new ProfileException(ProfileErrorCode.PROFILE_CONFLICT);
+        }
         Profile profile = profileRepository.save(Profile.builder()
 //                .userId(userId) //방1
                 .member(member) //방2
@@ -74,10 +76,18 @@ public class ProfileService {
         PresignedUrlResponse presignedUrlResponse = fileService.getUploadPresignedUrl(presignedUrlRequest.getPrefix(),
                 presignedUrlRequest.getFileName());
 
-        String saveUrl = presignedUrlResponse.getUrl().split("\\?")[0];
-        Profile profile = profileRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
-        profile.updateImage(saveUrl);
+        //프로필에 저장은 따로
+//        String[] urls = presignedUrlResponse.getUrl().split("\\?")[0].split("/");
+//        urls[2] = "cdn.hobiday.site";
+//        String cdnUrl = "https://";
+//        for (int i = 2; i < urls.length; i++) {
+//            cdnUrl += urls[i] + "/";
+//        }
+//        cdnUrl = cdnUrl.substring(0, cdnUrl.length() - 1);
+//        Profile profile = profileRepository.findByMemberId(memberId)
+//                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+//        profile.updateImage(saveUrl);
+//        profile.updateImage(cdnUrl); //CloudFront 라우팅된 주소로 저장
 
         return presignedUrlResponse;
     }

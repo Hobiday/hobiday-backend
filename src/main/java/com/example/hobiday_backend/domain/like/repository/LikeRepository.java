@@ -26,5 +26,4 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     // 추가: 특정 사용자가 특정 피드에 좋아요를 눌렀는지 확인
     boolean existsByFeedAndProfile(Feed feed, Profile profile);
-
 }

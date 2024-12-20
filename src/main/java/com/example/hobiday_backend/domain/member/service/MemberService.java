@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 import static com.example.hobiday_backend.global.oauth.OAuth2SuccessHandler.ACCESS_TOKEN_DURATION;
 import static com.example.hobiday_backend.global.oauth.OAuth2SuccessHandler.REFRESH_TOKEN_DURATION;
 
@@ -61,7 +63,7 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
-// 개발 테스트용도 ==============================================================================================================
+    // 개발용 or 게스트 로그인
     public FreePassResponse loginFreePassMember(String nickname) {
         Member member = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER__NOT_FOUND));
@@ -89,6 +91,8 @@ public class MemberService implements UserDetailsService {
         refreshTokenRepository.save(refreshToken);
 //        log.info("saveRefreshToken() 완료");
     }
+
+
 
 
     // no use ===============================================================================================

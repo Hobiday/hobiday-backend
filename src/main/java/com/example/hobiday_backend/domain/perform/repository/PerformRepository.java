@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface PerformRepository extends JpaRepository<Perform, Long> {
     Optional<Perform> findByMt20id(String mt20id);
+    List<Perform> findAllByPrfstateNot(String prfstate);
 
     // 장르별 공연 선택, 공연완료 제외
     @Query("select p " +
@@ -27,7 +28,7 @@ public interface PerformRepository extends JpaRepository<Perform, Long> {
             "order by p.prfpdfrom asc limit 10")
     Optional<List<Perform>> findByPrfNm(String search);
 
-    // 모든 장르 선택 (미완성)
+    // 모든 장르 선택: 공연시작일 빠른순
     @Query("select p " +
             "from Perform p " +
             "where p.prfstate!='공연완료' " +
@@ -35,11 +36,13 @@ public interface PerformRepository extends JpaRepository<Perform, Long> {
             "limit :limit offset :offset")
     Optional<List<Perform>> findAllBySelect(int limit, int offset);
 
-    // 랜덤 공연 6개 선택
-//    @Query("select p " +
-//            "from Perform p " +
-//            "order by Rand() limit 6")
-//    Optional<List<Perform>> findAllByRand();
+    // 모든 장르 선택: 공연종료일 임박순
+    @Query("select p " +
+            "from Perform p " +
+            "where p.prfstate!='공연완료' " +
+            "order by p.prfpdto asc " +
+            "limit :limit offset :offset")
+    Optional<List<Perform>> findAllBySelectDeadline(int limit, int offset);
 
     // (추천 검색어) 장르별 1개, 공연중 선택
     @Query("select p " +
