@@ -26,7 +26,10 @@ public class PerformCustomRepositoryImpl implements PerformCustomRepository {
             throw new PerformException(PerformErrorCode.PERFORM_NOT_ALLOWED);
         }
         else if (genres.isEmpty() && areas.isEmpty()){
-            return jpaQueryFactory.selectFrom(perform).fetch();
+            return jpaQueryFactory
+                    .selectFrom(perform)
+                    .where(perform.prfnm.contains(keyword))
+                    .fetch();
         }else if (genres.isEmpty()){
             return jpaQueryFactory
                     .selectFrom(perform)
