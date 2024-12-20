@@ -18,6 +18,22 @@ public class PerformCustomRepositoryImpl implements PerformCustomRepository {
 
     @Override
     public List<Perform> findAllBySelectAreaAndGenre(String keyword, List<String> genres, List<String> areas) {
+        if (genres.isEmpty() && areas.isEmpty()){
+            return jpaQueryFactory.selectFrom(perform).fetch();
+        }else if (genres.isEmpty()){
+            return jpaQueryFactory
+                    .selectFrom(perform)
+                    .where(perform.prfnm.contains(keyword),
+                            perform.area.in(areas))
+                    .fetch();
+        }else if(areas.isEmpty()){
+            return jpaQueryFactory
+                    .selectFrom(perform)
+                    .where(perform.prfnm.contains(keyword),
+                            perform.genrenm.in(genres))
+                    .fetch();
+        }
+
         return jpaQueryFactory
                 .selectFrom(perform)
                 .where(perform.prfnm.contains(keyword),
