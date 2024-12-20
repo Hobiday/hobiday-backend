@@ -1,6 +1,8 @@
 package com.example.hobiday_backend.domain.perform.repository;
 
 import com.example.hobiday_backend.domain.perform.entity.Perform;
+import com.example.hobiday_backend.domain.perform.exception.PerformErrorCode;
+import com.example.hobiday_backend.domain.perform.exception.PerformException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +20,12 @@ public class PerformCustomRepositoryImpl implements PerformCustomRepository {
 
     @Override
     public List<Perform> findAllBySelectAreaAndGenre(String keyword, List<String> genres, List<String> areas) {
-        if (genres.isEmpty() && areas.isEmpty()){
+        if(keyword.isEmpty() && genres.isEmpty() && areas.isEmpty()){
+            throw new PerformException(PerformErrorCode.PERFORM_NOT_ALLOWED);
+        }else if(keyword.isEmpty()){
+            throw new PerformException(PerformErrorCode.PERFORM_NOT_ALLOWED);
+        }
+        else if (genres.isEmpty() && areas.isEmpty()){
             return jpaQueryFactory.selectFrom(perform).fetch();
         }else if (genres.isEmpty()){
             return jpaQueryFactory
@@ -33,7 +40,6 @@ public class PerformCustomRepositoryImpl implements PerformCustomRepository {
                             perform.genrenm.in(genres))
                     .fetch();
         }
-
         return jpaQueryFactory
                 .selectFrom(perform)
                 .where(perform.prfnm.contains(keyword),
