@@ -51,4 +51,13 @@ public interface PerformRepository extends JpaRepository<Perform, Long> {
             "order by p.prfpdfrom asc " +
             "limit 1 offset :offset") // limit 개수, offset 시작값
     Optional<List<Perform>> findBySelectGenre(String genre, int offset);
+
+//    @Query(value = "select p " +
+//            "from Perform p " +
+//            "where (p.genrenm = :genreQuery) " +
+//            "and (p.area = :areaQuery) " +
+//            "order by p.prfpdto asc", nativeQuery = true)
+//    Optional<List<Perform>> findAllBySelectAreaAndGenre(String genreQuery, String areaQuery);
+//
+//    public
 }

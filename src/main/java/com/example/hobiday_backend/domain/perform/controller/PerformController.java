@@ -63,6 +63,16 @@ public class PerformController {
         return ApiResponse.success(performService.getPerformsByRecommends(profileGenreList));
     }
 
+    // 공연 상세 검색 조회
+    @Operation(summary="공연 상세 검색",description="쿼리파라미터에 검색어, 장르들, 지역들 | 설명은 서버알림방" )
+    @GetMapping("/performs/search/detail")
+    public ApiResponse<List<PerformResponse>> getPerformsBySearchDetails(@RequestParam String keyword,
+                                                                                      @RequestParam List<String> genres,
+                                                                                      @RequestParam List<String> areas){
+
+        return ApiResponse.success(performService.getPerformsBySearchDetails(keyword, genres, areas));
+    }
+
     // 공연명으로 검색 결과 조회
     @Operation(summary="공연명으로 검색 결과 조회", description="입력한 이름을 포함하는 공연 조회 ex) 주말, 마술")
     @GetMapping("/performs/search")

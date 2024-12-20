@@ -7,6 +7,7 @@ import com.example.hobiday_backend.domain.perform.entity.PerformDetail;
 import com.example.hobiday_backend.domain.perform.exception.PerformErrorCode;
 import com.example.hobiday_backend.domain.perform.exception.PerformException;
 import com.example.hobiday_backend.domain.perform.repository.FacilityRepository;
+import com.example.hobiday_backend.domain.perform.repository.PerformCustomRepositoryImpl;
 import com.example.hobiday_backend.domain.perform.repository.PerformDetailRepository;
 import com.example.hobiday_backend.domain.perform.repository.PerformRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 
 @Slf4j
@@ -25,6 +26,7 @@ public class PerformService {
     private final PerformRepository performRepository;
     private final PerformDetailRepository performDetailRepository;
     private final FacilityRepository facilityRepository;
+    private final PerformCustomRepositoryImpl performCustomRepositoryImpl;
 
 
     // 모든 장르 조회: 공연 시작순
@@ -187,6 +189,24 @@ public class PerformService {
                 .map(PerformRecommendListResponse::new)
                 .toList();
     }
+
+    // 키워드, 지역들, 장르들 검색
+    public List<PerformResponse> getPerformsBySearchDetails(String keyword, List<String> genres, List<String> areas) {
+        List<Perform> performList = performCustomRepositoryImpl.findAllBySelectAreaAndGenre(keyword, genres, areas);
+        for(Perform perform : performList){
+            log.info("공연 정보: {} | {} | {}", perform.getPrfnm(), perform.getGenrenm(), perform.getArea());
+        }
+
+        return performList.stream()
+                .map(PerformResponse::new)
+                .toList();
+    }
+
+//    public List<Perform> findAllBySelectAreaAndGenre(final String genre, final String area) {
+//        return queryFactory
+//                .selectfrom(Perform)
+//    }
+
 
     // 모든 장르로 조회
 //    public List<PerformResponse> getPerformsAll() {

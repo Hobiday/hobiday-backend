@@ -143,13 +143,8 @@ public class PerformParsing extends KopisParsing {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
                 String performDetailId = element.getElementsByTagName("mt20id").item(0).getTextContent();
-//                log.info("performDetailId: " + performDetailId);
-
                 // 이미 있는 공연 정보이면 패스
-                if (performRepository.findByMt20id(performDetailId).isPresent()){
-                    continue;
-                }
-
+                if (performRepository.findByMt20id(performDetailId).isPresent()) continue;
                 // 공연 기본정보 저장
                 Perform perform = Perform.builder()
 //                        .mt20id(element.getElementsByTagName("mt20id").item(0).getTextContent())
@@ -226,28 +221,19 @@ public class PerformParsing extends KopisParsing {
     // (공연기본) 장르 선택하여 여러개의 db 태그 리스트 반환
     public NodeList getNodeListByGenre(String shcate) { // shcate: 장르 코드
         String cpage = "1";
-//        String signgucode = "11";   // 지역 코드
-
         StringBuilder urlBuilder = new StringBuilder(BASE_URL);
         urlBuilder.append("?service="+SERVICE_KEY);
-
-//        urlBuilder.append("&stdate="+STDATE);
-//        urlBuilder.append("&eddate="+EDDATE);
         urlBuilder.append("&stdate="+stDate);
         urlBuilder.append("&eddate="+eddDate);
-
         urlBuilder.append("&rows="+ROWS);
         urlBuilder.append("&cpage="+cpage);
-//        urlBuilder.append("&signgucode="+signgucode);
         urlBuilder.append("&shcate=" + shcate);
-//        log.info("전url: "+urlBuilder.toString());
 
         return getNodeList(urlBuilder); //파싱할 tag는 <db>
     }
 
     // (공연상세, 시설상세) 단일 db 태그 리스트 반환
     private static NodeList getNodeList(StringBuilder urlBuilder)  {
-//        log.info("후url: "+urlBuilder.toString());
         Document doc = null;
         try {
             doc = DocumentBuilderFactory
