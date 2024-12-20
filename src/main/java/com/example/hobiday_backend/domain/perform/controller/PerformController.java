@@ -66,7 +66,7 @@ public class PerformController {
     // 공연 상세 검색 조회
     @Operation(summary="공연 상세 검색",description="쿼리파라미터에 검색어, 장르들, 지역들 | 설명은 서버알림방" )
     @GetMapping("/performs/search/detail")
-    public ApiResponse<List<PerformRecommendListResponse>> getPerformsBySearchDetails(@RequestParam String keyword,
+    public ApiResponse<List<PerformResponse>> getPerformsBySearchDetails(@RequestParam String keyword,
                                                                                       @RequestParam List<String> genres,
                                                                                       @RequestParam List<String> areas){
 
