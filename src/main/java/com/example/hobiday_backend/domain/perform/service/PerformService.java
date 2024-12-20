@@ -191,14 +191,14 @@ public class PerformService {
     }
 
     // 키워드, 지역들, 장르들 검색
-    public List<PerformRecommendListResponse> getPerformsBySearchDetails(String keyword, List<String> genres, List<String> areas) {
+    public List<PerformResponse> getPerformsBySearchDetails(String keyword, List<String> genres, List<String> areas) {
         List<Perform> performList = performCustomRepositoryImpl.findAllBySelectAreaAndGenre(keyword, genres, areas);
         for(Perform perform : performList){
             log.info("공연 정보: {} | {} | {}", perform.getPrfnm(), perform.getGenrenm(), perform.getArea());
         }
 
         return performList.stream()
-                .map(PerformRecommendListResponse::new)
+                .map(PerformResponse::new)
                 .toList();
     }
 
