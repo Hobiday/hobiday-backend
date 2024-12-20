@@ -76,19 +76,6 @@ public class ProfileService {
         PresignedUrlResponse presignedUrlResponse = fileService.getUploadPresignedUrl(presignedUrlRequest.getPrefix(),
                 presignedUrlRequest.getFileName());
 
-        //프로필에 저장은 따로
-//        String[] urls = presignedUrlResponse.getUrl().split("\\?")[0].split("/");
-//        urls[2] = "cdn.hobiday.site";
-//        String cdnUrl = "https://";
-//        for (int i = 2; i < urls.length; i++) {
-//            cdnUrl += urls[i] + "/";
-//        }
-//        cdnUrl = cdnUrl.substring(0, cdnUrl.length() - 1);
-//        Profile profile = profileRepository.findByMemberId(memberId)
-//                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
-//        profile.updateImage(saveUrl);
-//        profile.updateImage(cdnUrl); //CloudFront 라우팅된 주소로 저장
-
         return presignedUrlResponse;
     }
 
