@@ -210,10 +210,11 @@ public class FeedService {
 
     // 단일 피드 조회
     @Transactional(readOnly = true)
-    public FeedRes getFeedById(Long profileId, Long feedId) {
+    public FeedRes getFeedById(Long feedId) {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
-        Profile profile = profileRepository.findById(profileId)
+        Profile findProfile=feed.getProfile();
+        Profile profile=profileRepository.findById(findProfile.getId())
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
         // 피드 작성 후 저장된 피드 공연 정보를 가져오기
         Perform findPerform=feed.getPerform();
