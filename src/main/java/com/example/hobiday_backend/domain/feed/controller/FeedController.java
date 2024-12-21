@@ -95,20 +95,19 @@ public class FeedController {
     // 프로필 단일 피드 조회
     @Operation(summary = "프로필에서 단일 피드 조회", description = "피드의 id를 path명으로 받습니다" +
             "프로필에서 단일 피드 조회를 하는 API")
-    @GetMapping("/profiles/feeds/{feedId}")
-    public ApiResponse<FeedRes> getFeedById(@RequestHeader("Authorization") String token,
+    @GetMapping("/profiles/{profileId}/feeds/{feedId}")
+    public ApiResponse<FeedRes> getFeedById(@PathVariable Long profileId,
                                             @PathVariable Long feedId) {
-        Long userId = memberService.getMemberIdByToken(token);
-        FeedRes feedRes = feedService.getFeedById(userId,feedId);
+        FeedRes feedRes = feedService.getFeedById(profileId,feedId);
         return ApiResponse.success(feedRes);
     }
 
     // 프로필 하위 전체 피드 조회
     @Operation(summary = "프로필 하위의 전체 피드 조회", description = "프로필 하위에 전체 피드를 조회하는 API")
-    @GetMapping("/profiles/feeds")
-    public ApiResponse<List<FeedRes>> getProfileFeeds(@RequestHeader("Authorization") String token) {
-        Long userId = memberService.getMemberIdByToken(token);
-        List<FeedRes> profileFeeds = feedService.getProfileFeeds(userId);
+    @GetMapping("/profiles/{profileId}/feeds")
+    public ApiResponse<List<FeedRes>> getProfileFeeds(@PathVariable Long profileId) {
+        List<FeedRes> profileFeeds = feedService.getProfileFeeds(profileId);
         return ApiResponse.success(profileFeeds);
     }
+
 }

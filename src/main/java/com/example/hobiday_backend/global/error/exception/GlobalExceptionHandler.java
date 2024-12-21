@@ -4,6 +4,7 @@ import com.example.hobiday_backend.domain.comment.exception.CommentException;
 import com.example.hobiday_backend.domain.feed.exception.FeedException;
 import com.example.hobiday_backend.domain.feed.exception.FileUrlException;
 import com.example.hobiday_backend.domain.feed.exception.HashTagException;
+import com.example.hobiday_backend.domain.follow.exception.FollowException;
 import com.example.hobiday_backend.domain.member.exception.MemberException;
 import com.example.hobiday_backend.domain.perform.exception.PerformException;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
@@ -61,6 +62,12 @@ public class GlobalExceptionHandler {
     // 신규: 해시태그 예외 처리
     @ExceptionHandler(HashTagException.class)
     public ResponseEntity<ErrorRes<Void>> handleHashTagException(HashTagException e) {
+        log.info("HashTagException: {}", e.getMessage(), e);
+        return ResponseEntity.status(e.getHttpStatus()).body(ErrorRes.failure(e.getCode(), e.getMessage()));
+    }
+
+    @ExceptionHandler(FollowException.class)
+    public ResponseEntity<ErrorRes<Void>> handleFollowException(FollowException e) {
         log.info("HashTagException: {}", e.getMessage(), e);
         return ResponseEntity.status(e.getHttpStatus()).body(ErrorRes.failure(e.getCode(), e.getMessage()));
     }

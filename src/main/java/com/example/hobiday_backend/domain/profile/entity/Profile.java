@@ -45,10 +45,10 @@ public class Profile {
     private String profileImageUrl;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> followers = new ArrayList<>();
+    private List<Follow> following = new ArrayList<>();
 
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> followings = new ArrayList<>();
+    private List<Follow> followers = new ArrayList<>();
 
     // 좋아요 연간관계 맵핑
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
