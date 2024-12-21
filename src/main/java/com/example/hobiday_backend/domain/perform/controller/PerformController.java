@@ -110,10 +110,10 @@ public class PerformController {
         return ApiResponse.success(performService.getPerformAll(performId));
     }
 
-//    // 공연으로 작성한 피드 전체 조회
-//    @Operation(summary="공연으로 작성한 피드 전체 조회", description="공연으로 작성한 피드 전체 조회")
-//    @GetMapping("/performs/feeds/{performId}")
-//    public ApiResponse<List<FeedRes>> getFeedsByPerformId(@PathVariable String performId){
-//        return ApiResponse.success(performService.getFeedsByPerformId(performId));
-//    }
+    // 공연으로 작성한 피드 전체 조회
+    @Operation(summary="공연으로 작성한 피드 전체 조회", description="공연ID PF12345 보내서 피드 전체 조회")
+    @GetMapping("/performs/feeds/{performId}")
+    public ApiResponse<List<FeedRes>> getFeedsByPerformId(@PathVariable String performId){
+        return ApiResponse.success(performService.getFeedsByPerformId(performId));
+    }
 }

@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.hobiday_backend.domain.feed.entity.QFeed.feed;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -210,26 +212,15 @@ public class PerformService {
                 .toList();
     }
 
-//    public List<FeedRes> getFeedsByPerformId(String performId) {
-//        Perform perform = performRepository.findByMt20id(performId)
-//                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
-//        List<Feed> feedList = feedRepository.findAllByPerformOrderByCreatedTimeDesc(perform);
-//
-//        private Long feedId;
-//        private String contents;
-//        private String profileName;
-//        private Long profileId;
-//        private String profileImageUrl;
-//        private List<String> hashTag;
-//        private List<String> feedFiles;
-//        private Integer likeCount;
-//        private boolean isLiked;
-//        private Integer commentCount;
-//
-//        return feedList.stream()
-//                .map(FeedRes::new)
-//                .toList();
-//    }
+    public List<FeedRes> getFeedsByPerformId(String performId) {
+        Perform perform = performRepository.findByMt20id(performId)
+                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+        List<Feed> feedList = feedRepository.findAllByPerformOrderByCreatedTimeDesc(perform);
+
+        return feedList.stream()
+                .map(FeedRes::from)
+                .toList();
+    }
 
 //    public List<Perform> findAllBySelectAreaAndGenre(final String genre, final String area) {
 //        return queryFactory
