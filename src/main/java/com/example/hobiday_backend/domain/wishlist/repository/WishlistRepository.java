@@ -15,13 +15,13 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
             "where w.profileId = :profileId " +
             "order by w.modifiedTime desc " +
             "limit :limit offset :offset")
-    Optional<List<Wishlist>> findWishListAll(Long profileId, int limit, int offset);
+    List<Wishlist> findWishListAll(Long profileId, int limit, int offset);
 
     @Query("select w " +
             "from Wishlist w " +
             "where w.genre like concat('%', :genre, '%') and w.profileId = :profileId " +
             "order by w.modifiedTime desc ")
-    Optional<List<Wishlist>> findWishListByGenre(Long profileId, String genre);
+    List<Wishlist> findWishListByGenre(Long profileId, String genre);
 
     boolean existsByProfileIdAndMt20id(Long profileId, String performId);
 }
