@@ -1,13 +1,18 @@
 package com.example.hobiday_backend.domain.perform.dto.response;
 
-import com.example.hobiday_backend.domain.feed.dto.FeedRes;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.feed.entity.FeedFile;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 @Builder
 public class FeedsByPerformResponse {
     private Long feedId;
