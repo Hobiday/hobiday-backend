@@ -95,10 +95,9 @@ public class FeedController {
     // 프로필 단일 피드 조회
     @Operation(summary = "프로필에서 단일 피드 조회", description = "피드의 id를 path명으로 받습니다" +
             "프로필에서 단일 피드 조회를 하는 API")
-    @GetMapping("/profiles/{profileId}/feeds/{feedId}")
-    public ApiResponse<FeedRes> getFeedById(@PathVariable Long profileId,
-                                            @PathVariable Long feedId) {
-        FeedRes feedRes = feedService.getFeedById(profileId,feedId);
+    @GetMapping("/profiles/feeds/{feedId}")
+    public ApiResponse<FeedRes> getFeedById(@PathVariable Long feedId) {
+        FeedRes feedRes = feedService.getFeedById(feedId);
         return ApiResponse.success(feedRes);
     }
 
