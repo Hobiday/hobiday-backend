@@ -15,6 +15,7 @@ import com.example.hobiday_backend.global.dto.ApiResponse;
 import com.example.hobiday_backend.global.dto.file.PreSignedUrlRequest;
 import com.example.hobiday_backend.global.dto.file.PresignedUrlResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +78,7 @@ public class ProfileController {
     @Operation(summary = "프로필 조회(by토큰)", description = "토큰을 요청 받아 프로필 정보를 반환합니다..")
     @GetMapping("/api/profiles/myprofile")
     public ApiResponse<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token,
-                                                           @RequestParam Long profileId){
+                                                           @Parameter Long profileId){
         if (profileId == null) { // 마이페이지
             Long memberId = memberService.getMemberIdByToken(token);
             ProfileResponse profileResponse = profileService.getProfileByMemberId(memberId);
