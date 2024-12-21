@@ -30,10 +30,22 @@ public class ProfileService {
     private final FeedRepository feedRepository;
     private final FollowRepository followRepository;
 
+    // 회원ID로 프로필 조회
+    public ProfileResponse getProfileByMemberId(Long memberId){
+        Profile profile = profileRepository.findByMemberId(memberId)
+                .orElseThrow(() ->new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        return ProfileResponse.from(profile);
+    }
 
+    // 프로필ID로 프로필 조회
+    public ProfileResponse getProfileByProfileId(Long profileId){
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(() ->new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        return ProfileResponse.from(profile);
+    }
 
-    // 회원ID로 프로필 정보 반환
-    public ProfileResponse getProfileId(Long profileId){
+    // 프로필 정보 반환 프로필 갯수 팔로우 팔로워 수 갯수
+    public ProfileResponse getProfileById(Long profileId){
         Profile profile = profileRepository.findById(profileId)
                 .orElseThrow(() ->new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
         int totalFeedCount = feedRepository.countByProfile(profile);
