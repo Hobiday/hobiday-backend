@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface PerformCustomRepository {
     List<Perform> findAllBySelectAreaAndGenre(String keyword, List<String> genres, List<String> areas);
+    List<Perform> findTenBySelectGenre(List<String> genres);
 }

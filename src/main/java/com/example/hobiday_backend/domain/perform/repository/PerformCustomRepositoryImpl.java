@@ -51,4 +51,27 @@ public class PerformCustomRepositoryImpl implements PerformCustomRepository {
                 .fetch();
 
     }
+
+    @Override
+    public List<Perform> findTenBySelectGenre(List<String> genres) {
+        List<Perform> performs = jpaQueryFactory
+                .selectFrom(perform)
+                .where(perform.genrenm.in(genres))
+                .orderBy(perform.prfpdfrom.asc())
+                .limit(10)
+                .fetch();
+
+        int index = 0;
+        while(performs.size() < 10){
+            performs.addAll(jpaQueryFactory
+                    .selectFrom(perform)
+                    .where(perform.genrenm.notIn(genres))
+                    .orderBy(perform.prfpdfrom.asc())
+                    .offset(index++)
+                    .limit(1)
+                    .fetch());
+        }
+
+        return performs;
+    }
 }

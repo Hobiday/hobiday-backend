@@ -29,9 +29,9 @@ public class PerformController {
     public ApiResponse<List<PerformResponse>> getPerformsAll(@RequestHeader("Authorization") String token,
                                                              @RequestParam String rowStart,
                                                              @RequestParam String rowEnd){
-        Long memberId = memberService.getMemberIdByToken(token);
-        List<String> profileGenreList = profileService.getProfileByMemberId(memberId).getProfileGenres();
-        return ApiResponse.success(performService.getPerformsAll(profileGenreList, rowStart, rowEnd));
+//        Long memberId = memberService.getMemberIdByToken(token);
+//        List<String> profileGenreList = profileService.getProfileByMemberId(memberId).getProfileGenres();
+        return ApiResponse.success(performService.getPerformsAll(rowStart, rowEnd));
     }
 
     // 전체 공연 조회2
@@ -40,9 +40,9 @@ public class PerformController {
     public ApiResponse<List<PerformResponse>> getPerformsAllDeadline(@RequestHeader("Authorization") String token,
                                                              @RequestParam String rowStart,
                                                              @RequestParam String rowEnd){
-        Long memberId = memberService.getMemberIdByToken(token);
-        List<String> profileGenreList = profileService.getProfileByMemberId(memberId).getProfileGenres();
-        return ApiResponse.success(performService.getPerformsAllDeadline(profileGenreList, rowStart, rowEnd));
+//        Long memberId = memberService.getMemberIdByToken(token);
+//        List<String> profileGenreList = profileService.getProfileByMemberId(memberId).getProfileGenres();
+        return ApiResponse.success(performService.getPerformsAllDeadline(rowStart, rowEnd));
     }
 
     // 장르별 공연 조회
