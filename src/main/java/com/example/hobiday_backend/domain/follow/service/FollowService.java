@@ -3,6 +3,8 @@ package com.example.hobiday_backend.domain.follow.service;
 import com.example.hobiday_backend.domain.follow.dto.response.FollowMessageResponse;
 import com.example.hobiday_backend.domain.follow.dto.response.FollowResponse;
 import com.example.hobiday_backend.domain.follow.entity.Follow;
+import com.example.hobiday_backend.domain.follow.exception.FollowErrorCode;
+import com.example.hobiday_backend.domain.follow.exception.FollowException;
 import com.example.hobiday_backend.domain.follow.repository.FollowRepository;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.domain.profile.entity.Profile;
@@ -30,6 +32,11 @@ public class FollowService {
         Long memberId = memberService.getMemberIdByToken(token);
         Profile follower = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+
+        // 자기 자신을 팔로우하려는 경우를 방지
+        if (follower.getId().equals(targetProfileId)) {
+            throw new FollowException(FollowErrorCode.FOLLOW_SELF);
+        }
 
         Profile target = profileRepository.findById(targetProfileId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
