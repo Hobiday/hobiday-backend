@@ -13,7 +13,7 @@ import java.util.TimeZone;
 @SpringBootApplication
 public class HobidayApplication {
 
-    // 한국 시간대 설정은 SpringBoot-RDS-Docker 모두 설정해서 일치시켜야함 (EC2 Host 시간대는 무관)
+    // 한국 시간대 설정은 SpringBoot-RDS-Docker 모두 설정해서 일치시켜야함 (EC2 Host 시간대는 무관  )
     @PostConstruct
     void started() { // 스프링 타임존 설정
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
