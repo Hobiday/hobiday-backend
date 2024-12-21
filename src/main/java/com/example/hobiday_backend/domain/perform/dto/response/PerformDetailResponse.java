@@ -24,4 +24,5 @@ public class PerformDetailResponse {
 
     private int wishCount;      // 좋아요 개수
     private int feedCount;      // 피드 개수
+    private Boolean isWished;   // 좋아요 여부
 }
