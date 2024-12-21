@@ -26,9 +26,16 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final FileService fileService;
 
-    // 회원ID로 프로필 정보 반환
+    // 회원ID로 프로필 조회
     public ProfileResponse getProfileByMemberId(Long memberId){
         Profile profile = profileRepository.findByMemberId(memberId)
+                .orElseThrow(() ->new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        return ProfileResponse.from(profile);
+    }
+
+    // 프로필ID로 프로필 조회
+    public ProfileResponse getProfileByProfileId(Long profileId){
+        Profile profile = profileRepository.findById(profileId)
                 .orElseThrow(() ->new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
         return ProfileResponse.from(profile);
     }
@@ -72,7 +79,7 @@ public class ProfileService {
 
     // 프로필 수정
     @Transactional
-    public PresignedUrlResponse updateImage(Long memberId, PreSignedUrlRequest presignedUrlRequest) {
+    public PresignedUrlResponse updateImage(PreSignedUrlRequest presignedUrlRequest) {
         PresignedUrlResponse presignedUrlResponse = fileService.getUploadPresignedUrl(presignedUrlRequest.getPrefix(),
                 presignedUrlRequest.getFileName());
 

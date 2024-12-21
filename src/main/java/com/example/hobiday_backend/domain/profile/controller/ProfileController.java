@@ -73,13 +73,18 @@ public class ProfileController {
         return ApiResponse.success(profileService.isNicknameOverlap(nickname));
     }
 
-    // 프로필 정보 반환
+    // 프로필 조회
     @Operation(summary = "프로필 조회(by토큰)", description = "토큰을 요청 받아 프로필 정보를 반환합니다..")
     @GetMapping("/api/profiles/myprofile")
-    public ApiResponse<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token){
-        Long memberId = memberService.getMemberIdByToken(token);
-        ProfileResponse profileResponse = profileService.getProfileByMemberId(memberId);
-        return ApiResponse.success(profileResponse);
+    public ApiResponse<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token,
+                                                           @RequestParam Long profileId){
+        if (profileId == null) { // 마이페이지
+            Long memberId = memberService.getMemberIdByToken(token);
+            ProfileResponse profileResponse = profileService.getProfileByMemberId(memberId);
+            return ApiResponse.success(profileResponse);
+        }else{ // 타인페이지
+            return ApiResponse.success(profileService.getProfileByProfileId(profileId));
+        }
     }
 
 
@@ -88,8 +93,8 @@ public class ProfileController {
     @PostMapping("/api/profiles/image")
     public ApiResponse<PresignedUrlResponse> updateImage(@RequestHeader("Authorization") String token,
                                                          @RequestBody PreSignedUrlRequest presignedUrlRequest){
-        Long memberId = memberService.getMemberIdByToken(token);
-        return ApiResponse.success(profileService.updateImage(memberId, presignedUrlRequest));
+//        Long memberId = memberService.getMemberIdByToken(token);
+        return ApiResponse.success(profileService.updateImage(presignedUrlRequest));
     }
 
     // 프로필 수정
