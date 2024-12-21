@@ -1,6 +1,5 @@
 package com.example.hobiday_backend.domain.perform.service;
 
-import com.example.hobiday_backend.domain.feed.dto.FeedRes;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
 import com.example.hobiday_backend.domain.perform.dto.response.*;
@@ -212,13 +211,13 @@ public class PerformService {
                 .toList();
     }
 
-    public List<FeedRes> getFeedsByPerformId(String performId) {
+    public List<FeedsByPerformResponse> getFeedsByPerformId(String performId) {
         Perform perform = performRepository.findByMt20id(performId)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
         List<Feed> feedList = feedRepository.findAllByPerformOrderByCreatedTimeDesc(perform);
 
         return feedList.stream()
-                .map(FeedRes::from)
+                .map(FeedsByPerformResponse::from)
                 .toList();
     }
 

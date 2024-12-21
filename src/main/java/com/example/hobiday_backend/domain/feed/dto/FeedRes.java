@@ -37,15 +37,4 @@ public class FeedRes {
 
     // 상대 시간
     private String relativeTime;
-
-    // 공연상세에서 피드 클릭시 작성된 피드목록 조회
-    public static FeedRes from(Feed feed) {
-        return FeedRes.builder()
-                .feedId(feed.getId())
-                .contents(feed.getContent())
-                .feedFiles(feed.getFeedFiles().stream()
-                        .map(FeedFile::getFileUrl)
-                        .collect(Collectors.toList()))
-                .build();
-    }
 }
