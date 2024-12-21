@@ -97,18 +97,4 @@ public class ProfileService {
         return presignedUrlResponse;
     }
 
-// no use ============================================================================================================
-//    // 프로필ID로 프로필 정보 반환
-//    public ProfileResponse getProfile(Long profileId){
-//        Profile profile = profileRepository.findById(profileId)
-//                .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));;
-//        return ProfileResponse.builder()
-//                .profileId(profile.getId())
-//                .memberId(profile.getMember().getId())
-//                .profileNickname(profile.getProfileNickname())
-//                .profileEmail(profile.getProfileEmail())
-////                .profileGenre(profile.getProfileGenre())
-//                .build();
-//    }
-
 }

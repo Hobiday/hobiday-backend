@@ -171,27 +171,6 @@ public class PerformService {
 
     // 공연 추천 검색어 목록
     public List<PerformRecommendListResponse> getPerformsByRecommends(List<String> profileGenreList) {
-
-        // 선택한 장르를 한번씩 돌아가며 리스트 10개 채워놓음
-//        int i = 0;
-//        int iniSize = profileGenreList.size();
-//        while (profileGenreList.size() != 10){
-//            profileGenreList.add(profileGenreList.get(i++));
-//            if (i==iniSize) i = 0;
-//        }
-//
-////        log.info("프로필장르리스트: " + profileGenreList);
-//
-//        // 응답할 공연 10개 꺼내오기
-//        int cnt = 0;
-//        List<Perform> performList = new ArrayList<>();
-//        List<Perform> perform;
-//        while (cnt!=10){
-//            perform = performRepository.findBySelectGenre(profileGenreList.get(cnt), cnt)
-//                    .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
-//            performList.addAll(perform);
-//            cnt++;
-//        }
         List<Perform> performList = performCustomRepositoryImpl.findTenBySelectGenre(profileGenreList);
 
         return performList.stream()
@@ -202,15 +181,13 @@ public class PerformService {
     // 키워드, 지역들, 장르들 검색
     public List<PerformResponse> getPerformsBySearchDetails(String keyword, List<String> genres, List<String> areas) {
         List<Perform> performList = performCustomRepositoryImpl.findAllBySelectAreaAndGenre(keyword, genres, areas);
-//        for(Perform perform : performList){
-//            log.info("공연 정보: {} | {} | {}", perform.getPrfnm(), perform.getGenrenm(), perform.getArea());
-//        }
 
         return performList.stream()
                 .map(PerformResponse::new)
                 .toList();
     }
 
+    // 공연 연결 피드 조회
     public List<FeedRes> getFeedsByPerformId(String performId) {
         Perform perform = performRepository.findByMt20id(performId)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
