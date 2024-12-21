@@ -75,10 +75,9 @@ public class ProfileController {
 
     // 프로필 정보 반환
     @Operation(summary = "프로필 조회(by토큰)", description = "토큰을 요청 받아 프로필 정보를 반환합니다..")
-    @GetMapping("/api/profiles/myprofile")
-    public ApiResponse<ProfileResponse> getProfileByUserId(@RequestHeader("Authorization") String token){
-        Long memberId = memberService.getMemberIdByToken(token);
-        ProfileResponse profileResponse = profileService.getProfileByMemberId(memberId);
+    @GetMapping("/api/profiles/{profileId}")
+    public ApiResponse<ProfileResponse> getProfileByUserId(@PathVariable Long profileId){
+        ProfileResponse profileResponse = profileService.getProfileById(profileId);
         return ApiResponse.success(profileResponse);
     }
 
