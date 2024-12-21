@@ -176,7 +176,7 @@ public class PerformService {
 
     // 공연 추천 검색어 목록
     public List<PerformRecommendListResponse> getPerformsByRecommends(List<String> profileGenreList) {
-        List<Perform> performList = performCustomRepositoryImpl.findTenBySelectGenre(profileGenreList);
+        List<Perform> performList = performCustomRepositoryImpl.findTenByProfileGenre(profileGenreList);
 
         return performList.stream()
                 .map(PerformRecommendListResponse::new)
