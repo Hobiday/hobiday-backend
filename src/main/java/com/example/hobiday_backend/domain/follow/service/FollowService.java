@@ -10,6 +10,7 @@ import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
 import com.example.hobiday_backend.domain.profile.exception.ProfileException;
 import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class FollowService {
     private final FollowRepository followRepository;
     private final ProfileRepository profileRepository;
@@ -49,7 +51,10 @@ public class FollowService {
 
         List<Follow> following = followRepository.findAllByFollower(profile);
 
-        // Follow 엔티티를 FollowResponse DTO로 변환
+        if (following.isEmpty()) {
+            log.info("팔로잉 목록이 비어 있습니다. profileId: {}", profileId);
+        }
+
         return following.stream()
                 .map(follow -> new FollowResponse(
                         follow.getFollowing(),

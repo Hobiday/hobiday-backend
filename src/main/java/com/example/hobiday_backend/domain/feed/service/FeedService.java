@@ -191,7 +191,9 @@ public class FeedService {
 //            throw new FeedException(FeedErrorCode.FEED_LIST_EMPTY); // 피드가 없을 경우 예외 발생
 //        }
         // 초기화면에는 피드가 없을 수도 있기 때문에
-        return convertToFeedResList(feeds,userId);
+        Profile profile = profileRepository.findByMemberId(userId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        return convertToFeedResList(feeds, profile.getId());
     }
 
     // 좋아요 순 조회
@@ -201,15 +203,17 @@ public class FeedService {
 //        if (feeds.isEmpty()) {
 //            throw new FeedException(FeedErrorCode.FEED_LIST_EMPTY); // 피드가 없을 경우 예외 발생
 //        }
-        return convertToFeedResList(feeds,userId);
+        Profile profile = profileRepository.findByMemberId(userId)
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        return convertToFeedResList(feeds, profile.getId());
     }
 
     // 단일 피드 조회
     @Transactional(readOnly = true)
-    public FeedRes getFeedById(Long userId, Long feedId) {
+    public FeedRes getFeedById(Long profileId, Long feedId) {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
-        Profile profile = profileRepository.findByMemberId(userId)
+        Profile profile = profileRepository.findById(profileId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
         // 피드 작성 후 저장된 피드 공연 정보를 가져오기
         Perform findPerform=feed.getPerform();
@@ -253,19 +257,17 @@ public class FeedService {
 
     // 프로필 하위 전체 피드 조회
     @Transactional(readOnly = true)
-    public List<FeedRes> getProfileFeeds(Long userId) {
-        Profile profile = profileRepository.findByMemberId(userId)
+    public List<FeedRes> getProfileFeeds(Long profileId) {
+        Profile profile = profileRepository.findById(profileId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
-        Long profileId = profile.getId();
-
+        Long findProfileId = profile.getId();
         List<Feed> feeds = feedRepository.findAllByProfileIdOrderByCreatedTimeDesc(profileId);
-
-        return convertToFeedResList(feeds, userId);
+        return convertToFeedResList(feeds,findProfileId);
     }
 
     // Feed 엔티티를 FeedRes DTO로 변환
-    private List<FeedRes> convertToFeedResList(List<Feed> feeds, Long memberId) {
-        Profile profile = profileRepository.findByMemberId(memberId)
+    private List<FeedRes> convertToFeedResList(List<Feed> feeds, Long profileId) {
+        Profile profile = profileRepository.findById(profileId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
 
         return feeds.stream()

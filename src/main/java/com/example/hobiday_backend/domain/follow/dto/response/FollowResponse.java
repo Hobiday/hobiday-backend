@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class FollowResponse {
     private Long profileId;
     private String profileNickName;

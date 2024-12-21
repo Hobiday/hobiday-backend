@@ -1,3 +1,4 @@
+/*
 package com.example.hobiday_backend.domain.perform.service;
 
 import com.example.hobiday_backend.domain.perform.entity.FacilityDetail;
@@ -251,4 +252,4 @@ public class PerformParsing extends KopisParsing {
         return element.getElementsByTagName(tag).item(0).getTextContent();
     }
 
-}
+}*/
