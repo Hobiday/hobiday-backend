@@ -264,8 +264,8 @@ public class FeedService {
     }
 
     // Feed 엔티티를 FeedRes DTO로 변환
-    private List<FeedRes> convertToFeedResList(List<Feed> feeds, Long userId) {
-        Profile profile = profileRepository.findByMemberId(userId)
+    private List<FeedRes> convertToFeedResList(List<Feed> feeds, Long memberId) {
+        Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
 
         return feeds.stream()

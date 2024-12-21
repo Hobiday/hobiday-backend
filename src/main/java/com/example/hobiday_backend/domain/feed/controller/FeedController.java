@@ -2,7 +2,6 @@ package com.example.hobiday_backend.domain.feed.controller;
 
 import com.example.hobiday_backend.domain.feed.dto.FeedReq;
 import com.example.hobiday_backend.domain.feed.dto.FeedRes;
-import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.feed.service.FeedService;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
@@ -112,4 +111,6 @@ public class FeedController {
         List<FeedRes> profileFeeds = feedService.getProfileFeeds(userId);
         return ApiResponse.success(profileFeeds);
     }
+
+
 }
