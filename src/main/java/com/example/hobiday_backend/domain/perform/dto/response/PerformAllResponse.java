@@ -20,7 +20,6 @@ public class PerformAllResponse {
     private Boolean openRun;        // 오픈런 (Y/N)
     private String area;            // 지역명 (서울)
     private String poster;          // 공연포스터 경로 (url)
-    private int wishCount;      // 좋아요 개수
 
     private String facilityId;          // 시설상세ID
     private String cast;                // 공연 출연진
@@ -32,4 +31,7 @@ public class PerformAllResponse {
     private String showtime;            // 공연시간
     private String reservationChannel;  // [상위 여러개에서 1개]예약 방법
     private String reservationUrl;      // [상위 여러개에서 1개]예약 사이트
+
+    private int wishCount;      // 좋아요 개수
+    private int feedCount;      // 피드 개수
 }

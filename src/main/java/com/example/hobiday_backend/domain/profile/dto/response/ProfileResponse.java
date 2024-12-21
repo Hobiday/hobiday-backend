@@ -20,6 +20,9 @@ public class ProfileResponse {
     private List<String> profileGenres;
     private String profileIntroduction;
     private String profileImageUrl;
+    private int totalFeedCount;
+    private int followerCount;
+    private int followingCount;
 
     public static ProfileResponse from(Profile profile){
         return ProfileResponse.builder()
@@ -30,6 +33,21 @@ public class ProfileResponse {
                 .profileGenres(getGenreToList(profile.getProfileGenre()))
                 .profileIntroduction(profile.getProfileIntroduction())
                 .profileImageUrl(profile.getProfileImageUrl())
+                .build();
+    }
+
+    public static ProfileResponse of(Profile profile, int totalFeedCount, int followerCount, int followingCount) {
+        return ProfileResponse.builder()
+                .profileId(profile.getId())
+                .memberId(profile.getMember().getId())
+                .profileNickname(profile.getProfileNickname())
+                .profileEmail(profile.getProfileEmail())
+                .profileGenres(getGenreToList(profile.getProfileGenre()))
+                .profileIntroduction(profile.getProfileIntroduction())
+                .profileImageUrl(profile.getProfileImageUrl())
+                .totalFeedCount(totalFeedCount)
+                .followerCount(followerCount)
+                .followingCount(followingCount)
                 .build();
     }
 }

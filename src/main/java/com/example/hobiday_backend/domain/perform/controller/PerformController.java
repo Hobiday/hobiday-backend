@@ -1,5 +1,6 @@
 package com.example.hobiday_backend.domain.perform.controller;
 
+import com.example.hobiday_backend.domain.feed.dto.FeedRes;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.domain.perform.dto.response.*;
 import com.example.hobiday_backend.domain.perform.service.PerformService;
@@ -108,4 +109,11 @@ public class PerformController {
     public ApiResponse<PerformAllResponse> getPerformAll(@PathVariable String performId){
         return ApiResponse.success(performService.getPerformAll(performId));
     }
+
+//    // 공연으로 작성한 피드 전체 조회
+//    @Operation(summary="공연으로 작성한 피드 전체 조회", description="공연으로 작성한 피드 전체 조회")
+//    @GetMapping("/performs/feeds/{performId}")
+//    public ApiResponse<List<FeedRes>> getFeedsByPerformId(@PathVariable String performId){
+//        return ApiResponse.success(performService.getFeedsByPerformId(performId));
+//    }
 }
