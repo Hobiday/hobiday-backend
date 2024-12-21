@@ -21,4 +21,7 @@ public class PerformDetailResponse {
     private String showtime;            // 공연시간
     private String reservationChannel;  // [상위 여러개에서 1개]예약 방법
     private String reservationUrl;      // [상위 여러개에서 1개]예약 사이트
+
+    private int wishCount;      // 좋아요 개수
+    private int feedCount;      // 피드 개수
 }

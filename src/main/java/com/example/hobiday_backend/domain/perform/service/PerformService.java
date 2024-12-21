@@ -1,5 +1,8 @@
 package com.example.hobiday_backend.domain.perform.service;
 
+import com.example.hobiday_backend.domain.feed.dto.FeedRes;
+import com.example.hobiday_backend.domain.feed.entity.Feed;
+import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
 import com.example.hobiday_backend.domain.perform.dto.response.*;
 import com.example.hobiday_backend.domain.perform.entity.FacilityDetail;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
@@ -14,7 +17,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.hobiday_backend.domain.feed.entity.QFeed.feed;
 
 
 @Slf4j
@@ -25,6 +31,7 @@ public class PerformService {
     private final PerformDetailRepository performDetailRepository;
     private final FacilityRepository facilityRepository;
     private final PerformCustomRepositoryImpl performCustomRepositoryImpl;
+    private final FeedRepository feedRepository;
 
 
     // 모든 장르 조회: 공연 시작순
@@ -86,6 +93,8 @@ public class PerformService {
     public PerformDetailResponse getPerformDetailResponse(String mt20id) {
         PerformDetail performDetail = performDetailRepository.findByMt20id(mt20id)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+        Perform perform = performRepository.findByMt20id(mt20id)
+                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
 
         return PerformDetailResponse.builder()
                 .performId(performDetail.getMt20id())
@@ -98,6 +107,7 @@ public class PerformService {
                 .showtime(performDetail.getDtguidance())
                 .reservationChannel(performDetail.getRelatenm())
                 .reservationUrl(performDetail.getRelateurl())
+                .feedCount(feedRepository.countByPerform(perform))
                 .build();
     }
 
@@ -156,6 +166,7 @@ public class PerformService {
                 .showtime(performDetail.getDtguidance())
                 .reservationChannel(performDetail.getRelatenm())
                 .reservationUrl(performDetail.getRelateurl())
+                .feedCount(feedRepository.countByPerform(perform))
                 .build();
     }
 
@@ -198,6 +209,16 @@ public class PerformService {
 
         return performList.stream()
                 .map(PerformResponse::new)
+                .toList();
+    }
+
+    public List<FeedRes> getFeedsByPerformId(String performId) {
+        Perform perform = performRepository.findByMt20id(performId)
+                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+        List<Feed> feedList = feedRepository.findAllByPerformOrderByCreatedTimeDesc(perform);
+
+        return feedList.stream()
+                .map(FeedRes::from)
                 .toList();
     }
 

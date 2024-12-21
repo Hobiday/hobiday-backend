@@ -22,7 +22,15 @@ public class FeedFile {
 
     @Builder
     public FeedFile(String fileUrl, Feed feed) {
-        this.fileUrl = fileUrl;
+        String[] urls = fileUrl.split("/");
+        urls[2] = "cdn.hobiday.site";
+        String cdnUrl = "https://";
+        for (int i = 2; i < urls.length; i++) {
+            cdnUrl += urls[i] + "/";
+        }
+        cdnUrl = cdnUrl.substring(0, cdnUrl.length() - 1);
+        this.fileUrl = cdnUrl;
+
         this.feed = feed;
     }
 }
