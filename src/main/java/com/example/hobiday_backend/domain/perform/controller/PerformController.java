@@ -4,6 +4,9 @@ import com.example.hobiday_backend.domain.feed.dto.FeedRes;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.domain.perform.dto.response.*;
 import com.example.hobiday_backend.domain.perform.service.PerformService;
+import com.example.hobiday_backend.domain.profile.exception.ProfileErrorCode;
+import com.example.hobiday_backend.domain.profile.exception.ProfileException;
+import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.domain.profile.service.ProfileService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +26,8 @@ public class PerformController {
     private final PerformService performService;
     private final MemberService memberService;
     private final ProfileService profileService;
+    private final ProfileRepository profileRepository;
+
 
     // 전체 공연 조회
     @Operation(summary="전체 공연 조회(공연시작일 빠를수록)", description="전체에서 공연중을 우선 조회 |rowStart = DB시작값(0부터 시작), rowEnd = DB끝값\"")
@@ -92,8 +97,11 @@ public class PerformController {
     // 공연 상세정보 조회
     @Operation(summary="공연 상세정보 조회", description="Kopis의 공연상세ID로 조회")
     @GetMapping("/performs/perform/{performId}")
-    public ApiResponse<PerformDetailResponse> getPerformDetail(@PathVariable("performId") String performId){
-        return ApiResponse.success(performService.getPerformDetailResponse(performId));
+    public ApiResponse<PerformDetailResponse> getPerformDetail(@RequestHeader("Authorization") String token,
+                                                               @PathVariable("performId") String performId){;
+        Long profileId = profileRepository.findByMemberId(memberService.getMemberIdByToken(token))
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND)).getId();
+        return ApiResponse.success(performService.getPerformDetailResponse(performId, profileId));
     }
 
     // 시설 정보 조회
@@ -106,14 +114,17 @@ public class PerformController {
     // 공연 기본&상세정보 조회
     @Operation(summary="공연 기본&상세정보 조회", description="Kopis의 공연상세ID로 조회")
     @GetMapping("/performs/all/{performId}")
-    public ApiResponse<PerformAllResponse> getPerformAll(@PathVariable String performId){
-        return ApiResponse.success(performService.getPerformAll(performId));
+    public ApiResponse<PerformAllResponse> getPerformAll(@RequestHeader("Authorization") String token,
+                                                         @PathVariable String performId){
+        Long profileId = profileRepository.findByMemberId(memberService.getMemberIdByToken(token))
+                .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND)).getId();
+        return ApiResponse.success(performService.getPerformAll(performId, profileId));
     }
 
     // 공연으로 작성한 피드 전체 조회
     @Operation(summary="공연으로 작성한 피드 전체 조회", description="공연ID PF12345 보내서 피드 전체 조회")
     @GetMapping("/performs/feeds/{performId}")
-    public ApiResponse<List<FeedsByPerformResponse>> getFeedsByPerformId(@PathVariable String performId){
+    public ApiResponse<List<FeedRes>> getFeedsByPerformId(@PathVariable String performId){
         return ApiResponse.success(performService.getFeedsByPerformId(performId));
     }
 }

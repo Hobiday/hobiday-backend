@@ -53,7 +53,7 @@ public class PerformCustomRepositoryImpl implements PerformCustomRepository {
     }
 
     @Override
-    public List<Perform> findTenBySelectGenre(List<String> genres) {
+    public List<Perform> findTenByProfileGenre(List<String> genres) {
         List<Perform> performs = jpaQueryFactory
                 .selectFrom(perform)
                 .where(perform.genrenm.in(genres))

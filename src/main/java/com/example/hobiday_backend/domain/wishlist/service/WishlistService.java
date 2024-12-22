@@ -28,8 +28,7 @@ public class WishlistService {
     public List<WishResponse> getWishlistAll(Long profileId, String rowStart, String rowEnd) {
         int start = Integer.parseInt(rowStart);
         int end = Integer.parseInt(rowEnd);
-        List<Wishlist> wishlists = wishlistRepository.findWishListAll(profileId, end - start + 1, start)
-                .orElseThrow(() -> new WishlistException(WishlistErrorCode.WISH_NOT_FOUND));
+        List<Wishlist> wishlists = wishlistRepository.findWishListAll(profileId, end - start + 1, start);
         return wishlists.stream()
                 .map(WishResponse::new)
                 .toList();
@@ -37,11 +36,7 @@ public class WishlistService {
 
     // 위시리스트 장르별 조회
     public List<WishResponse> getWishlistByGenre(Long profileId, String genre) {
-        List<Wishlist> wishlists = wishlistRepository.findWishListByGenre(profileId, genre)
-                .orElseThrow(() -> new WishlistException(WishlistErrorCode.WISH_NOT_FOUND));
-        if (wishlists.isEmpty()){
-            throw new WishlistException(WishlistErrorCode.WISH_NOT_FOUND);
-        }
+        List<Wishlist> wishlists = wishlistRepository.findWishListByGenre(profileId, genre);
         return wishlists.stream()
                 .map(WishResponse::new)
                 .toList();

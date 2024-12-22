@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +63,20 @@ public class FeedService {
             throw new FileUrlException(FileUrlErrorCode.EMPTY_FILE_URL);
         }
 
-        List<FeedFile> feedFiles = feedReq.getFileUrls().stream()
+        // 4-2. cloudfront url로 이미지 저장
+        List<String> cdnFileUrls = new ArrayList<>();
+        for(String s3url : feedReq.getFileUrls()) {
+            String[] urls = s3url.split("/");
+            urls[2] = "cdn.hobiday.site";
+            String cdnUrl = "https://";
+            for (int i = 2; i < urls.length; i++) {
+                cdnUrl += urls[i] + "/";
+            }
+            cdnFileUrls.add(cdnUrl.substring(0, cdnUrl.length() - 1));
+        }
+
+//        List<FeedFile> feedFiles = feedReq.getFileUrls().stream()
+        List<FeedFile> feedFiles = cdnFileUrls.stream()
                 .map(fileUrl -> FeedFile.builder()
                         .fileUrl(fileUrl)
                         .feed(savedFeed) // 부모 설정

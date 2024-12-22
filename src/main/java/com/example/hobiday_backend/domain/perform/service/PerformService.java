@@ -1,7 +1,9 @@
 package com.example.hobiday_backend.domain.perform.service;
 
+import com.example.hobiday_backend.domain.feed.dto.FeedRes;
 import com.example.hobiday_backend.domain.feed.entity.Feed;
 import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
+import com.example.hobiday_backend.domain.feed.service.FeedService;
 import com.example.hobiday_backend.domain.perform.dto.response.*;
 import com.example.hobiday_backend.domain.perform.entity.FacilityDetail;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
@@ -12,15 +14,13 @@ import com.example.hobiday_backend.domain.perform.repository.FacilityRepository;
 import com.example.hobiday_backend.domain.perform.repository.PerformCustomRepositoryImpl;
 import com.example.hobiday_backend.domain.perform.repository.PerformDetailRepository;
 import com.example.hobiday_backend.domain.perform.repository.PerformRepository;
+import com.example.hobiday_backend.domain.wishlist.repository.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.hobiday_backend.domain.feed.entity.QFeed.feed;
-
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,6 +31,8 @@ public class PerformService {
     private final FacilityRepository facilityRepository;
     private final PerformCustomRepositoryImpl performCustomRepositoryImpl;
     private final FeedRepository feedRepository;
+    private final FeedService feedService;
+    private final WishlistRepository wishlistRepository;
 
 
     // 모든 장르 조회: 공연 시작순
@@ -89,7 +91,7 @@ public class PerformService {
     }
 
     // 공연상세 조회
-    public PerformDetailResponse getPerformDetailResponse(String mt20id) {
+    public PerformDetailResponse getPerformDetailResponse(String mt20id, Long profileId) {
         PerformDetail performDetail = performDetailRepository.findByMt20id(mt20id)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
         Perform perform = performRepository.findByMt20id(mt20id)
@@ -107,6 +109,7 @@ public class PerformService {
                 .reservationChannel(performDetail.getRelatenm())
                 .reservationUrl(performDetail.getRelateurl())
                 .feedCount(feedRepository.countByPerform(perform))
+                .isWished(wishlistRepository.existsByProfileIdAndMt20id(profileId, mt20id))
                 .build();
     }
 
@@ -136,7 +139,8 @@ public class PerformService {
                 .toList();
     }
 
-    public PerformAllResponse getPerformAll(String mt20id) {
+    // 공연 모두 반환
+    public PerformAllResponse getPerformAll(String mt20id, Long profileId) {
         Perform perform = performRepository.findByMt20id(mt20id)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
 
@@ -166,33 +170,13 @@ public class PerformService {
                 .reservationChannel(performDetail.getRelatenm())
                 .reservationUrl(performDetail.getRelateurl())
                 .feedCount(feedRepository.countByPerform(perform))
+                .isWished(wishlistRepository.existsByProfileIdAndMt20id(profileId, mt20id))
                 .build();
     }
 
     // 공연 추천 검색어 목록
     public List<PerformRecommendListResponse> getPerformsByRecommends(List<String> profileGenreList) {
-
-        // 선택한 장르를 한번씩 돌아가며 리스트 10개 채워놓음
-//        int i = 0;
-//        int iniSize = profileGenreList.size();
-//        while (profileGenreList.size() != 10){
-//            profileGenreList.add(profileGenreList.get(i++));
-//            if (i==iniSize) i = 0;
-//        }
-//
-////        log.info("프로필장르리스트: " + profileGenreList);
-//
-//        // 응답할 공연 10개 꺼내오기
-//        int cnt = 0;
-//        List<Perform> performList = new ArrayList<>();
-//        List<Perform> perform;
-//        while (cnt!=10){
-//            perform = performRepository.findBySelectGenre(profileGenreList.get(cnt), cnt)
-//                    .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
-//            performList.addAll(perform);
-//            cnt++;
-//        }
-        List<Perform> performList = performCustomRepositoryImpl.findTenBySelectGenre(profileGenreList);
+        List<Perform> performList = performCustomRepositoryImpl.findTenByProfileGenre(profileGenreList);
 
         return performList.stream()
                 .map(PerformRecommendListResponse::new)
@@ -202,23 +186,22 @@ public class PerformService {
     // 키워드, 지역들, 장르들 검색
     public List<PerformResponse> getPerformsBySearchDetails(String keyword, List<String> genres, List<String> areas) {
         List<Perform> performList = performCustomRepositoryImpl.findAllBySelectAreaAndGenre(keyword, genres, areas);
-//        for(Perform perform : performList){
-//            log.info("공연 정보: {} | {} | {}", perform.getPrfnm(), perform.getGenrenm(), perform.getArea());
-//        }
 
         return performList.stream()
                 .map(PerformResponse::new)
                 .toList();
     }
 
-    public List<FeedsByPerformResponse> getFeedsByPerformId(String performId) {
+    // 공연 연결 피드 조회
+    public List<FeedRes> getFeedsByPerformId(String performId) {
         Perform perform = performRepository.findByMt20id(performId)
                 .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
-        List<Feed> feedList = feedRepository.findAllByPerformOrderByCreatedTimeDesc(perform);
-
-        return feedList.stream()
-                .map(FeedsByPerformResponse::from)
-                .toList();
+        List<Feed> feeds = feedRepository.findAllByPerformOrderByCreatedTimeDesc(perform);
+        List<FeedRes> feedResList = new ArrayList<>();
+        for (Feed feed : feeds) {
+            feedResList.add(feedService.getFeedById(feed.getId()));
+        }
+        return feedResList;
     }
 
 //    public List<Perform> findAllBySelectAreaAndGenre(final String genre, final String area) {
