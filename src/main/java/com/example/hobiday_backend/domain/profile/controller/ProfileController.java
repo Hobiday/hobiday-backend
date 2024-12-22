@@ -74,6 +74,14 @@ public class ProfileController {
         return ApiResponse.success(profileService.isNicknameOverlap(nickname));
     }
 
+    // 프로필 정보 반환 + 피드 전체 갯수
+    @Operation(summary = "프로필의 전체 피드갯수 팔로우 팔로워 갯수 반환", description = "프로필 id로 프로필 조회")
+    @GetMapping("/api/profiles/{profileId}")
+    public ApiResponse<ProfileResponse> getProfileByUserId(@PathVariable Long profileId){
+        ProfileResponse profileResponse = profileService.getProfileById(profileId);
+        return ApiResponse.success(profileResponse);
+    }
+
     // 프로필 조회
     @Operation(summary = "프로필 조회(by토큰)", description = "토큰을 요청 받아 프로필 정보를 반환합니다..")
     @GetMapping("/api/profiles/myprofile")
@@ -88,14 +96,13 @@ public class ProfileController {
         }
     }
 
-
     // 프로필 이미지 등록(수정)
     @Operation(summary = "프로필 이미지 등록(수정 포함)할 url 응답", description = "저장할 폴더명(prefix), 파일명(fileName) 요청해서 프로필 이미지 등록할 url 및 filepath 응답 ")
     @PostMapping("/api/profiles/image")
     public ApiResponse<PresignedUrlResponse> updateImage(@RequestHeader("Authorization") String token,
                                                          @RequestBody PreSignedUrlRequest presignedUrlRequest){
-//        Long memberId = memberService.getMemberIdByToken(token);
-        return ApiResponse.success(profileService.updateImage(presignedUrlRequest));
+        Long memberId = memberService.getMemberIdByToken(token);
+        return ApiResponse.success(profileService.updateImage(memberId, presignedUrlRequest));
     }
 
     // 프로필 수정

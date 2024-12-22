@@ -50,6 +50,17 @@ public class ProfileService {
         return ProfileResponse.of(profile, totalFeedCount, followerCount, followingCount);
     }
 
+    // 프로필 정보 반환 프로필 갯수 팔로우 팔로워 수 갯수
+    public ProfileResponse getProfileById(Long profileId){
+        Profile profile = profileRepository.findById(profileId)
+                .orElseThrow(() ->new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
+        int totalFeedCount = feedRepository.countByProfile(profile);
+        int followerCount = followRepository.countByFollowing(profile);
+        int followingCount = followRepository.countByFollower(profile);
+
+        return ProfileResponse.from(profile, totalFeedCount, followerCount, followingCount);
+    }
+
     // 닉네임 중복 여부
     public ProfileMessageResponse isNicknameOverlap(String nickname){
         if (profileRepository.findByProfileNickname(nickname).isPresent()) { // 존재하는 닉네임이면
@@ -90,7 +101,7 @@ public class ProfileService {
 
     // 프로필 수정
     @Transactional
-    public PresignedUrlResponse updateImage(PreSignedUrlRequest presignedUrlRequest) {
+    public PresignedUrlResponse updateImage(Long memberId, PreSignedUrlRequest presignedUrlRequest) {
         PresignedUrlResponse presignedUrlResponse = fileService.getUploadPresignedUrl(presignedUrlRequest.getPrefix(),
                 presignedUrlRequest.getFileName());
 

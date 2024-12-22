@@ -24,10 +24,25 @@ public class ProfileResponse {
     private int followerCount;
     private int followingCount;
 
-    public static ProfileResponse from(Profile profile){
+    public static ProfileResponse from(Profile profile, int totalFeedCount, int followerCount, int followingCount) {
         return ProfileResponse.builder()
                 .profileId(profile.getId())
-                .memberId(profile.getMember().getId()) // 방2
+                .memberId(profile.getMember().getId())
+                .profileNickname(profile.getProfileNickname())
+                .profileEmail(profile.getProfileEmail())
+                .profileGenres(getGenreToList(profile.getProfileGenre()))
+                .profileIntroduction(profile.getProfileIntroduction())
+                .profileImageUrl(profile.getProfileImageUrl())
+                .totalFeedCount(totalFeedCount)
+                .followerCount(followerCount)
+                .followingCount(followingCount)
+                .build();
+    }
+
+    public static ProfileResponse from(Profile profile) {
+        return ProfileResponse.builder()
+                .profileId(profile.getId())
+                .memberId(profile.getMember().getId())
                 .profileNickname(profile.getProfileNickname())
                 .profileEmail(profile.getProfileEmail())
                 .profileGenres(getGenreToList(profile.getProfileGenre()))

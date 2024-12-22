@@ -119,7 +119,6 @@ public class FeedService {
                 .commentCount(savedFeed.getCommentList().size())
                 .isLiked(false)
                 .relativeTime(getRelativeTime(savedFeed.getCreatedTime())) // 상대 시간 추가
-                .performId(perform.getMt20id())
                 .performName(perform.getPrfnm())
                 .startDate(perform.getPrfpdfrom())
                 .endDate(perform.getPrfpdto())
