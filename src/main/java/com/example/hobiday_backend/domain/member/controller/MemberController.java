@@ -42,15 +42,16 @@ public class MemberController {
     }
 
     // 게스트 로그인
-    @Operation(summary="게스트 로그인", description="게스트 계정은 서버에서 GET, DELETE만 허용하도록 설정함, DELETE는 로그아웃 용도 | 준비된 10개 계정 중 랜덤 로그인 " +
+    @Operation(summary="게스트 로그인", description="게스트 계정은 서버에서 GET, DELETE만 허용하도록 설정함, DELETE는 로그아웃 용도 | 준비된 40개 계정 중 랜덤 로그인 " +
             "| 프로필 등록O")
     @GetMapping("/api/members/guest")
     public ApiResponse<FreePassResponse> loginGuest(){
         Random rd = new Random();
-        String nickname = "guest" + (rd.nextInt(10)+1);
+        String nickname = "guest" + (rd.nextInt(40)+1);
         return ApiResponse.success(memberService.loginFreePassMember(nickname));
     }
 
+    // 회원탈퇴
     @Operation(summary="회원탈퇴", description="회원ID와 일치 확인후 회원탈퇴")
     @DeleteMapping("/api/members/signout/{memberId}")
     public ApiResponse<MemberSignOutResponse> signOut(@RequestHeader("Authorization") String token, @PathVariable Long memberId){
