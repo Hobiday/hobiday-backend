@@ -3,6 +3,7 @@ package com.example.hobiday_backend.domain.member.controller;
 import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberMessageResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberResponse;
+import com.example.hobiday_backend.domain.member.dto.MemberSignOutResponse;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
 import com.example.hobiday_backend.global.jwt.RefreshTokenService;
@@ -45,6 +46,14 @@ public class MemberController {
 //        log.info("프리패스: " + freePassResponse.getNickname());
 //        return ResponseEntity.ok().body(freePassResponse);
         return ApiResponse.success(freePassResponse);
+    }
+
+    @Operation(summary="회원탈퇴", description="회원ID와 일치 확인후 회원탈퇴")
+    @PostMapping("/api/members/signout/{memberId}")
+    public ApiResponse<MemberSignOutResponse> signOut(@RequestHeader("Authorization") String token, @PathVariable Long memberId){
+        MemberSignOutResponse memberSignOutResponse = memberService.signOut(token, memberId);
+        refreshTokenService.delete();
+        return ApiResponse.success(memberSignOutResponse);
     }
 
 

@@ -2,10 +2,13 @@ package com.example.hobiday_backend.domain.member.service;
 
 import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberResponse;
+import com.example.hobiday_backend.domain.member.dto.MemberSignOutResponse;
 import com.example.hobiday_backend.domain.member.entity.Member;
 import com.example.hobiday_backend.domain.member.exception.MemberErrorCode;
 import com.example.hobiday_backend.domain.member.exception.MemberException;
 import com.example.hobiday_backend.domain.member.repository.MemberRepository;
+import com.example.hobiday_backend.domain.profile.entity.Profile;
+import com.example.hobiday_backend.domain.profile.repository.ProfileRepository;
 import com.example.hobiday_backend.global.jwt.RefreshToken;
 import com.example.hobiday_backend.global.jwt.RefreshTokenRepository;
 import com.example.hobiday_backend.global.jwt.TokenProvider;
@@ -17,6 +20,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 import static com.example.hobiday_backend.global.oauth.OAuth2SuccessHandler.ACCESS_TOKEN_DURATION;
 import static com.example.hobiday_backend.global.oauth.OAuth2SuccessHandler.REFRESH_TOKEN_DURATION;
 
@@ -27,6 +32,7 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final ProfileRepository profileRepository;
 
     // 토큰으로 카카오 회원ID 반환
     public Long getMemberIdByToken(String token) {
@@ -88,6 +94,29 @@ public class MemberService implements UserDetailsService {
                 .orElse(new RefreshToken(memberId, newRefreshToken)); // 없으면 새로 생성
         refreshTokenRepository.save(refreshToken);
 //        log.info("saveRefreshToken() 완료");
+    }
+
+    public MemberSignOutResponse signOut(String token, Long memberId) {
+        Member member = findById(getMemberIdByToken(token));
+        Profile profile = member.getProfile();
+
+        if (!Objects.equals(memberId, member.getId())){
+            throw new MemberException(MemberErrorCode.MEMBER__NOT_ACCEPTABLE);
+        }
+
+        MemberSignOutResponse memberSignOutResponse
+                = MemberSignOutResponse.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .profileId(profile.getId())
+                .profileNickname(profile.getProfileNickname())
+                .build();
+
+        memberRepository.delete(member);
+
+
+        return memberSignOutResponse;
     }
 
 

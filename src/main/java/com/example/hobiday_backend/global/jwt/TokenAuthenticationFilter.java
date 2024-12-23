@@ -30,25 +30,40 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("request: {}", request.getRequestURL());
-        log.info("response: {}", response.getStatus());
+        log.info("request.getRequestURL()): {}", request.getRequestURL());
+        log.info("request.getMethod()): {}", request.getMethod());
+
         // 요청 헤더의 Authorization 키의 값 조회
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
 
         // 가져온 값에서 접두사 제거
         String token = getAccessToken(authorizationHeader);
-        log.info("액세스 토큰: {}", token);
 
+        String email = null; // 게스트 계정 파악용
         //가져온 토큰이 유효한지 확인하고, 유효한 때는 인증 정보 설정
         if(tokenProvider.validToken(token)){
             Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication); // contextHolder에 유저 정보 넣어줌
-            log.info("토큰 유효함");
+            email = authentication.getName();
         }
 
-        log.info("TokenAuthenticationFilter doFilterInternal 완료");
+        // 게스트 계정은 GET, DELETE 메서드 외에는 차단
+        if (email != null && email.substring(0,6).equals("&guest")){
+            if (request.getMethod().equalsIgnoreCase("OPTIONS")
+                    || request.getMethod().equalsIgnoreCase("PUT")
+                    || request.getMethod().equalsIgnoreCase("POST")
+                    || request.getMethod().equalsIgnoreCase("TRACE")
+                    || request.getMethod().equalsIgnoreCase("PATCH")
+                    || request.getMethod().equalsIgnoreCase("OPTION")){
+//                log.info("차단");
+                response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                return;
+            }
+        }
+
+//        log.info("TokenAuthenticationFilter doFilterInternal 완료");
         filterChain.doFilter(request, response);
-        log.info("FilterChain doFilter 완료");
+//        log.info("FilterChain doFilter 완료");
     }
 
 
