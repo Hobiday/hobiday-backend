@@ -1,6 +1,6 @@
-/*
 package com.example.hobiday_backend.domain.perform.service;
 
+import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
 import com.example.hobiday_backend.domain.perform.entity.FacilityDetail;
 import com.example.hobiday_backend.domain.perform.entity.Perform;
 import com.example.hobiday_backend.domain.perform.entity.PerformDetail;
@@ -38,6 +38,7 @@ public class PerformParsing extends KopisParsing {
     private static HashSet<String> facilitySet = new HashSet<>(); //시설상세ID 모음
     private static String stDate = "20241215";
     private static String eddDate = "20250113";
+    private final FeedRepository feedRepository;
 
     // 파싱 기간 갱신(오늘~28일후) - 아직 적용X
     public void setParsingPeriod(){
@@ -78,7 +79,7 @@ public class PerformParsing extends KopisParsing {
             int performEndDate = Integer.parseInt(perform.getPrfpdto().replace(".", "")); // 공연종료날짜 '.'없애고 정수 리턴
             int performStartDate = Integer.parseInt(perform.getPrfpdfrom().replace(".", "")); // 공연종료날짜 '.'없애고 정수 리턴
             if (todayDate > performEndDate){
-                if (perform.getWishCount() == 0){
+                if (perform.getWishCount() == 0 && feedRepository.countByPerform(perform) == 0){
                     performDetailRepository.delete(performDetailRepository.findByMt20id(perform.getMt20id())
                             .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND)));
                     performRepository.delete(perform);
@@ -253,4 +254,4 @@ public class PerformParsing extends KopisParsing {
     }
 
 }
-*/
+

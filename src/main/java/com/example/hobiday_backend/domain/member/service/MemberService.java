@@ -1,5 +1,7 @@
 package com.example.hobiday_backend.domain.member.service;
 
+import com.example.hobiday_backend.domain.feed.entity.Feed;
+import com.example.hobiday_backend.domain.feed.repository.FeedRepository;
 import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberSignOutResponse;
@@ -20,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.example.hobiday_backend.global.oauth.OAuth2SuccessHandler.ACCESS_TOKEN_DURATION;
@@ -32,6 +35,7 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final FeedRepository feedRepository;
 
     // 토큰으로 카카오 회원ID 반환
     public Long getMemberIdByToken(String token) {
@@ -75,6 +79,9 @@ public class MemberService implements UserDetailsService {
         if (!Objects.equals(memberId, member.getId())){ // 접속중 사용자와 회원ID 일치 여부
             throw new MemberException(MemberErrorCode.MEMBER__NOT_ACCEPTABLE);
         }
+        if (member.getEmail().startsWith("&guest")){ // 게스트 계정은 삭제 못하게
+            throw new MemberException(MemberErrorCode.MEMBER__NOT_ACCEPTABLE);
+        }
 
         MemberSignOutResponse memberSignOutResponse
                 = MemberSignOutResponse.builder()
@@ -84,6 +91,8 @@ public class MemberService implements UserDetailsService {
                 .profileId(profile.getId())
                 .profileNickname(profile.getProfileNickname())
                 .build();
+        List<Feed> feeds = feedRepository.findAllByProfileIdOrderByCreatedTimeDesc(profile.getId());
+        feedRepository.deleteAll(feeds);
 
         memberRepository.delete(member);
         return memberSignOutResponse;

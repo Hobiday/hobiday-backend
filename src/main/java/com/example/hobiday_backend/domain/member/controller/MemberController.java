@@ -51,7 +51,7 @@ public class MemberController {
     }
 
     @Operation(summary="회원탈퇴", description="회원ID와 일치 확인후 회원탈퇴")
-    @PostMapping("/api/members/signout/{memberId}")
+    @DeleteMapping("/api/members/signout/{memberId}")
     public ApiResponse<MemberSignOutResponse> signOut(@RequestHeader("Authorization") String token, @PathVariable Long memberId){
         MemberSignOutResponse memberSignOutResponse = memberService.signOut(token, memberId);
         refreshTokenService.delete();
