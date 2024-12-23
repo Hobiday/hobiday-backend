@@ -67,6 +67,9 @@ public class FeedService {
         List<String> cdnFileUrls = new ArrayList<>();
         for(String s3url : feedReq.getFileUrls()) {
             String[] urls = s3url.split("/");
+            if (urls.length < 4){
+                throw new FileUrlException(FileUrlErrorCode.WRONG_FILE_URL);
+            }
             urls[2] = "cdn.hobiday.site";
             String cdnUrl = "https://";
             for (int i = 2; i < urls.length; i++) {
