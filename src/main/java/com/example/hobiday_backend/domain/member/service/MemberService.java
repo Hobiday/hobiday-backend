@@ -91,17 +91,8 @@ public class MemberService implements UserDetailsService {
                 .profileId(profile.getId())
                 .profileNickname(profile.getProfileNickname())
                 .build();
-
-        log.info("memberId: {}", memberId);
-        log.info("profileId: {}", profile.getId());
-
         List<Feed> feeds = feedRepository.findAllByProfileIdOrderByCreatedTimeDesc(profile.getId());
-        log.info("feed 개수: {}", feeds.size());
-//        for(Feed feed : feeds){
-//            feedRepository.delete(feed);
-//        }
         feedRepository.deleteAll(feeds);
-
         memberRepository.delete(member);
         return memberSignOutResponse;
     }
@@ -134,8 +125,6 @@ public class MemberService implements UserDetailsService {
         refreshTokenRepository.save(refreshToken);
 //        log.info("saveRefreshToken() 완료");
     }
-
-
 
 
     // no use ===============================================================================================

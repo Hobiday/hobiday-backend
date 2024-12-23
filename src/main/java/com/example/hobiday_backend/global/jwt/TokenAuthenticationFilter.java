@@ -29,8 +29,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("request.getRequestURL()): {}", request.getRequestURL());
-        log.info("request.getMethod()): {}", request.getMethod());
+//        log.info("request.getRequestURL()): {}", request.getRequestURL());
+//        log.info("request.getMethod()): {}", request.getMethod());
 
         // 요청 헤더의 Authorization 키의 값 조회
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);

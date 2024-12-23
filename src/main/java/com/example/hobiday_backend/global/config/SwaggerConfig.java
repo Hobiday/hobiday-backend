@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "hobiday 프로젝트 API 명세서",
+                title = "hobiday 프로젝트 API 명세서 - (개선)게스트 로그인 | (추가)회원탈퇴",
                 version = "v1.0.0",
                 description = "hobiday API 명세서입니다"
         )

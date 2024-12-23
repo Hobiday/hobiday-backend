@@ -42,7 +42,8 @@ public class MemberController {
     }
 
     // 게스트 로그인
-    @Operation(summary="게스트 로그인", description="서버에서 GET, DELETE만 가능하도록 설정함, DELETE는 로그아웃 용도 | 준비된 10개 계정 중 랜덤 로그인")
+    @Operation(summary="게스트 로그인", description="게스트 계정은 서버에서 GET, DELETE만 허용하도록 설정함, DELETE는 로그아웃 용도 | 준비된 10개 계정 중 랜덤 로그인 " +
+            "| 프로필 등록O")
     @GetMapping("/api/members/guest")
     public ApiResponse<FreePassResponse> loginGuest(){
         Random rd = new Random();
