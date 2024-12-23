@@ -3,6 +3,7 @@ package com.example.hobiday_backend.domain.member.controller;
 import com.example.hobiday_backend.domain.member.dto.FreePassResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberMessageResponse;
 import com.example.hobiday_backend.domain.member.dto.MemberResponse;
+import com.example.hobiday_backend.domain.member.dto.MemberSignOutResponse;
 import com.example.hobiday_backend.domain.member.service.MemberService;
 import com.example.hobiday_backend.global.dto.ApiResponse;
 import com.example.hobiday_backend.global.jwt.RefreshTokenService;
@@ -41,12 +42,20 @@ public class MemberController {
     }
 
     // 게스트 로그인
-    @Operation(summary="게스트 로그인", description="준비된 10개 계정 중 랜덤 로그인 | 프론트에서 Read Only로 만들어주세요")
+    @Operation(summary="게스트 로그인", description="서버에서 GET, DELETE만 가능하도록 설정함, DELETE는 로그아웃 용도 | 준비된 10개 계정 중 랜덤 로그인")
     @GetMapping("/api/members/guest")
     public ApiResponse<FreePassResponse> loginGuest(){
         Random rd = new Random();
         String nickname = "guest" + (rd.nextInt(10)+1);
         return ApiResponse.success(memberService.loginFreePassMember(nickname));
+    }
+
+    @Operation(summary="회원탈퇴", description="회원ID와 일치 확인후 회원탈퇴")
+    @PostMapping("/api/members/signout/{memberId}")
+    public ApiResponse<MemberSignOutResponse> signOut(@RequestHeader("Authorization") String token, @PathVariable Long memberId){
+        MemberSignOutResponse memberSignOutResponse = memberService.signOut(token, memberId);
+        refreshTokenService.delete();
+        return ApiResponse.success(memberSignOutResponse);
     }
 
     // 개발용 기존회원 로그인
