@@ -44,8 +44,13 @@ public class FeedService {
         Profile profile = profileRepository.findByMemberId(userId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
 
-        Perform perform = performRepository.findByMt20id(feedReq.getPerformId())
-                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+        // 공연 정보가 있을 경우 처리
+        Perform perform = null;
+        if (feedReq.getPerformId() != null) {
+            perform = performRepository.findByMt20id(feedReq.getPerformId())
+                    .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+        }
+
 
         // 2. Feed 생성
         Feed feed = Feed.builder()
