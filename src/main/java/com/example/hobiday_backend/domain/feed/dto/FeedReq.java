@@ -19,9 +19,8 @@ public class FeedReq {
     @Schema(description = "피드 해시태그")
     private List<String> hashTags;
 
-    @Schema(description = "공연 id")
+    @Schema(description = "공연 id (선택사항)", nullable = true)
     private String performId;
-
     // 프로필 사진도 받아야 함
 }
 

@@ -44,8 +44,12 @@ public class FeedService {
         Profile profile = profileRepository.findByMemberId(userId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
 
-        Perform perform = performRepository.findByMt20id(feedReq.getPerformId())
-                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+        // 공연 정보가 있을 경우 처리
+        Perform perform = null;
+        if (feedReq.getPerformId() != null) {
+            perform = performRepository.findByMt20id(feedReq.getPerformId())
+                    .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+        }
 
         // 2. Feed 생성
         Feed feed = Feed.builder()
@@ -122,16 +126,17 @@ public class FeedService {
                 .commentCount(savedFeed.getCommentList().size())
                 .isLiked(false)
                 .relativeTime(getRelativeTime(savedFeed.getCreatedTime())) // 상대 시간 추가
-                .performName(perform.getPrfnm())
-                .startDate(perform.getPrfpdfrom())
-                .endDate(perform.getPrfpdto())
-                .genreName(perform.getGenrenm())
-                .performState(perform.getPrfstate())
-                .placeName(perform.getFcltynm())
-                .openRun(perform.getOpenrun())
-                .area(perform.getArea())
-                .poster(perform.getPoster())
-                .performLikeCount(perform.getWishCount())
+                .performId(perform != null ? perform.getMt20id() : null)
+                .performName(perform != null ? perform.getPrfnm() : null)
+                .startDate(perform != null ? perform.getPrfpdfrom() : null)
+                .endDate(perform != null ? perform.getPrfpdto() : null)
+                .genreName(perform != null ? perform.getGenrenm() : null)
+                .performState(perform != null ? perform.getPrfstate() : null)
+                .placeName(perform != null ? perform.getFcltynm() : null)
+                .openRun(perform != null ? perform.getOpenrun() : null)
+                .area(perform != null ? perform.getArea() : null)
+                .poster(perform != null ? perform.getPoster() : null)
+                .performLikeCount(perform != null ? perform.getWishCount() : null)
                 .build();
     }
 
@@ -140,9 +145,12 @@ public class FeedService {
         // 멤버 id로 프로필 찾기
         Profile profile = profileRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new ProfileException(ProfileErrorCode.PROFILE_NOT_FOUND));
-        //
-        Perform perform = performRepository.findByMt20id(feedReq.getPerformId())
-                .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+
+        Perform perform = null;
+       if (feedReq.getPerformId() != null) {
+            perform = performRepository.findByMt20id(feedReq.getPerformId())
+                    .orElseThrow(() -> new PerformException(PerformErrorCode.PERFORM_NOT_FOUND));
+        }
         // 2. 피드 조회 및 작성자 확인
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new FeedException(FeedErrorCode.FEED_NOT_FOUND));
@@ -151,8 +159,22 @@ public class FeedService {
             throw new FeedException(FeedErrorCode.FEED_UPDATE_ACCESS_DENIED);
         }
 
+        List<String> cdnFileUrls = new ArrayList<>();
+        for (String s3url : feedReq.getFileUrls()) {
+            String[] urls = s3url.split("/");
+            if (urls.length < 4) {
+                throw new FileUrlException(FileUrlErrorCode.WRONG_FILE_URL);
+            }
+            urls[2] = "cdn.hobiday.site";
+            String cdnUrl = "https://";
+            for (int i = 2; i < urls.length; i++) {
+                cdnUrl += urls[i] + "/";
+            }
+            cdnFileUrls.add(cdnUrl.substring(0, cdnUrl.length() - 1));
+        }
+
         // 3. 피드 수정
-        feed.update(feedReq.getContent(), feedReq.getTopic(), feedReq.getFileUrls(), feedReq.getHashTags());
+        feed.update(feedReq.getContent(), feedReq.getTopic(), cdnFileUrls, feedReq.getHashTags());
 
         // FeedRes 반환 (상대 시간 추가)
         return FeedRes.builder()
@@ -171,17 +193,17 @@ public class FeedService {
                 .commentCount(feed.getCommentList().size())
                 .isLiked(false)
                 .relativeTime(getRelativeTime(feed.getCreatedTime())) // 상대 시간 추가
-                .performId(perform.getMt20id())
-                .performName(perform.getPrfnm())
-                .startDate(perform.getPrfpdfrom())
-                .endDate(perform.getPrfpdto())
-                .genreName(perform.getGenrenm())
-                .performState(perform.getPrfstate())
-                .placeName(perform.getFcltynm())
-                .openRun(perform.getOpenrun())
-                .area(perform.getArea())
-                .poster(perform.getPoster())
-                .performLikeCount(perform.getWishCount())
+                .performId(perform != null ? perform.getMt20id() : null)
+                .performName(perform != null ? perform.getPrfnm() : null)
+                .startDate(perform != null ? perform.getPrfpdfrom() : null)
+                .endDate(perform != null ? perform.getPrfpdto() : null)
+                .genreName(perform != null ? perform.getGenrenm() : null)
+                .performState(perform != null ? perform.getPrfstate() : null)
+                .placeName(perform != null ? perform.getFcltynm() : null)
+                .openRun(perform != null ? perform.getOpenrun() : null)
+                .area(perform != null ? perform.getArea() : null)
+                .poster(perform != null ? perform.getPoster() : null)
+                .performLikeCount(perform != null ? perform.getWishCount() : null)
                 .build();
     }
 
