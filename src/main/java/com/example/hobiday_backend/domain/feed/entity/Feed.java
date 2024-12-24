@@ -37,7 +37,7 @@ public class Feed extends TimeStamped {
 
     // 공연
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "perform_id", nullable = false)
+    @JoinColumn(name = "perform_id", nullable = true)
     private Perform perform;
 
     // 피드 사진
