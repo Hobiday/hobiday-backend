@@ -89,7 +89,11 @@
 ---
 
 ## :link: API 문서
-[API 문서 링크](https://www.notion.so/1617dbf1cfb481818b9bf95e96ab17df?v=1617dbf1cfb48156a7b6000c7bb421c1&pvs=4)
+<details>
+    <summary>API 명세서 보기</summary>
+    <img width="1000" src="https://github.com/user-attachments/assets/6a24d091-e725-4c42-a5f9-af3ff9c30d47">
+    <img width="1000" src="https://github.com/user-attachments/assets/d761da53-cd49-4594-b824-d6849b14497b">
+</details>
 
 ## 🧑‍💻 역할 
 **최현**
