@@ -98,7 +98,7 @@
     <img width="1000" src="https://github.com/user-attachments/assets/d761da53-cd49-4594-b824-d6849b14497b">
 </details>
 
-## 🧑‍💻 역할 
+## 🧑 역할 
 **최현**
 - 서버 아키텍처 설계 및 구축
 - 카카오 로그인 및 JWT 활용한 회원관리 기능 구현
